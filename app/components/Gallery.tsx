@@ -62,7 +62,7 @@ export default function Gallery() {
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{
                 duration: 0.5,
-                ease: "easeOut",
+                ease: "easeOut" as any,
                 delay: 0.2 + i * 0.07,
               }}
               className={`relative rounded-xl overflow-hidden group cursor-pointer ${item.span}`}

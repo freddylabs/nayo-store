@@ -31,7 +31,7 @@ function fadeUp(delay: number) {
   return {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, ease: "easeOut" as const, delay },
+    transition: { duration: 0.7, ease: "easeOut" as any as const, delay },
   };
 }
 
@@ -159,7 +159,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut", delay: 0.3 }}
+          transition={{ duration: 0.9, ease: "easeOut" as any, delay: 0.3 }}
           className="relative flex items-center justify-center h-full max-h-[220px] sm:max-h-[300px] lg:max-h-[500px] w-full mt-10 sm:mt-12 lg:mt-0"
         >
           {/* Category tabs */}
@@ -194,7 +194,7 @@ export default function Hero() {
                     zIndex: offset === 0 ? 3 : offset === 1 ? 2 : 1,
                     opacity: offset === 0 ? 1 : offset === 1 ? 0.6 : 0.3,
                   }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  transition={{ duration: 0.6, ease: "easeOut" as any }}
                   style={{ position: "absolute", inset: 0 }}
                   className="cursor-pointer"
                   onClick={() => setCurrent(i)}

@@ -35,7 +35,7 @@ const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-100px" },
-  transition: { duration: 0.8, delay, ease: "easeOut" },
+  transition: { duration: 0.8, delay, ease: "easeOut" as any },
 });
 
 export default function LegacySection() {
@@ -69,7 +69,7 @@ export default function LegacySection() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: i * 0.15, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: i * 0.15, ease: "easeOut" as any }}
                 className="group relative bg-nayo-white/[0.02] border border-nayo-gold/10 hover:border-nayo-gold/30 hover:bg-nayo-white/[0.04] transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col items-start hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
               >
                 <div className="mb-6 flex flex-col items-start">
