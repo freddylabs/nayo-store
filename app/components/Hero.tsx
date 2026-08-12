@@ -159,7 +159,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
+          transition={{ duration: 0.9, ease: "easeOut", delay: 0.3 }}
           className="relative flex items-center justify-center h-full max-h-[220px] sm:max-h-[300px] lg:max-h-[500px] w-full mt-10 sm:mt-12 lg:mt-0"
         >
           {/* Category tabs */}
@@ -194,7 +194,7 @@ export default function Hero() {
                     zIndex: offset === 0 ? 3 : offset === 1 ? 2 : 1,
                     opacity: offset === 0 ? 1 : offset === 1 ? 0.6 : 0.3,
                   }}
-                  transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                   style={{ position: "absolute", inset: 0 }}
                   className="cursor-pointer"
                   onClick={() => setCurrent(i)}

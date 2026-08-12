@@ -29,7 +29,7 @@ const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-100px" },
-  transition: { duration: 0.8, delay, ease: [0.23, 1, 0.32, 1] },
+  transition: { duration: 0.8, delay, ease: "easeOut" },
 });
 
 const values = [
@@ -127,7 +127,7 @@ export default function AboutPage() {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.6, delay: i * 0.1, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
                     className="group relative bg-nayo-white/[0.02] border border-nayo-gold/10 hover:border-nayo-gold/30 hover:bg-nayo-white/[0.04] transition-all duration-500 rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
                   >
                     <Icon size={32} className="text-nayo-gold/70 group-hover:text-nayo-gold transition-colors duration-500 mb-4" strokeWidth={1.5} />
@@ -238,7 +238,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="text-center max-w-4xl mx-auto relative z-10"
           >
             <h2 className="text-xs tracking-[0.3em] uppercase font-semibold text-nayo-gold mb-10">
