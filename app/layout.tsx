@@ -19,12 +19,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Nayo — Wear It. Taste It. Love It.",
   description:
-    "Nayo is a luxury lifestyle brand celebrating Fashion, Food & Culture. Discover curated collections that blend African heritage with modern elegance.",
+    "A luxury lifestyle brand celebrating African heritage through fashion, food, and culture. Wear it. Taste it. Love it.",
   keywords: "Nayo, luxury fashion, African food, cultural accessories, lifestyle brand",
   openGraph: {
     title: "Nayo — Wear It. Taste It. Love It.",
     description:
-      "A luxury lifestyle brand celebrating Fashion, Food & Culture.",
+      "A luxury lifestyle brand celebrating African heritage through fashion, food, and culture. Wear it. Taste it. Love it.",
     type: "website",
   },
 };
