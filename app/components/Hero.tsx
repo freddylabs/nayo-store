@@ -45,7 +45,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[100dvh] bg-nayo-black flex items-center justify-center overflow-hidden pt-32 sm:pt-36 pb-12 sm:pb-8">
+    <section className="relative min-h-[100dvh] bg-nayo-black flex items-center justify-center overflow-hidden pt-24 sm:pt-28 pb-12 sm:pb-8">
       {/* Background radial glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div

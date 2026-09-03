@@ -69,7 +69,7 @@ export default function AboutPage() {
     <main className="relative bg-nayo-black min-h-screen selection:bg-nayo-gold/30 selection:text-nayo-white">
       <Navbar />
 
-      <div className="pt-32">
+      <div className="pt-24">
         {/* The original requested About component with the woman in elegant dress and stats */}
         <About />
 

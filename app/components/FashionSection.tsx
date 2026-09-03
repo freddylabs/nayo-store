@@ -4,8 +4,9 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import ProductCard from "./ProductCard";
 import { fashionProducts } from "@/app/data/products";
+import { ArrowRight } from "lucide-react";
 
-export default function FashionSection({ showHeader = true }: { showHeader?: boolean }) {
+export default function FashionSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -23,26 +24,23 @@ export default function FashionSection({ showHeader = true }: { showHeader?: boo
 
       <div className="max-w-[1400px] mx-auto section-padding">
         {/* Header */}
-        {showHeader && (
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
-            <div>
-              <p className="eyebrow text-nayo-gold mb-3">The Collection</p>
-              <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-ink leading-tight"
-              >
-                Wear What
-                <br />
-                <span className="italic gold-text">Speaks For You.</span>
-              </motion.h2>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-white leading-tight"
+            >
+              Wear What
+              <br />
+              <span className="gold-text">Speaks For You.</span>
+            </motion.h2>
           </div>
-        )}
+        </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {fashionProducts.map((product, i) => (
             <ProductCard key={product.id} product={product} index={i} />
           ))}
