@@ -11,7 +11,7 @@ export default function FashionSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="fashion" ref={ref} className="relative bg-nayo-black overflow-hidden">
+    <section id="fashion" ref={ref} className="relative bg-nayo-white overflow-hidden">
       {/* Subtle texture overlay */}
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
@@ -30,7 +30,7 @@ export default function FashionSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-white leading-tight"
+              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-black leading-tight"
             >
               Wear What
               <br />

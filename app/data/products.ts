@@ -4,8 +4,10 @@ export interface Product {
   description: string;
   price: number;
   image: string;
-  category: "fashion" | "food" | "culture";
+  category: "fashion" | "food" | "health" | "culture";
   badge?: string;
+  rating?: number;
+  reviews?: number;
 }
 
 export const fashionProducts: Product[] = [
@@ -17,6 +19,8 @@ export const fashionProducts: Product[] = [
     image: "/hero-fashion.png",
     category: "fashion",
     badge: "Bestseller",
+    rating: 4.8,
+    reviews: 214,
   },
   {
     id: "f-002",
@@ -26,6 +30,8 @@ export const fashionProducts: Product[] = [
     image: "/fashion-blazer.png",
     category: "fashion",
     badge: "New Arrival",
+    rating: 4.7,
+    reviews: 98,
   },
   {
     id: "f-003",
@@ -34,6 +40,8 @@ export const fashionProducts: Product[] = [
     price: 620,
     image: "/fashion-velvet.png",
     category: "fashion",
+    rating: 4.9,
+    reviews: 64,
   },
   {
     id: "f-004",
@@ -42,15 +50,8 @@ export const fashionProducts: Product[] = [
     price: 310,
     image: "/culture-kente.png",
     category: "fashion",
-  },
-  {
-    id: "f-005",
-    name: "Nayo Signature Scrubs",
-    description: "Premium medical scrubs offering unparalleled comfort and a tailored fit.",
-    price: 120,
-    image: "/hero-scrubs.png",
-    category: "fashion",
-    badge: "Medical",
+    rating: 4.6,
+    reviews: 81,
   },
   {
     id: "f-006",
@@ -59,15 +60,8 @@ export const fashionProducts: Product[] = [
     price: 85,
     image: "/jersey.png",
     category: "fashion",
-  },
-  {
-    id: "f-007",
-    name: "Tailored Lab Coat",
-    description: "Professional medical coat with structural shoulders and gold-button details.",
-    price: 165,
-    image: "/labcoat.png",
-    category: "fashion",
-    badge: "Medical",
+    rating: 4.5,
+    reviews: 142,
   },
   {
     id: "f-008",
@@ -76,8 +70,12 @@ export const fashionProducts: Product[] = [
     price: 110,
     image: "/polo.png",
     category: "fashion",
+    rating: 4.6,
+    reviews: 117,
   },
 ];
+
+export const apparelProducts = fashionProducts;
 
 export const foodProducts: Product[] = [
   {
@@ -88,15 +86,19 @@ export const foodProducts: Product[] = [
     image: "/hero-food.png",
     category: "food",
     badge: "Fan Favourite",
+    rating: 4.9,
+    reviews: 320,
   },
   {
     id: "fd-002",
     name: "Suya Platter",
     description: "Chargrilled suya skewers, spiced with yaji, served with grilled peppers.",
     price: 18.99,
-    image: "/suya.png",
+    image: "/food-suya.png",
     category: "food",
     badge: "Chef's Pick",
+    rating: 4.8,
+    reviews: 188,
   },
   {
     id: "fd-003",
@@ -105,6 +107,8 @@ export const foodProducts: Product[] = [
     price: 19.99,
     image: "/friedrice.jpg",
     category: "food",
+    rating: 4.7,
+    reviews: 156,
   },
   {
     id: "fd-004",
@@ -114,6 +118,53 @@ export const foodProducts: Product[] = [
     image: "/mealbox.png",
     category: "food",
     badge: "Limited",
+    rating: 4.8,
+    reviews: 91,
+  },
+  {
+    id: "fd-005",
+    name: "Egusi Soup",
+    description: "Rich melon-seed stew with spinach and tender protein, served with swallow.",
+    price: 22.99,
+    image: "/food-egusi.png",
+    category: "food",
+    rating: 4.8,
+    reviews: 74,
+  },
+];
+
+export const healthProducts: Product[] = [
+  {
+    id: "h-001",
+    name: "Nayo Signature Scrubs",
+    description: "Premium medical scrubs offering unparalleled comfort and a tailored fit.",
+    price: 120,
+    image: "/hero-scrubs.png",
+    category: "health",
+    badge: "Medical",
+    rating: 4.9,
+    reviews: 186,
+  },
+  {
+    id: "h-002",
+    name: "Tailored Lab Coat",
+    description: "Professional medical coat with structural shoulders and gold-button details.",
+    price: 165,
+    image: "/labcoat.png",
+    category: "health",
+    badge: "Medical",
+    rating: 4.7,
+    reviews: 94,
+  },
+  {
+    id: "h-003",
+    name: "Clinical Comfort Set",
+    description: "Shift-ready layers designed for long hours on the floor.",
+    price: 148,
+    image: "/hero-scrubs.png",
+    category: "health",
+    rating: 4.8,
+    reviews: 61,
   },
 ];
 
@@ -126,6 +177,8 @@ export const cultureProducts: Product[] = [
     image: "/hero-scrubs.png",
     category: "culture",
     badge: "Handcrafted",
+    rating: 4.8,
+    reviews: 44,
   },
   {
     id: "c-002",
@@ -135,6 +188,8 @@ export const cultureProducts: Product[] = [
     image: "/culture-kente.png",
     category: "culture",
     badge: "Heritage Piece",
+    rating: 4.9,
+    reviews: 38,
   },
   {
     id: "c-003",
@@ -143,6 +198,8 @@ export const cultureProducts: Product[] = [
     price: 89,
     image: "/hero-scrubs.png",
     category: "culture",
+    rating: 4.6,
+    reviews: 27,
   },
   {
     id: "c-004",
@@ -152,7 +209,14 @@ export const cultureProducts: Product[] = [
     image: "/hero-scrubs.png",
     category: "culture",
     badge: "Artisan Made",
+    rating: 4.7,
+    reviews: 33,
   },
 ];
 
-export const allProducts = [...fashionProducts, ...foodProducts, ...cultureProducts];
+export const allProducts = [
+  ...fashionProducts,
+  ...foodProducts,
+  ...healthProducts,
+  ...cultureProducts,
+];

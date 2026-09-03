@@ -29,7 +29,7 @@ export default function Gallery() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="relative bg-nayo-black overflow-hidden">
+    <section ref={ref} className="relative bg-nayo-white overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-px divider-gold" />
 
       <div className="max-w-[1400px] mx-auto section-padding">
@@ -95,7 +95,7 @@ export default function Gallery() {
           transition={{ duration: 0.5, delay: 0.7 }}
           className="text-center mt-10"
         >
-          <p className="text-nayo-white/40 text-sm">
+          <p className="text-nayo-black/45 text-sm">
             Follow{" "}
             <a
               href="https://instagram.com"

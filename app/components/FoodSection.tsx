@@ -17,8 +17,7 @@ export default function FoodSection() {
     <section
       id="food"
       ref={ref}
-      className="relative overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #0A140D 0%, #0A0A0A 100%)" }}
+      className="relative overflow-hidden bg-nayo-white"
     >
       {/* Warm amber glow */}
       <div
@@ -42,7 +41,7 @@ export default function FoodSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-nayo-green-light/30 bg-nayo-green/10 text-[#4CAF50] text-xs tracking-widest uppercase font-semibold"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-nayo-green/40 bg-nayo-green/10 text-nayo-green text-xs tracking-widest uppercase font-semibold"
           >
             <Flame size={12} />
             Food • Chef's Collection
@@ -52,7 +51,7 @@ export default function FoodSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-white"
+            className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-black"
           >
             Built for Every{" "}
             <span className="gold-text">Craving.</span>
@@ -62,7 +61,7 @@ export default function FoodSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="text-nayo-white/50 max-w-lg mx-auto leading-relaxed"
+            className="text-nayo-black/55 max-w-lg mx-auto leading-relaxed"
           >
             Authentic West African flavours, elevated for the modern palate.
             Every dish is made to order — no shortcuts, no compromise.
@@ -73,7 +72,7 @@ export default function FoodSection() {
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {foodProducts.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
+            <ProductCard key={product.id} product={product} index={i} variant="light" />
           ))}
         </div>
       </div>

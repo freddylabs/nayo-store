@@ -33,11 +33,7 @@ export default function CultureSection() {
     <section
       id="culture"
       ref={ref}
-      className="relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(180deg, #0A0A0A 0%, #0D0A05 50%, #0A0A0A 100%)",
-      }}
+      className="relative overflow-hidden bg-nayo-white"
     >
       {/* Textured background */}
       <div
@@ -69,7 +65,7 @@ export default function CultureSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-white leading-tight"
+              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold text-nayo-black leading-tight"
             >
               Objects That
               <br />
@@ -80,7 +76,7 @@ export default function CultureSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.35 }}
-              className="text-nayo-white/60 leading-relaxed max-w-md"
+              className="text-nayo-black/60 leading-relaxed max-w-md"
             >
               These are not souvenirs. They are living artefacts — each one
               carrying a story, a symbol, a place. Wear the culture. Pass it on.
@@ -99,8 +95,8 @@ export default function CultureSection() {
                     {pt.icon}
                   </span>
                   <div>
-                    <p className="font-semibold text-nayo-white text-sm">{pt.title}</p>
-                    <p className="text-nayo-white/50 text-xs mt-1 leading-relaxed">{pt.desc}</p>
+                    <p className="font-semibold text-nayo-black text-sm">{pt.title}</p>
+                    <p className="text-nayo-black/50 text-xs mt-1 leading-relaxed">{pt.desc}</p>
                   </div>
                 </div>
               ))}
@@ -136,7 +132,7 @@ export default function CultureSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/60 to-transparent" />
               <div className="absolute bottom-4 left-4">
                 <p className="text-xs gold-text font-semibold tracking-widest uppercase">Kente Robe</p>
-                <p className="text-[10px] text-nayo-white/40 mt-0.5">Ghana</p>
+                <p className="text-[10px] text-nayo-white/70 mt-0.5">Ghana</p>
               </div>
             </div>
 
@@ -152,15 +148,15 @@ export default function CultureSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/60 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <p className="text-xs gold-text font-semibold tracking-widest uppercase">Beadwork</p>
-                <p className="text-[10px] text-nayo-white/40 mt-0.5">Nigeria</p>
+                <p className="text-[10px] text-nayo-white/70 mt-0.5">Nigeria</p>
               </div>
             </div>
 
             {/* Bottom right */}
-            <div className="relative rounded-2xl overflow-hidden border border-nayo-gold/15 bg-nayo-charcoal-2 flex items-center justify-center p-4">
+            <div className="relative rounded-2xl overflow-hidden border border-nayo-gold/25 bg-nayo-white flex items-center justify-center p-4">
               <div className="text-center space-y-2">
                 <div className="text-3xl font-bold text-display gold-text">12+</div>
-                <p className="text-xs text-nayo-white/50 leading-tight">Artisan<br />Partners</p>
+                <p className="text-xs text-nayo-black/50 leading-tight">Artisan<br />Partners</p>
                 <div className="w-8 h-px gold-gradient mx-auto" />
                 <p className="text-[10px] text-nayo-gold tracking-widest uppercase">3 Countries</p>
               </div>

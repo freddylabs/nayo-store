@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ShoppingBag, Plus } from "lucide-react";
+import { ShoppingCart, Plus } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
 
@@ -23,7 +23,7 @@ export default function ProductCard({
     dispatch({
       type: "ADD_ITEM",
       payload: {
-        id: product.id,
+        productId: product.id,
         name: product.name,
         price: product.price,
         image: product.image,
@@ -47,8 +47,8 @@ export default function ProductCard({
       }}
       className={`group relative rounded-2xl overflow-hidden product-card-hover border ${
         variant === "dark"
-          ? "bg-nayo-charcoal-2 border-nayo-gold/10 hover:border-nayo-gold/30"
-          : "bg-nayo-white/5 border-nayo-white/10 hover:border-nayo-gold/30"
+          ? "bg-nayo-white border-nayo-gold/25 hover:border-nayo-gold"
+          : "bg-nayo-white border-nayo-green/25 hover:border-nayo-green"
       }`}
     >
       {/* Badge */}
@@ -87,10 +87,10 @@ export default function ProductCard({
       <div className="p-5 space-y-3">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="font-semibold text-display text-nayo-white text-base leading-tight">
+            <h3 className="font-semibold text-display text-nayo-black text-base leading-tight">
               {product.name}
             </h3>
-            <p className="text-xs text-nayo-white/40 mt-1 leading-relaxed line-clamp-2">
+            <p className="text-xs text-nayo-black/45 mt-1 leading-relaxed line-clamp-2">
               {product.description}
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function ProductCard({
           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border border-nayo-gold/30 text-xs tracking-widest uppercase text-nayo-gold font-semibold hover:gold-gradient hover:text-nayo-black hover:border-transparent transition-all duration-300"
           id={`add-to-cart-${product.id}`}
         >
-          <ShoppingBag size={13} />
+          <ShoppingCart size={13} />
           Add to Cart
         </button>
       </div>

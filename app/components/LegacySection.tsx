@@ -40,20 +40,20 @@ const fadeUp = (delay: number) => ({
 
 export default function LegacySection() {
   return (
-    <section className="relative bg-nayo-black py-16 sm:py-20 overflow-hidden border-t border-nayo-white/5">
+    <section className="relative bg-nayo-white py-16 sm:py-20 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 xl:px-16 relative z-10 flex flex-col items-center">
         
         {/* Intro */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.h2
             {...fadeUp(0.1)}
-            className="text-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-nayo-white"
+            className="text-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-nayo-black"
           >
             Every Nayo creation holds what money cannot buy — <span className="gold-text italic">a bloodline, a promise.</span>
           </motion.h2>
           <motion.p
             {...fadeUp(0.2)}
-            className="text-nayo-white/60 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
+            className="text-nayo-black/60 text-base sm:text-lg leading-relaxed max-w-xl mx-auto"
           >
             Born from generations of uncompromising standards, our foundation was laid long before the doors ever opened.
           </motion.p>
@@ -70,18 +70,18 @@ export default function LegacySection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.8, delay: i * 0.15, ease: "easeOut" as any }}
-                className="group relative bg-nayo-white/[0.02] border border-nayo-gold/10 hover:border-nayo-gold/30 hover:bg-nayo-white/[0.04] transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col items-start hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
+                className="group relative bg-nayo-white border border-nayo-gold/25 hover:border-nayo-gold hover:bg-nayo-gold/5 transition-all duration-500 rounded-2xl p-8 sm:p-10 flex flex-col items-start hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.3)]"
               >
                 <div className="mb-6 flex flex-col items-start">
                   <Icon size={28} className="text-nayo-gold/70 group-hover:text-nayo-gold transition-colors duration-500 mb-4" strokeWidth={1.5} />
                   <div className="w-8 h-[2px] bg-nayo-gold/40 group-hover:bg-nayo-gold transition-colors duration-500 rounded-full" />
                 </div>
                 
-                <h3 className="text-display text-2xl font-bold text-[#F5F1E8] mb-3">
+                <h3 className="text-display text-2xl font-bold text-nayo-black mb-3">
                   {item.title}
                 </h3>
                 
-                <p className="text-[#F5F1E8]/70 text-sm leading-relaxed font-medium">
+                <p className="text-nayo-black/70 text-sm leading-relaxed font-medium">
                   {item.copy}
                 </p>
               </motion.div>
@@ -94,7 +94,7 @@ export default function LegacySection() {
           {...fadeUp(0.8)}
           className="text-center"
         >
-          <p className="text-display text-xl sm:text-2xl font-bold text-nayo-white/80">
+          <p className="text-display text-xl sm:text-2xl font-bold text-nayo-black/80">
             This is the legacy you wear, the culture you taste, <span className="gold-text italic">the family you love.</span>
           </p>
         </motion.div>

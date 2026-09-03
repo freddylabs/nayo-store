@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
@@ -29,8 +28,9 @@ const IconYoutube = () => (
 );
 
 const quickLinks = [
-  { label: "Fashion", href: "/fashion" },
+  { label: "Apparel", href: "/fashion" },
   { label: "Food", href: "/food" },
+  { label: "Health", href: "/health" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
@@ -55,7 +55,7 @@ export default function Footer() {
   };
 
   return (
-    <footer id="footer" className="relative bg-nayo-black border-t border-nayo-gold/15 overflow-hidden">
+    <footer id="footer" className="relative bg-black overflow-hidden">
       {/* Background accent */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none opacity-5"
@@ -73,17 +73,12 @@ export default function Footer() {
           <div className="space-y-6 sm:col-span-2 lg:col-span-1">
             <Link
               href="/"
-              className="relative w-32 h-32 block group mb-2"
+              className="text-display text-3xl font-bold text-nayo-gold tracking-wide"
             >
-              <Image
-                src="/nayo-logo-transparent.png"
-                alt="Nayo Logo"
-                fill
-                className="object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
-              />
+              Nayo
             </Link>
 
-            <p className="text-nayo-white/40 text-sm leading-relaxed max-w-xs">
+            <p className="text-nayo-white/70 text-sm leading-relaxed max-w-xs">
               A luxury lifestyle brand celebrating African heritage through fashion,
               food, and culture. Wear it. Taste it. Love it.
             </p>
@@ -97,7 +92,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-full glass-light border border-nayo-gold/20 flex items-center justify-center text-nayo-white/50 hover:text-nayo-gold hover:border-nayo-gold/50 transition-all duration-300"
+                  className="w-9 h-9 rounded-full border border-nayo-gold/40 flex items-center justify-center text-nayo-white hover:text-nayo-gold hover:border-nayo-gold transition-all duration-300"
                 >
                   <Icon />
                 </a>
@@ -115,7 +110,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-nayo-white/50 hover:text-nayo-gold transition-colors duration-300 text-left group flex items-center gap-2"
+                    className="text-sm text-nayo-white/70 hover:text-nayo-gold transition-colors duration-300 text-left group flex items-center gap-2"
                   >
                     <span className="w-4 h-px bg-nayo-gold/0 group-hover:bg-nayo-gold/60 transition-all duration-300" />
                     {link.label}
@@ -137,7 +132,7 @@ export default function Footer() {
                   <span className="text-xs text-nayo-gold/70 tracking-wider uppercase font-medium">
                     {h.days}
                   </span>
-                  <span className="text-sm text-nayo-white/50">{h.time}</span>
+                  <span className="text-sm text-nayo-white/70">{h.time}</span>
                 </li>
               ))}
             </ul>
@@ -154,10 +149,10 @@ export default function Footer() {
                   <Phone size={12} className="text-nayo-black" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Phone</p>
+                  <p className="text-[10px] text-nayo-gold uppercase tracking-wider mb-0.5 font-semibold">Phone</p>
                   <a
                     href="tel:+2348001234567"
-                    className="text-sm text-nayo-white/60 hover:text-nayo-gold transition-colors duration-300"
+                    className="text-sm text-nayo-white/80 hover:text-nayo-gold transition-colors duration-300"
                   >
                     +234 800 123 4567
                   </a>
@@ -168,10 +163,10 @@ export default function Footer() {
                   <Mail size={12} className="text-nayo-black" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Email</p>
+                  <p className="text-[10px] text-nayo-gold uppercase tracking-wider mb-0.5 font-semibold">Email</p>
                   <a
                     href="mailto:hello@nayo.store"
-                    className="text-sm text-nayo-white/60 hover:text-nayo-gold transition-colors duration-300"
+                    className="text-sm text-nayo-white/80 hover:text-nayo-gold transition-colors duration-300"
                   >
                     hello@nayo.store
                   </a>
@@ -182,8 +177,8 @@ export default function Footer() {
                   <MapPin size={12} className="text-nayo-black" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Flagship</p>
-                  <p className="text-sm text-nayo-white/60 leading-relaxed">
+                  <p className="text-[10px] text-nayo-gold uppercase tracking-wider mb-0.5 font-semibold">Flagship</p>
+                  <p className="text-sm text-nayo-white/80 leading-relaxed">
                     14 Victoria Island Blvd,
                     <br />
                     Lagos, Nigeria
@@ -199,13 +194,13 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-nayo-white/25 text-center sm:text-left">
+          <p className="text-xs text-nayo-white/50 text-center sm:text-left">
             © {new Date().getFullYear()} Nayo Lifestyle Ltd. All rights reserved.
           </p>
-          <p className="text-xs text-nayo-white/25 italic text-display">
+          <p className="text-xs text-nayo-gold italic text-display">
             "Wear It. Taste It. Love It."
           </p>
-          <div className="flex items-center gap-6 text-xs text-nayo-white/25">
+          <div className="flex items-center gap-6 text-xs text-nayo-white/50">
             <a href="#" className="hover:text-nayo-gold/60 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-nayo-gold/60 transition-colors">Terms</a>
             <a href="#" className="hover:text-nayo-gold/60 transition-colors">Shipping</a>

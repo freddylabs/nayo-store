@@ -1,11 +1,7 @@
 import Navbar from "@/app/components/Navbar";
 import Hero from "@/app/components/Hero";
-import About from "@/app/components/About";
-import LegacySection from "@/app/components/LegacySection";
-import DivisionsSection from "@/app/components/DivisionsSection";
-import Testimonials from "@/app/components/Testimonials";
+import ShopCollections from "@/app/components/ShopCollections";
 import Footer from "@/app/components/Footer";
-import CartDrawer from "@/app/components/CartDrawer";
 import VideoLoader from "@/app/components/VideoLoader";
 
 export default function Home() {
@@ -14,11 +10,8 @@ export default function Home() {
       <VideoLoader />
       <Navbar />
       <Hero />
-      <LegacySection />
-      <DivisionsSection />
-      <Testimonials />
+      <ShopCollections />
       <Footer />
-      <CartDrawer />
     </main>
   );
 }

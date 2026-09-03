@@ -84,7 +84,7 @@ export default function VideoLoader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] bg-nayo-black flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-nayo-white flex items-center justify-center"
         >
           {/* Typing Phase */}
           <AnimatePresence mode="wait">
@@ -118,13 +118,14 @@ export default function VideoLoader() {
                 animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                 exit={{ scale: 1.8, opacity: 0, filter: "blur(20px)" }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="relative w-48 h-48 sm:w-64 sm:h-64 absolute"
+                className="relative w-[min(94vw,780px)] h-[min(90vh,836px)] absolute"
               >
                 <Image
-                  src="/nayo-logo-transparent.png"
+                  src="/Nayo_logo_white.jpeg"
                   alt="Nayo Logo Loader"
                   fill
-                  className="object-contain animate-pulse drop-shadow-[0_0_40px_rgba(212,175,55,0.8)]"
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 94vw, 780px"
                   priority
                 />
               </motion.div>

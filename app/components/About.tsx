@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRef } from "react";
 
 const stats = [
-  { value: "5,000+", label: "Happy Customers" },
   { value: "94%", label: "Repeat Purchase Rate" },
   { value: "3+", label: "Flagship Locations" },
   { value: "12+", label: "Artisan Partners" },
@@ -16,7 +15,7 @@ export default function About() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" ref={ref} className="relative bg-nayo-charcoal overflow-hidden">
+    <section id="about" ref={ref} className="relative bg-nayo-white overflow-hidden">
       {/* Top gradient */}
       <div className="absolute top-0 left-0 right-0 h-px divider-gold" />
 
@@ -39,7 +38,7 @@ export default function About() {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold leading-tight text-nayo-white"
+              className="text-display text-4xl sm:text-5xl xl:text-6xl font-bold leading-tight text-nayo-black"
             >
               We Didn't Build a
               <br />
@@ -53,7 +52,7 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="space-y-5 text-nayo-white/60 leading-relaxed"
+              className="space-y-5 text-nayo-black/65 leading-relaxed"
             >
               <p>
                 NAYO was founded with a vision to create more than just a business—it was created to build a legacy. Rooted in strong family values and a passion for excellence, NAYO brings together two everyday essentials: quality fashion and great food under one trusted brand.
@@ -85,7 +84,7 @@ export default function About() {
                 sizes="(max-width: 1024px) 100vw, 55vw"
               />
               {/* Gold overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-nayo-gold/10 via-transparent to-nayo-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-br from-nayo-gold/15 via-transparent to-nayo-green/20" />
 
               {/* Floating stat card */}
               <motion.div
@@ -103,7 +102,7 @@ export default function About() {
                       <p className="text-2xl font-bold text-display gold-text">
                         {stat.value}
                       </p>
-                      <p className="text-xs text-nayo-white/50 mt-0.5">{stat.label}</p>
+                      <p className="text-xs text-nayo-black/50 mt-0.5">{stat.label}</p>
                     </div>
                   ))}
                 </div>

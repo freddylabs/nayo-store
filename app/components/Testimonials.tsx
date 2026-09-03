@@ -48,10 +48,7 @@ export default function Testimonials() {
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden"
-      style={{
-        background: "linear-gradient(180deg, #0A0A0A 0%, #111008 50%, #0A0A0A 100%)",
-      }}
+      className="relative overflow-hidden bg-nayo-white"
     >
       {/* Gold top accent */}
       <div className="absolute top-0 left-0 right-0 h-px divider-gold" />
@@ -80,7 +77,7 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-display text-4xl sm:text-5xl font-bold text-nayo-white"
+            className="text-display text-4xl sm:text-5xl font-bold text-nayo-black"
           >
             Loved by Those Who{" "}
             <span className="gold-text">Live It.</span>
@@ -99,11 +96,7 @@ export default function Testimonials() {
                 ease: "easeOut" as any,
                 delay: 0.3 + i * 0.1,
               }}
-              className="relative rounded-2xl overflow-hidden border border-nayo-gold/15 flex flex-col"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(25,20,5,0.9) 0%, rgba(15,12,3,0.95) 100%)",
-              }}
+              className="relative rounded-2xl overflow-hidden border border-nayo-gold/30 flex flex-col bg-nayo-white shadow-[0_12px_40px_-20px_rgba(212,175,55,0.35)]"
             >
               {/* Quote icon */}
               <div className="absolute top-5 right-5 opacity-10">
@@ -123,7 +116,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Quote */}
-                <p className="text-nayo-white/70 leading-relaxed text-sm flex-1">
+                <p className="text-nayo-black/70 leading-relaxed text-sm flex-1">
                   &ldquo;{t.quote}&rdquo;
                 </p>
 
@@ -132,10 +125,10 @@ export default function Testimonials() {
 
                 {/* Customer */}
                 <div className="flex flex-col gap-0.5">
-                  <p className="text-sm font-semibold text-nayo-white">
+                  <p className="text-sm font-semibold text-nayo-black">
                     {t.name}
                   </p>
-                  <p className="text-xs text-nayo-white/40">{t.role}</p>
+                  <p className="text-xs text-nayo-black/45">{t.role}</p>
                 </div>
 
                 {/* Purchased badge */}
