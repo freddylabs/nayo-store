@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
+import AccountMenu from "@/app/components/AccountMenu";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -113,6 +114,8 @@ export default function Navbar() {
                   </motion.span>
                 )}
             </button>
+
+            <AccountMenu />
           </div>
         </div>
       </motion.nav>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const displayFont = Cormorant_Garamond({
   subsets: ["latin"],
@@ -35,7 +36,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${displayFont.variable} ${inter.variable}`}>
       <body className="bg-nayo-black text-nayo-white antialiased">
-        <CartProvider>{children}</CartProvider>
+        <AuthProvider>
+          <CartProvider>{children}</CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

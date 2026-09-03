@@ -166,4 +166,25 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
   }
+
+  .auth-input {
+    width: 100%;
+    background: rgba(10, 10, 10, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #ffffff;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .auth-input:focus {
+    outline: none;
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+  }
 }

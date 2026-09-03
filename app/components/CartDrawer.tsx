@@ -2,11 +2,18 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 
 export default function CartDrawer() {
   const { state, dispatch, totalItems, totalPrice } = useCart();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    dispatch({ type: "CLOSE_CART" });
+    router.push("/checkout");
+  };
 
   return (
     <AnimatePresence>
@@ -189,7 +196,10 @@ export default function CartDrawer() {
                 </p>
 
                 {/* Checkout btn */}
-                <button className="btn-gold w-full py-4 text-sm tracking-widest uppercase font-bold flex items-center justify-center gap-2">
+                <button
+                  onClick={handleCheckout}
+                  className="btn-gold w-full py-4 text-sm tracking-widest uppercase font-bold flex items-center justify-center gap-2"
+                >
                   Proceed to Checkout
                   <ArrowRight size={16} />
                 </button>

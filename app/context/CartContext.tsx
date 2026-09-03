@@ -29,7 +29,8 @@ type CartAction =
   | { type: "DECREMENT"; payload: string }
   | { type: "TOGGLE_CART" }
   | { type: "OPEN_CART" }
-  | { type: "CLOSE_CART" };
+  | { type: "CLOSE_CART" }
+  | { type: "CLEAR_CART" };
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
@@ -67,6 +68,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       return { ...state, isOpen: true };
     case "CLOSE_CART":
       return { ...state, isOpen: false };
+    case "CLEAR_CART":
+      return { ...state, items: [], isOpen: false };
     default:
       return state;
   }
