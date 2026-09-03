@@ -77,11 +77,11 @@ export default function LegacySection() {
                   <div className="w-8 h-[2px] bg-nayo-gold/40 group-hover:bg-nayo-gold transition-colors duration-500 rounded-full" />
                 </div>
                 
-                <h3 className="text-display text-2xl font-bold text-[#F5F1E8] mb-3">
+                <h3 className="text-display text-2xl font-bold text-nayo-white mb-3">
                   {item.title}
                 </h3>
                 
-                <p className="text-[#F5F1E8]/70 text-sm leading-relaxed font-medium">
+                <p className="text-nayo-white/70 text-sm leading-relaxed font-medium">
                   {item.copy}
                 </p>
               </motion.div>

@@ -298,7 +298,7 @@ export default function CheckoutClient({
                       className="object-cover"
                       sizes="56px"
                     />
-                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full gold-gradient text-[10px] font-bold text-nayo-black flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full gold-gradient text-[10px] font-bold text-nayo-ink flex items-center justify-center">
                       {item.qty}
                     </span>
                   </div>

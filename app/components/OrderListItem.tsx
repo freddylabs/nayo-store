@@ -34,7 +34,7 @@ export default function OrderListItem({ order }: { order: Order }) {
   return (
     <Link
       href={`/dashboard/orders/${order.id}`}
-      className="group flex items-center gap-4 p-4 rounded-2xl border border-nayo-gold/10 bg-white/[0.02] hover:border-nayo-gold/30 hover:bg-nayo-gold/[0.03] transition-all duration-300"
+      className="group flex items-center gap-4 p-4 rounded-2xl border border-nayo-gold/10 bg-nayo-ink/[0.02] hover:border-nayo-gold/30 hover:bg-nayo-gold/[0.03] transition-all duration-300"
     >
       {/* Thumbnails */}
       <div className="flex -space-x-3 flex-shrink-0">

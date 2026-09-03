@@ -118,13 +118,13 @@ export default function VideoLoader() {
                 animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                 exit={{ scale: 1.8, opacity: 0, filter: "blur(20px)" }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="relative w-48 h-48 sm:w-64 sm:h-64 absolute"
+                className="relative w-80 h-80 sm:w-[30rem] sm:h-[30rem] absolute"
               >
                 <Image
                   src="/nayo-logo-transparent.png"
                   alt="Nayo Logo Loader"
                   fill
-                  className="object-contain animate-pulse drop-shadow-[0_0_40px_rgba(212,175,55,0.8)]"
+                  className="object-contain animate-pulse drop-shadow-[0_0_50px_rgba(199,154,46,0.55)]"
                   priority
                 />
               </motion.div>

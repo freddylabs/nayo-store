@@ -35,7 +35,7 @@ export default function DashboardSidebar() {
               href={link.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300 ${
                 active
-                  ? "gold-gradient text-nayo-black font-bold"
+                  ? "gold-gradient text-nayo-ink font-bold"
                   : "text-nayo-white/60 hover:text-nayo-gold hover:bg-nayo-gold/5"
               }`}
             >

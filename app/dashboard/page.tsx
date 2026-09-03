@@ -55,7 +55,7 @@ export default async function DashboardPage() {
               key={stat.label}
               className="glass rounded-2xl border border-nayo-gold/15 p-6 flex items-center gap-4"
             >
-              <div className="w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-nayo-black flex-shrink-0">
+              <div className="w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-nayo-ink flex-shrink-0">
                 <Icon size={20} />
               </div>
               <div>

@@ -30,7 +30,7 @@ export default async function CheckoutSuccessPage({
       <div className="flex-grow pt-32 pb-20 px-6 lg:px-10 max-w-2xl mx-auto w-full">
         <div className="text-center mb-10">
           <div className="w-20 h-20 rounded-full gold-gradient flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(212,175,55,0.4)]">
-            <CheckCircle2 size={40} className="text-nayo-black" />
+            <CheckCircle2 size={40} className="text-nayo-ink" />
           </div>
           <h1 className="text-display text-4xl sm:text-5xl font-bold text-nayo-white mb-3">
             Order <span className="gold-text italic">Confirmed</span>

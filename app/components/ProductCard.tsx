@@ -53,7 +53,7 @@ export default function ProductCard({
     >
       {/* Badge */}
       {product.badge && (
-        <div className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full gold-gradient text-[10px] font-bold tracking-widest uppercase text-nayo-black">
+        <div className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full gold-gradient text-[10px] font-bold tracking-widest uppercase text-nayo-ink">
           {product.badge}
         </div>
       )}
@@ -67,7 +67,7 @@ export default function ProductCard({
           className="object-cover transition-transform duration-700 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-nayo-ink/50 via-transparent to-transparent" />
 
         {/* Quick add overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -101,7 +101,7 @@ export default function ProductCard({
 
         <button
           onClick={handleAdd}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border border-nayo-gold/30 text-xs tracking-widest uppercase text-nayo-gold font-semibold hover:gold-gradient hover:text-nayo-black hover:border-transparent transition-all duration-300"
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border border-nayo-gold/30 text-xs tracking-widest uppercase text-nayo-gold font-semibold hover:gold-gradient hover:text-nayo-ink hover:border-transparent transition-all duration-300"
           id={`add-to-cart-${product.id}`}
         >
           <ShoppingBag size={13} />

@@ -50,10 +50,10 @@ export default function DivisionsSection() {
             <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-0">
               {/* Text side */}
               <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center space-y-6 lg:pr-8">
-                <h3 className="text-display text-3xl sm:text-4xl xl:text-5xl font-bold text-nayo-white leading-tight">
+                <h3 className="text-display text-3xl sm:text-4xl xl:text-5xl font-bold text-white leading-tight">
                   NAYO Foods
                 </h3>
-                <p className="text-nayo-white/70 leading-relaxed max-w-md text-sm sm:text-base">
+                <p className="text-white/70 leading-relaxed max-w-md text-sm sm:text-base">
                   Authentic meals and catering, made fresh daily.
                 </p>
                 <div className="flex items-center gap-6 pt-2 pb-4">
@@ -111,10 +111,10 @@ export default function DivisionsSection() {
             <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-0">
               {/* Text side */}
               <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center space-y-6 lg:pr-8">
-                <h3 className="text-display text-3xl sm:text-4xl xl:text-5xl font-bold text-nayo-white leading-tight">
+                <h3 className="text-display text-3xl sm:text-4xl xl:text-5xl font-bold text-white leading-tight">
                   NAYO Apparel
                 </h3>
-                <p className="text-nayo-white/70 leading-relaxed max-w-md text-sm sm:text-base">
+                <p className="text-white/70 leading-relaxed max-w-md text-sm sm:text-base">
                   Fashion and professional wear, crafted with intention.
                 </p>
                 <div className="flex items-center gap-6 pt-2 pb-4">
@@ -130,7 +130,7 @@ export default function DivisionsSection() {
                   {["Streetwear", "Corporate Wear", "Medical Uniforms"].map((tag) => (
                     <span
                       key={tag}
-                      className="px-4 py-1.5 rounded-full border border-nayo-white/10 text-nayo-white/80 text-xs font-semibold tracking-wider uppercase"
+                      className="px-4 py-1.5 rounded-full border border-white/25 text-white/80 text-xs font-semibold tracking-wider uppercase"
                     >
                       {tag}
                     </span>

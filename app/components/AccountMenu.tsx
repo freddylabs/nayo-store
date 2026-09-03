@@ -56,7 +56,7 @@ export default function AccountMenu() {
       <button
         onClick={() => setOpen((p) => !p)}
         aria-label="Account menu"
-        className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-nayo-black text-xs font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all duration-300"
+        className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-nayo-ink text-xs font-bold hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all duration-300"
       >
         {initials || <User size={16} />}
       </button>

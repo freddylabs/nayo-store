@@ -36,7 +36,7 @@ export default function CultureSection() {
       className="relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(180deg, #0A0A0A 0%, #0D0A05 50%, #0A0A0A 100%)",
+          "linear-gradient(180deg, #F7F4EE 0%, #FBF6EC 50%, #F7F4EE 100%)",
       }}
     >
       {/* Textured background */}
@@ -133,10 +133,10 @@ export default function CultureSection() {
                 className="object-cover"
                 sizes="(max-width: 1024px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-nayo-ink/60 to-transparent" />
               <div className="absolute bottom-4 left-4">
                 <p className="text-xs gold-text font-semibold tracking-widest uppercase">Kente Robe</p>
-                <p className="text-[10px] text-nayo-white/40 mt-0.5">Ghana</p>
+                <p className="text-[10px] text-white/60 mt-0.5">Ghana</p>
               </div>
             </div>
 
@@ -149,10 +149,10 @@ export default function CultureSection() {
                 className="object-cover"
                 sizes="(max-width: 1024px) 50vw, 25vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-nayo-ink/60 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <p className="text-xs gold-text font-semibold tracking-widest uppercase">Beadwork</p>
-                <p className="text-[10px] text-nayo-white/40 mt-0.5">Nigeria</p>
+                <p className="text-[10px] text-white/60 mt-0.5">Nigeria</p>
               </div>
             </div>
 

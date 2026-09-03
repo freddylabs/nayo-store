@@ -151,7 +151,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 group">
                 <div className="w-7 h-7 rounded-full gold-gradient flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Phone size={12} className="text-nayo-black" />
+                  <Phone size={12} className="text-nayo-ink" />
                 </div>
                 <div>
                   <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Phone</p>
@@ -165,7 +165,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-7 h-7 rounded-full gold-gradient flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Mail size={12} className="text-nayo-black" />
+                  <Mail size={12} className="text-nayo-ink" />
                 </div>
                 <div>
                   <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Email</p>
@@ -179,7 +179,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-7 h-7 rounded-full gold-gradient flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin size={12} className="text-nayo-black" />
+                  <MapPin size={12} className="text-nayo-ink" />
                 </div>
                 <div>
                   <p className="text-[10px] text-nayo-white/30 uppercase tracking-wider mb-0.5">Flagship</p>
