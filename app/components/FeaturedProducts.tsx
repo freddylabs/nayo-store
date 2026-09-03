@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Truck, UtensilsCrossed, ShieldCheck, Gem } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { fashionProducts, foodProducts } from "@/app/data/products";
 
@@ -49,18 +49,26 @@ export default function FeaturedProducts() {
           className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-16 pt-12 border-t border-nayo-ink/10"
         >
           {[
-            { title: "Complimentary Shipping", copy: "On all orders over $200" },
-            { title: "Made to Order", copy: "Freshly prepared, never mass-made" },
-            { title: "Secure Checkout", copy: "Encrypted, protected payments" },
-            { title: "Crafted in Lagos", copy: "Heritage in every detail" },
-          ].map((item) => (
-            <div key={item.title} className="text-center sm:text-left">
-              <p className="text-display text-base font-bold text-nayo-ink mb-1">
-                {item.title}
-              </p>
-              <p className="text-xs text-nayo-ink/50 leading-relaxed">{item.copy}</p>
-            </div>
-          ))}
+            { icon: Truck, title: "Complimentary Shipping", copy: "On all orders over $200" },
+            { icon: UtensilsCrossed, title: "Made to Order", copy: "Freshly prepared, never mass-made" },
+            { icon: ShieldCheck, title: "Secure Checkout", copy: "Encrypted, protected payments" },
+            { icon: Gem, title: "Crafted in Lagos", copy: "Heritage in every detail" },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.title} className="flex items-start gap-3">
+                <span className="w-10 h-10 rounded-full bg-nayo-cream border border-nayo-gold/25 flex items-center justify-center text-nayo-gold shrink-0">
+                  <Icon size={17} strokeWidth={1.5} />
+                </span>
+                <div>
+                  <p className="text-display text-base font-bold text-nayo-ink mb-0.5">
+                    {item.title}
+                  </p>
+                  <p className="text-xs text-nayo-ink/50 leading-relaxed">{item.copy}</p>
+                </div>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
