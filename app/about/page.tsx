@@ -131,7 +131,7 @@ export default function AboutPage() {
                     className="group relative bg-nayo-white/[0.02] border border-nayo-gold/10 hover:border-nayo-gold/30 hover:bg-nayo-white/[0.04] transition-all duration-500 rounded-2xl p-6 sm:p-8 flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
                   >
                     <Icon size={32} className="text-nayo-gold/70 group-hover:text-nayo-gold transition-colors duration-500 mb-4" strokeWidth={1.5} />
-                    <h3 className="text-display text-lg sm:text-xl font-bold text-[#F5F1E8]">
+                    <h3 className="text-display text-lg sm:text-xl font-bold text-nayo-white">
                       {val.name}
                     </h3>
                   </motion.div>
@@ -200,8 +200,8 @@ export default function AboutPage() {
           {/* Scrollable Chips Row */}
           <div className="w-full relative max-w-[1400px] mx-auto">
             {/* Gradient masks for smooth scrolling edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-r from-nayo-black to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-l from-nayo-black to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-r from-nayo-cream to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 bg-gradient-to-l from-nayo-cream to-transparent z-10 pointer-events-none" />
 
             <motion.div 
               {...fadeUp(0.3)}

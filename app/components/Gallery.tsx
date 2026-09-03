@@ -75,7 +75,7 @@ export default function Gallery() {
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               />
               {/* Hover overlay */}
-              <div className="absolute inset-0 bg-nayo-black/0 group-hover:bg-nayo-black/40 transition-all duration-400">
+              <div className="absolute inset-0 bg-nayo-ink/0 group-hover:bg-nayo-ink/40 transition-all duration-400">
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center">
                     <IconInstagram />

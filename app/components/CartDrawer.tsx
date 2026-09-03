@@ -2,11 +2,18 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 
 export default function CartDrawer() {
   const { state, dispatch, totalItems, totalPrice } = useCart();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    dispatch({ type: "CLOSE_CART" });
+    router.push("/checkout");
+  };
 
   return (
     <AnimatePresence>
@@ -32,8 +39,8 @@ export default function CartDrawer() {
             transition={{ duration: 0.45, ease: "easeOut" as any }}
             className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md flex flex-col"
             style={{
-              background: "linear-gradient(180deg, #111108 0%, #0A0A0A 100%)",
-              borderLeft: "1px solid rgba(212,175,55,0.15)",
+              background: "linear-gradient(180deg, #FFFFFF 0%, #F7F4EE 100%)",
+              borderLeft: "1px solid rgba(199,154,46,0.25)",
             }}
           >
             {/* Header */}
@@ -44,7 +51,7 @@ export default function CartDrawer() {
                   Your Cart
                 </h2>
                 {totalItems > 0 && (
-                  <span className="w-6 h-6 rounded-full gold-gradient flex items-center justify-center text-[11px] font-bold text-nayo-black">
+                  <span className="w-6 h-6 rounded-full gold-gradient flex items-center justify-center text-[11px] font-bold text-nayo-ink">
                     {totalItems}
                   </span>
                 )}
@@ -98,7 +105,7 @@ export default function CartDrawer() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 30, height: 0 }}
                       transition={{ duration: 0.3, ease: "easeOut" as any }}
-                      className="flex gap-4 rounded-2xl p-4 border border-nayo-gold/10 bg-white/[0.02]"
+                      className="flex gap-4 rounded-2xl p-4 border border-nayo-gold/10 bg-nayo-ink/[0.02]"
                     >
                       {/* Image */}
                       <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-nayo-gold/15">
@@ -189,7 +196,10 @@ export default function CartDrawer() {
                 </p>
 
                 {/* Checkout btn */}
-                <button className="btn-gold w-full py-4 text-sm tracking-widest uppercase font-bold flex items-center justify-center gap-2">
+                <button
+                  onClick={handleCheckout}
+                  className="btn-gold w-full py-4 text-sm tracking-widest uppercase font-bold flex items-center justify-center gap-2"
+                >
                   Proceed to Checkout
                   <ArrowRight size={16} />
                 </button>

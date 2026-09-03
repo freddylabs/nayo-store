@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
+import AccountMenu from "@/app/components/AccountMenu";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -107,12 +108,14 @@ export default function Navbar() {
                     key={totalItems}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full gold-gradient flex items-center justify-center text-[10px] font-bold text-nayo-black"
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full gold-gradient flex items-center justify-center text-[10px] font-bold text-nayo-ink"
                   >
                     {totalItems}
                   </motion.span>
                 )}
             </button>
+
+            <AccountMenu />
           </div>
         </div>
       </motion.nav>

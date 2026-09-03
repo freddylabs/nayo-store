@@ -50,7 +50,7 @@ export default function Testimonials() {
       ref={ref}
       className="relative overflow-hidden"
       style={{
-        background: "linear-gradient(180deg, #0A0A0A 0%, #111008 50%, #0A0A0A 100%)",
+        background: "linear-gradient(180deg, #F7F4EE 0%, #FBF8F1 50%, #F7F4EE 100%)",
       }}
     >
       {/* Gold top accent */}
@@ -102,7 +102,7 @@ export default function Testimonials() {
               className="relative rounded-2xl overflow-hidden border border-nayo-gold/15 flex flex-col"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(25,20,5,0.9) 0%, rgba(15,12,3,0.95) 100%)",
+                  "linear-gradient(135deg, #FFFFFF 0%, #FBF8F1 100%)",
               }}
             >
               {/* Quote icon */}

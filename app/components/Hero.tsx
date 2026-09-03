@@ -129,7 +129,7 @@ export default function Hero() {
               {avatarColors.map((color, i) => (
                 <div
                   key={i}
-                  className="w-9 h-9 rounded-full border-2 border-nayo-black flex items-center justify-center text-xs font-bold text-nayo-black"
+                  className="w-9 h-9 rounded-full border-2 border-nayo-black flex items-center justify-center text-xs font-bold text-nayo-ink"
                   style={{ background: `linear-gradient(135deg, ${color}, #F5C24D)` }}
                 >
                   {["A", "K", "M", "T"][i]}
@@ -170,7 +170,7 @@ export default function Hero() {
                 onClick={() => setCurrent(i)}
                 className={`px-4 py-1.5 rounded-full text-xs tracking-widest uppercase font-medium transition-all duration-300 ${
                   current === i
-                    ? "gold-gradient text-nayo-black"
+                    ? "gold-gradient text-nayo-ink"
                     : "glass-light border border-nayo-gold/20 text-nayo-white/50 hover:text-nayo-white"
                 }`}
               >
@@ -208,7 +208,7 @@ export default function Hero() {
                       sizes="(max-width: 768px) 288px, (max-width: 1024px) 320px, 384px"
                     />
                     {/* Overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-nayo-ink/60 via-transparent to-transparent" />
                     {/* Label */}
                     {offset === 0 && (
                       <motion.div
@@ -219,7 +219,7 @@ export default function Hero() {
                         <span className="text-sm font-bold tracking-widest uppercase gold-text text-display">
                           {slide.label}
                         </span>
-                        <span className="text-xs text-nayo-white/50 tracking-wider">
+                        <span className="text-xs text-white/70 tracking-wider">
                           Shop →
                         </span>
                       </motion.div>
@@ -239,7 +239,7 @@ export default function Hero() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nayo-black to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-nayo-cream to-transparent pointer-events-none" />
     </section>
   );
 }

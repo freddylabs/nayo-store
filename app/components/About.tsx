@@ -85,7 +85,7 @@ export default function About() {
                 sizes="(max-width: 1024px) 100vw, 55vw"
               />
               {/* Gold overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-nayo-gold/10 via-transparent to-nayo-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-br from-nayo-gold/10 via-transparent to-nayo-ink/40" />
 
               {/* Floating stat card */}
               <motion.div

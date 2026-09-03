@@ -1,12 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-nayo-black: #0A0A0A;
-  --color-nayo-charcoal: #141414;
-  --color-nayo-charcoal-2: #1C1C1C;
-  --color-nayo-gold: #D4AF37;
-  --color-nayo-amber: #F5C24D;
-  --color-nayo-white: #FFFFFF;
+  /*
+   * Light theme.
+   * NOTE: token names are kept for backwards compatibility with existing
+   * class usage. Their *values* were flipped to produce a light look:
+   *   nayo-black  -> the page/surface background (warm ivory)
+   *   nayo-white  -> the primary foreground/text ink (warm near-black)
+   *   nayo-charcoal(-2) -> raised card surfaces
+   * Use `nayo-ink` when you need an always-dark color (e.g. text/scrims on
+   * gold), and `text-white`/literal colors on intentionally dark panels.
+   */
+  --color-nayo-black: #F7F4EE;
+  --color-nayo-charcoal: #FFFFFF;
+  --color-nayo-charcoal-2: #FFFFFF;
+  --color-nayo-gold: #C79A2E;
+  --color-nayo-gold-bright: #D4AF37;
+  --color-nayo-amber: #E0A83C;
+  --color-nayo-white: #1A1611;
+  --color-nayo-ink: #0A0A0A;
+  --color-nayo-cream: #F7F4EE;
   --color-nayo-green: #1F3D2D;
   --color-nayo-green-light: #2E5A41;
 
@@ -16,8 +29,8 @@
   --radius-card: 1rem;
   --radius-btn: 9999px;
 
-  --shadow-gold: 0 0 40px rgba(212, 175, 55, 0.15);
-  --shadow-gold-strong: 0 0 80px rgba(212, 175, 55, 0.25);
+  --shadow-gold: 0 10px 40px rgba(199, 154, 46, 0.18);
+  --shadow-gold-strong: 0 20px 60px rgba(199, 154, 46, 0.28);
 }
 
 @layer base {
@@ -30,8 +43,8 @@
   html {
     scroll-behavior: smooth;
     font-family: var(--font-body);
-    background-color: #0A0A0A;
-    color: #FFFFFF;
+    background-color: #F7F4EE;
+    color: #1A1611;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -41,8 +54,8 @@
   }
 
   ::selection {
-    background: rgba(212, 175, 55, 0.3);
-    color: #FFFFFF;
+    background: rgba(212, 175, 55, 0.35);
+    color: #0A0A0A;
   }
 
   ::-webkit-scrollbar {
@@ -50,11 +63,11 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0A0A0A;
+    background: #ECE6DA;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #D4AF37, #F5C24D);
+    background: linear-gradient(180deg, #D4AF37, #C79A2E);
     border-radius: 3px;
   }
 }
@@ -76,15 +89,23 @@
   }
 
   .glass {
-    background: rgba(20, 20, 20, 0.8);
+    background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(26, 22, 17, 0.06);
   }
 
   .glass-light {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(26, 22, 17, 0.03);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+  }
+
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 40px rgba(26, 22, 17, 0.05);
   }
 
   .section-padding {
@@ -147,15 +168,15 @@
 
   .btn-outline {
     background: transparent;
-    color: #FFFFFF;
-    border: 1px solid rgba(245, 241, 232, 0.3);
+    color: #1A1611;
+    border: 1px solid rgba(26, 22, 17, 0.25);
     border-radius: 9999px;
     transition: all 0.3s ease;
   }
 
   .btn-outline:hover {
-    border-color: #D4AF37;
-    color: #D4AF37;
+    border-color: #C79A2E;
+    color: #A87C1E;
   }
 
   .text-display {
@@ -164,6 +185,27 @@
 
   .divider-gold {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(199, 154, 46, 0.45), transparent);
+  }
+
+  .auth-input {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(26, 22, 17, 0.15);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #1A1611;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .auth-input::placeholder {
+    color: rgba(26, 22, 17, 0.35);
+  }
+
+  .auth-input:focus {
+    outline: none;
+    border-color: rgba(199, 154, 46, 0.6);
+    box-shadow: 0 0 0 3px rgba(199, 154, 46, 0.12);
   }
 }

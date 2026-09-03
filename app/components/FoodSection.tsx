@@ -18,7 +18,7 @@ export default function FoodSection() {
       id="food"
       ref={ref}
       className="relative overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #0A140D 0%, #0A0A0A 100%)" }}
+      style={{ background: "linear-gradient(180deg, #EEF4EE 0%, #F7F4EE 100%)" }}
     >
       {/* Warm amber glow */}
       <div
