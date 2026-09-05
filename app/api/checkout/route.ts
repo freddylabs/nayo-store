@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getDeliveryFee, type FulfillmentMethod } from "@/app/lib/checkout";
+import { addOrder, createOrderNumber } from "@/app/lib/store";
 
 type CheckoutItem = {
   lineId: string;
@@ -126,6 +127,27 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+
+  await addOrder({
+    id: session.id,
+    orderNumber: createOrderNumber(),
+    createdAt: new Date().toISOString(),
+    customerName: body.customerName,
+    email: body.email,
+    phone: body.phone || "",
+    fulfillment: body.fulfillment,
+    address: body.fulfillment === "delivery" ? body.address : undefined,
+    items: body.items.map((item) => ({
+      name: item.name,
+      qty: item.qty,
+      price: item.price,
+      note: item.note,
+    })),
+    subtotal,
+    deliveryFee,
+    total: subtotal + deliveryFee,
+    status: "to_send",
+  });
 
   return NextResponse.json({ url: session.url });
 }

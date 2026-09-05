@@ -3,12 +3,8 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import ShopProductCard from "./ShopProductCard";
-import {
-  foodProducts,
-  apparelProducts,
-  healthProducts,
-} from "@/app/data/products";
 import type { Product } from "@/app/data/products";
+import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 function ShopRow({
   title,
@@ -42,20 +38,25 @@ function ShopRow({
   );
 }
 
-export default function ShopCollections() {
+export default function ShopCollections({
+  products,
+  copy = defaultCopy,
+}: {
+  products: Product[];
+  copy?: SiteCopy;
+}) {
+  const food = products.filter((item) => item.category === "food");
+  const apparel = products.filter((item) => item.category === "fashion");
+  const health = products.filter((item) => item.category === "health");
+
   return (
-    <div className="bg-nayo-white pb-20 space-y-12 sm:space-y-16">
-      <ShopRow title="Best Sellers" products={foodProducts} href="/food" />
-      <ShopRow
-        title="Newest in store"
-        products={apparelProducts}
-        href="/fashion"
-      />
-      <ShopRow
-        title="Latest collection"
-        products={healthProducts}
-        href="/health"
-      />
+    <div className="bg-nayo-white pb-12 sm:pb-16 space-y-12 sm:space-y-16">
+      <p className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 pt-4 text-center text-[11px] tracking-[0.22em] uppercase font-semibold text-nayo-gold">
+        {copy.shopEyebrow}
+      </p>
+      <ShopRow title={copy.shopFoodTitle} products={food} href="/food" />
+      <ShopRow title={copy.shopApparelTitle} products={apparel} href="/fashion" />
+      <ShopRow title={copy.shopHealthTitle} products={health} href="/health" />
     </div>
   );
 }

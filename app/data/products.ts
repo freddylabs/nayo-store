@@ -31,7 +31,7 @@ export const fashionProducts: Product[] = [
     id: "f-001",
     name: "Royal Blue Embroidered Gown",
     description: "Mermaid gown in royal blue and turquoise, finished with gold filigree embroidery.",
-    price: 640,
+    price: 198,
     image: "/apparel-royal-gown.jpg",
     category: "fashion",
     badge: "New",
@@ -42,7 +42,7 @@ export const fashionProducts: Product[] = [
     id: "f-009",
     name: "Emerald Cape Dress",
     description: "Forest-green midi with gold embroidery, a structured collar, and cape sleeves.",
-    price: 580,
+    price: 186,
     image: "/apparel-emerald-dress.jpg",
     category: "fashion",
     badge: "New",
@@ -53,7 +53,7 @@ export const fashionProducts: Product[] = [
     id: "f-002",
     name: "Onyx Blazer",
     description: "Structured black blazer with hand-stitched gold trim. Tailored to perfection.",
-    price: 495,
+    price: 158,
     image: "/fashion-blazer.png",
     category: "fashion",
     badge: "New Arrival",
@@ -64,7 +64,7 @@ export const fashionProducts: Product[] = [
     id: "f-003",
     name: "Velvet Evening Gown",
     description: "Off-shoulder black velvet gown with a heritage-inspired silhouette.",
-    price: 620,
+    price: 192,
     image: "/fashion-velvet.png",
     category: "fashion",
     rating: 4.9,
@@ -74,7 +74,7 @@ export const fashionProducts: Product[] = [
     id: "f-004",
     name: "Heritage Wrap Set",
     description: "Two-piece kente-lined co-ord set. Tradition meets contemporary cut.",
-    price: 310,
+    price: 118,
     image: "/culture-kente.png",
     category: "fashion",
     rating: 4.6,
@@ -84,11 +84,13 @@ export const fashionProducts: Product[] = [
 
 export const apparelProducts = fashionProducts;
 
-const onTheHouse: MealItem[] = [
+export const complimentarySides: MealItem[] = [
   { id: "shito", name: "Shito pepper sauce" },
   { id: "napkins", name: "Serviettes" },
   { id: "water", name: "Bottled water" },
 ];
+
+const onTheHouse: MealItem[] = complimentarySides;
 
 const sharedExtras: MealExtra[] = [
   { id: "plantain", name: "Fried plantain", price: 3.5 },
@@ -107,7 +109,7 @@ export const foodProducts: Product[] = [
     name: "Jollof and Beef",
     description:
       "Smoky party jollof with grilled beef.",
-    price: 24.99,
+    price: 19.99,
     image: "/hero-food.png",
     category: "food",
     badge: "Fan Favourite",
@@ -130,7 +132,7 @@ export const foodProducts: Product[] = [
     name: "Jollof and Chicken",
     description:
       "Party jollof with grilled chicken and fried plantain.",
-    price: 23.99,
+    price: 18.99,
     image: "/food-jollof-chicken.jpg",
     category: "food",
     badge: "New",
@@ -145,12 +147,7 @@ export const foodProducts: Product[] = [
       complimentary: onTheHouse,
       extras: [
         { id: "extra-chicken", name: "Chicken", price: 5.5 },
-        { id: "plantain", name: "Fried plantain", price: 3.5 },
-        { id: "rice", name: "Extra rice", price: 4 },
-        { id: "salad", name: "Garden salad", price: 3 },
-        { id: "egg", name: "Fried egg", price: 2 },
-        { id: "kelewele", name: "Kelewele", price: 4.5 },
-        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+        ...sharedExtras,
       ],
     },
   },
@@ -159,7 +156,7 @@ export const foodProducts: Product[] = [
     name: "Jollof with Goat Meat",
     description:
       "Jollof with slow-cooked goat, fried plantain, and a fresh salad.",
-    price: 26.99,
+    price: 20.99,
     image: "/food-jollof-goat.jpg",
     category: "food",
     badge: "New",
@@ -175,12 +172,7 @@ export const foodProducts: Product[] = [
       complimentary: onTheHouse,
       extras: [
         { id: "extra-goat", name: "Goat meat", price: 7 },
-        { id: "plantain", name: "Fried plantain", price: 3.5 },
-        { id: "salad", name: "Garden salad", price: 3 },
-        { id: "rice", name: "Extra rice", price: 4 },
-        { id: "egg", name: "Fried egg", price: 2 },
-        { id: "kelewele", name: "Kelewele", price: 4.5 },
-        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+        ...sharedExtras,
       ],
     },
   },
@@ -189,7 +181,7 @@ export const foodProducts: Product[] = [
     name: "Classic Fried Rice",
     description:
       "Wok-tossed fried rice with peppers, peas, corn, and spring onion.",
-    price: 19.99,
+    price: 15.99,
     image: "/food-fried-rice.jpg",
     category: "food",
     rating: 4.7,
@@ -199,12 +191,35 @@ export const foodProducts: Product[] = [
       complimentary: onTheHouse,
       extras: [
         { id: "extra-chicken", name: "Grilled chicken", price: 5.5 },
-        { id: "egg", name: "Fried egg", price: 2 },
-        { id: "plantain", name: "Fried plantain", price: 3.5 },
-        { id: "rice", name: "Extra fried rice", price: 4 },
-        { id: "salad", name: "Garden salad", price: 3 },
-        { id: "kelewele", name: "Kelewele", price: 4.5 },
-        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+        ...sharedExtras,
+      ],
+    },
+  },
+  {
+    id: "fd-010",
+    name: "Kenkey Combo Platter",
+    description:
+      "Kenkey with fried fish, sausage, fried egg, plantain, and pepper sauce.",
+    price: 19.99,
+    image: "/food-kenkey-platter.jpg",
+    category: "food",
+    badge: "New",
+    rating: 4.9,
+    reviews: 24,
+    meal: {
+      included: [
+        { id: "kenkey", name: "Kenkey" },
+        { id: "fish", name: "Fried fish" },
+        { id: "sausage", name: "Fried sausage" },
+        { id: "egg", name: "Fried egg" },
+        { id: "plantain", name: "Fried plantain" },
+        { id: "pepper", name: "Pepper sauce" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "extra-fish", name: "Fried fish", price: 6 },
+        { id: "extra-kenkey", name: "Kenkey", price: 4 },
+        ...sharedExtras,
       ],
     },
   },
@@ -213,7 +228,7 @@ export const foodProducts: Product[] = [
     name: "Plantain Ampesi",
     description:
       "Boiled ripe plantain with garden egg stew, grilled fish, eggs, and avocado.",
-    price: 23.99,
+    price: 19.99,
     image: "/food-ampesi-plantain.jpg",
     category: "food",
     badge: "New",
@@ -230,11 +245,7 @@ export const foodProducts: Product[] = [
       complimentary: onTheHouse,
       extras: [
         { id: "fish", name: "Grilled fish", price: 6 },
-        { id: "egg", name: "Eggs", price: 2 },
-        { id: "avocado", name: "Avocado", price: 2.5 },
-        { id: "plantain", name: "Extra plantain", price: 3.5 },
-        { id: "salad", name: "Garden salad", price: 3 },
-        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+        ...sharedExtras,
       ],
     },
   },
@@ -243,7 +254,7 @@ export const foodProducts: Product[] = [
     name: "Yam & Kontomire Ampesi",
     description:
       "Boiled yam and plantain with kontomire stew, boiled egg, and fresh avocado.",
-    price: 24.99,
+    price: 18.99,
     image: "/food-ampesi-kontomire.jpg",
     category: "food",
     badge: "New",
@@ -259,12 +270,8 @@ export const foodProducts: Product[] = [
       ],
       complimentary: onTheHouse,
       extras: [
-        { id: "egg", name: "Eggs", price: 2 },
-        { id: "avocado", name: "Avocado", price: 2.5 },
         { id: "fish", name: "Grilled fish", price: 6 },
-        { id: "plantain", name: "Extra plantain", price: 3.5 },
-        { id: "salad", name: "Garden salad", price: 3 },
-        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+        ...sharedExtras,
       ],
     },
   },
@@ -339,7 +346,7 @@ export const healthProducts: Product[] = [
     id: "h-008",
     name: "Nursing Student Lanyard",
     description: "Black medical-print lanyard with badge reel and vertical ID holder.",
-    price: 22,
+    price: 50,
     image: "/health-nurse-lanyard.jpg",
     category: "health",
     badge: "New",
@@ -364,7 +371,7 @@ export const cultureProducts: Product[] = [
     id: "c-002",
     name: "Kente Draped Robe",
     description: "Handwoven Ghanaian kente in black & gold. A garment of quiet power.",
-    price: 275,
+    price: 198,
     image: "/culture-kente.png",
     category: "culture",
     badge: "Heritage Piece",

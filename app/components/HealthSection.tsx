@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import ProductCard from "./ProductCard";
 import SectionClose from "./SectionClose";
-import { healthProducts } from "@/app/data/products";
+import type { Product } from "@/app/data/products";
+import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 const SLIDE_MS = 5000;
 
@@ -43,7 +44,13 @@ const lookbook = [
   },
 ];
 
-export default function HealthSection() {
+export default function HealthSection({
+  products,
+  copy = defaultCopy,
+}: {
+  products: Product[];
+  copy?: SiteCopy;
+}) {
   const [current, setCurrent] = useState(0);
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -231,14 +238,13 @@ export default function HealthSection() {
 
         <div className="relative max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pb-10 sm:pb-12">
           <p className="text-nayo-gold text-xs tracking-[0.25em] uppercase font-semibold mb-3">
-            Nayo Health
+            {copy.healthEyebrow}
           </p>
           <h1 className="text-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-2xl">
-            Crafted For Every Shift.
+            {copy.healthTitle}
           </h1>
           <p className="mt-4 text-white/80 max-w-lg text-sm sm:text-base">
-            Modern scrubs and small essentials with a tailored fit, built for
-            long hours and a confident presence on the floor.
+            {copy.healthIntro}
           </p>
         </div>
       </div>
@@ -252,15 +258,15 @@ export default function HealthSection() {
           className="mb-10"
         >
           <h2 className="text-display text-3xl sm:text-4xl font-bold text-nayo-black">
-            Shop the <span className="gold-text">collection</span>
+            {copy.healthCollectionTitle}
           </h2>
           <p className="mt-3 text-nayo-black/55 max-w-xl">
-            Scrubs and lanyards that work as hard as you do.
+            {copy.healthCollectionBody}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {healthProducts.map((product, i) => (
+          {products.map((product, i) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -273,8 +279,8 @@ export default function HealthSection() {
 
       <SectionClose
         eyebrow="Nayo Health"
-        title="Show up looking like you belong."
-        body="Every shift is a promise. Dress for the work, the team, and the people who trust you with their care."
+        title={copy.healthCloseTitle}
+        body={copy.healthCloseBody}
         href="/contact"
         cta="Talk to us"
       />

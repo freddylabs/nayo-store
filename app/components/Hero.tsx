@@ -5,6 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Pause, Play } from "lucide-react";
+import ExploreShop from "./ExploreShop";
+import BrandStory from "./BrandStory";
+import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 const SLIDE_MS = 5500;
 
@@ -42,8 +45,12 @@ const heroSlides = [
         caption: "Royal blue embroidered mermaid gown",
       },
       {
-        src: "/apparel-emerald-dress.jpg",
-        caption: "Forest green cape dress with gold embroidery",
+        src: "/fashion-blazer.png",
+        caption: "Onyx blazer with gold trim",
+      },
+      {
+        src: "/fashion-velvet.png",
+        caption: "Velvet evening gown",
       },
     ],
   },
@@ -71,7 +78,7 @@ const heroSlides = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
   const [current, setCurrent] = useState(0);
   const [photo, setPhoto] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -397,9 +404,15 @@ export default function Hero() {
           transition={{ duration: 0.7, ease: "easeOut" as any }}
           className="text-display text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-nayo-black"
         >
-          WEAR IT.{" "}
-          <span className="gold-text">TASTE IT.</span>{" "}
-          LOVE IT.
+          {copy.landingHeadline.split(/(TASTE IT\.)/i).map((part, i) =>
+            /taste it\./i.test(part) ? (
+              <span key={i} className="gold-text">
+                {part}
+              </span>
+            ) : (
+              <span key={i}>{part}</span>
+            )
+          )}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -407,22 +420,15 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" as any }}
           className="mt-5 text-nayo-black/60 max-w-xl mx-auto text-base sm:text-lg"
         >
-          Fashion that tells your story. Food that feeds your soul. Culture
-          that grounds your identity.
+          {copy.landingSubtitle}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" as any }}
-          className="mt-8 flex flex-wrap justify-center gap-3 sm:gap-4"
+          className="mt-8 flex flex-col items-center gap-6"
         >
-          <Link
-            href="/fashion"
-            className="btn-gold flex items-center gap-2 px-6 py-3 text-xs tracking-widest uppercase font-bold"
-          >
-            Explore Shop
-            <ArrowRight size={14} />
-          </Link>
+          <ExploreShop />
           <Link
             href="/about"
             className="btn-outline flex items-center gap-2 px-6 py-3 text-xs tracking-widest uppercase font-medium"
@@ -431,6 +437,7 @@ export default function Hero() {
           </Link>
         </motion.div>
       </div>
+      <BrandStory copy={copy} />
     </section>
   );
 }

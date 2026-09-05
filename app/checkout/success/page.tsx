@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import ExploreShop from "@/app/components/ExploreShop";
 import { useCart } from "@/app/context/CartContext";
 
 export default function CheckoutSuccessPage() {
@@ -26,13 +26,7 @@ export default function CheckoutSuccessPage() {
           Thank you. Your payment went through and we’ll be in touch with next
           steps for pickup or delivery.
         </p>
-        <Link
-          href="/"
-          className="btn-gold px-6 py-3 text-xs tracking-widest uppercase font-bold inline-flex items-center gap-2"
-        >
-          <ShoppingCart size={14} />
-          Back to shop
-        </Link>
+        <ExploreShop />
       </div>
       <Footer />
     </main>

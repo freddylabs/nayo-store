@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Plus, Minus } from "lucide-react";
 import type { Product } from "@/app/data/products";
 import { mealUnitPrice } from "@/app/lib/meal";
@@ -34,15 +34,22 @@ export default function FoodCustomize({
   extras,
   onToggleDropped,
   onToggleExtra,
+  openExtras = false,
 }: {
   product: Product;
   dropped: string[];
   extras: string[];
   onToggleDropped: (id: string) => void;
   onToggleExtra: (id: string) => void;
+  openExtras?: boolean;
 }) {
-  const [extrasOpen, setExtrasOpen] = useState(false);
+  const [extrasOpen, setExtrasOpen] = useState(openExtras);
   const meal = product.meal;
+
+  useEffect(() => {
+    if (openExtras) setExtrasOpen(true);
+  }, [openExtras]);
+
   if (!meal) return null;
 
   const total = mealUnitPrice(product, extras);

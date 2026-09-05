@@ -4,9 +4,15 @@ import Image from "next/image";
 import { Leaf, Plus } from "lucide-react";
 import FoodOrderCard from "./FoodOrderCard";
 import SectionClose from "./SectionClose";
-import { foodProducts } from "@/app/data/products";
+import type { Product } from "@/app/data/products";
+import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 const features = [
+  {
+    src: "/food-kenkey-platter.jpg",
+    name: "Kenkey Combo Platter",
+    note: "Fish, sausage, egg & plantain",
+  },
   {
     src: "/hero-food.png",
     name: "Jollof and Beef",
@@ -29,7 +35,13 @@ const features = [
   },
 ];
 
-export default function FoodSection() {
+export default function FoodSection({
+  products,
+  copy = defaultCopy,
+}: {
+  products: Product[];
+  copy?: SiteCopy;
+}) {
   return (
     <section id="food" className="relative bg-nayo-white">
       <div className="relative bg-nayo-green overflow-hidden">
@@ -37,19 +49,18 @@ export default function FoodSection() {
 
         <div className="relative max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-10 sm:pt-14 pb-8">
           <p className="text-nayo-gold text-xs tracking-[0.25em] uppercase font-semibold">
-            Nayo Foods
+            {copy.foodEyebrow}
           </p>
           <h1 className="text-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-2xl mt-3">
-            Taste What Feeds The Soul.
+            {copy.foodTitle}
           </h1>
           <p className="mt-4 text-white/80 max-w-lg text-sm sm:text-base">
-            West African plates cooked to order. Choose what stays on the
-            plate, then add extras if you want more.
+            {copy.foodIntro}
           </p>
         </div>
 
         <div className="relative max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-16 pb-10 sm:pb-14">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             {features.map((item) => (
               <figure
                 key={item.src}
@@ -83,21 +94,19 @@ export default function FoodSection() {
           <div>
             <Leaf size={18} className="text-nayo-green mb-3" />
             <h2 className="text-display text-xl font-bold text-nayo-black">
-              On the plate
+              {copy.foodBand1Title}
             </h2>
             <p className="mt-2 text-sm text-nayo-black/60 leading-relaxed">
-              Rice, protein, and the sides that belong with that dish. Drop
-              anything you do not want — the plate price stays put.
+              {copy.foodBand1Body}
             </p>
           </div>
           <div>
             <Plus size={18} className="text-nayo-green mb-3" />
             <h2 className="text-display text-xl font-bold text-nayo-black">
-              Make it extra
+              {copy.foodBand2Title}
             </h2>
             <p className="mt-2 text-sm text-nayo-black/60 leading-relaxed">
-              More meat, extra plantain, a fried egg, kelewele, salad, or a
-              malt. Open Add extra on a plate and pick only what you want.
+              {copy.foodBand2Body}
             </p>
           </div>
         </div>
@@ -106,16 +115,15 @@ export default function FoodSection() {
       <div className="max-w-[1400px] mx-auto section-padding">
         <div className="mb-10">
           <h2 className="text-display text-3xl sm:text-4xl font-bold text-nayo-black">
-            From the <span className="gold-text">kitchen</span>
+            {copy.foodCollectionTitle}
           </h2>
           <p className="mt-3 text-nayo-black/55 max-w-xl">
-            Tap what stays on the plate, drop what you do not want, and add
-            extras before it goes in the cart.
+            {copy.foodCollectionBody}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {foodProducts.map((product, i) => (
+          {products.map((product, i) => (
             <FoodOrderCard key={product.id} product={product} index={i} />
           ))}
         </div>
@@ -123,8 +131,8 @@ export default function FoodSection() {
 
       <SectionClose
         eyebrow="Nayo Foods"
-        title="Come hungry. Leave looking after yourself."
-        body="Catering, weekday plates, and the dishes you grew up on — cooked to order, packed to travel."
+        title={copy.foodCloseTitle}
+        body={copy.foodCloseBody}
         href="/contact"
         cta="Order for a group"
       />

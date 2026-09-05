@@ -6,6 +6,7 @@ import { ShoppingCart, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
+import ExploreShop from "./ExploreShop";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -80,12 +81,9 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3 sm:gap-4">
-              <Link
-                href="/fashion"
-                className="hidden xl:block btn-gold text-xs tracking-widest uppercase px-5 py-2 font-bold text-center"
-              >
-                Shop
-              </Link>
+              <div className="hidden xl:block">
+                <ExploreShop variant="dropdown" />
+              </div>
 
               <button
                 id="cart-toggle-btn"
@@ -131,13 +129,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/fashion"
-              onClick={handleMobileNav}
-              className="btn-gold text-sm tracking-widest uppercase px-8 py-4 mt-4 font-bold text-center block"
-            >
-              Shop Now
-            </Link>
+            <ExploreShop onNavigate={handleMobileNav} />
           </motion.div>
         )}
       </AnimatePresence>

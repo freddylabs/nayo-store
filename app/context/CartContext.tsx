@@ -20,6 +20,7 @@ export interface CartItem {
   qty: number;
   note?: string;
   optionsKey?: string;
+  extrasDeclined?: boolean;
 }
 
 interface CartState {
@@ -38,9 +39,11 @@ type CartAction =
         category: string;
         note?: string;
         optionsKey?: string;
+        extrasDeclined?: boolean;
       };
     }
   | { type: "REMOVE_ITEM"; payload: string }
+  | { type: "DECLINE_MEAL_EXTRAS" }
   | { type: "INCREMENT"; payload: string }
   | { type: "DECREMENT"; payload: string }
   | { type: "TOGGLE_CART" }
@@ -49,7 +52,7 @@ type CartAction =
   | { type: "CLEAR_CART" }
   | { type: "HYDRATE"; payload: CartItem[] };
 
-const STORAGE_KEY = "nayo_cart_v3";
+const STORAGE_KEY = "nayo_cart_v5";
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
@@ -83,11 +86,19 @@ function cartReducer(state: CartState, action: CartAction): CartState {
                 category: action.payload.category,
                 note: action.payload.note,
                 optionsKey: action.payload.optionsKey,
+                extrasDeclined: action.payload.extrasDeclined,
                 qty: 1,
               },
             ],
       };
     }
+    case "DECLINE_MEAL_EXTRAS":
+      return {
+        ...state,
+        items: state.items.map((i) =>
+          i.category === "food" ? { ...i, extrasDeclined: true } : i
+        ),
+      };
     case "REMOVE_ITEM":
       return {
         ...state,

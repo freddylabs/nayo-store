@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
 import FoodCustomize, { useMealSelection } from "./FoodCustomize";
+import MealExtrasPrompt from "./MealExtrasPrompt";
 import { mealCartPayload } from "@/app/lib/meal";
 
 export default function FoodOrderCard({
@@ -17,12 +19,27 @@ export default function FoodOrderCard({
 }) {
   const { dispatch } = useCart();
   const { dropped, extras, toggleDropped, toggleExtra } = useMealSelection();
+  const [askExtras, setAskExtras] = useState(false);
+  const [openExtras, setOpenExtras] = useState(false);
+  const [offeredExtras, setOfferedExtras] = useState(false);
 
-  const handleAdd = () => {
+  const addToCart = (declinedExtras: boolean) => {
     dispatch({
       type: "ADD_ITEM",
-      payload: mealCartPayload(product, dropped, extras),
+      payload: mealCartPayload(product, dropped, extras, declinedExtras),
     });
+  };
+
+  const handleAdd = () => {
+    if (
+      extras.length === 0 &&
+      (product.meal?.extras.length ?? 0) > 0 &&
+      !offeredExtras
+    ) {
+      setAskExtras(true);
+      return;
+    }
+    addToCart(extras.length === 0);
   };
 
   return (
@@ -70,6 +87,7 @@ export default function FoodOrderCard({
           extras={extras}
           onToggleDropped={toggleDropped}
           onToggleExtra={toggleExtra}
+          openExtras={openExtras}
         />
 
         <button
@@ -81,6 +99,22 @@ export default function FoodOrderCard({
           Add to cart
         </button>
       </div>
+
+      <MealExtrasPrompt
+        open={askExtras}
+        body={`Would you like to add anything extra to your ${product.name}? More meat, plantain, a drink, or other sides are available.`}
+        confirmLabel="Yes, add extras"
+        declineLabel="No thank you, add to cart"
+        onConfirm={() => {
+          setAskExtras(false);
+          setOfferedExtras(true);
+          setOpenExtras(true);
+        }}
+        onDecline={() => {
+          setAskExtras(false);
+          addToCart(true);
+        }}
+      />
     </motion.article>
   );
 }

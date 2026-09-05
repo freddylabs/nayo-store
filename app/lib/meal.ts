@@ -41,10 +41,33 @@ export function mealNote(
   return parts.join(" · ");
 }
 
+export function mealHasSelectedExtras(optionsKey?: string): boolean {
+  if (!optionsKey) return false;
+  try {
+    const parsed = JSON.parse(optionsKey) as { e?: unknown };
+    return Array.isArray(parsed.e) && parsed.e.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+export function mealNeedsExtrasPrompt(item: {
+  category: string;
+  optionsKey?: string;
+  extrasDeclined?: boolean;
+}): boolean {
+  return (
+    item.category === "food" &&
+    !item.extrasDeclined &&
+    !mealHasSelectedExtras(item.optionsKey)
+  );
+}
+
 export function mealCartPayload(
   product: Product,
   droppedIds: string[],
-  extraIds: string[]
+  extraIds: string[],
+  extrasDeclined = false
 ) {
   return {
     productId: product.id,
@@ -54,6 +77,7 @@ export function mealCartPayload(
     category: product.category,
     note: mealNote(product, droppedIds, extraIds),
     optionsKey: mealOptionsKey(droppedIds, extraIds),
+    extrasDeclined: extrasDeclined && extraIds.length === 0,
   };
 }
 
@@ -64,6 +88,7 @@ export function productImageSize(src: string): { width: number; height: number }
   if (src.includes("food-jollof-chicken")) return { width: 819, height: 1024 };
   if (src.includes("food-ampesi-kontomire")) return { width: 1024, height: 731 };
   if (src.includes("food-ampesi-plantain")) return { width: 496, height: 618 };
+  if (src.includes("food-kenkey-platter")) return { width: 766, height: 790 };
   if (src.includes("hero-food")) return { width: 511, height: 512 };
   if (
     src.includes("fashion-blazer") ||

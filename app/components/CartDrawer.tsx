@@ -3,12 +3,31 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { X, Minus, Plus, Trash2, ShoppingCart, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { X, Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
+import { mealNeedsExtrasPrompt } from "@/app/lib/meal";
+import ExploreShop from "./ExploreShop";
+import MealExtrasPrompt from "./MealExtrasPrompt";
 
 export default function CartDrawer() {
   const { state, dispatch, totalItems, totalPrice } = useCart();
   const router = useRouter();
+  const [askExtras, setAskExtras] = useState(false);
+
+  const goToCheckout = () => {
+    dispatch({ type: "CLOSE_CART" });
+    setAskExtras(false);
+    router.push("/checkout");
+  };
+
+  const handleCheckout = () => {
+    if (state.items.some(mealNeedsExtrasPrompt)) {
+      setAskExtras(true);
+      return;
+    }
+    goToCheckout();
+  };
 
   return (
     <AnimatePresence>
@@ -71,15 +90,9 @@ export default function CartDrawer() {
                         Add something beautiful.
                       </p>
                     </div>
-                    <button
-                      onClick={() => {
-                        dispatch({ type: "CLOSE_CART" });
-                        router.push("/fashion");
-                      }}
-                      className="btn-gold px-6 py-2.5 text-xs tracking-widest uppercase font-bold"
-                    >
-                      Explore Shop
-                    </button>
+                    <ExploreShop
+                      onNavigate={() => dispatch({ type: "CLOSE_CART" })}
+                    />
                   </motion.div>
                 ) : (
                   state.items.map((item) => (
@@ -175,10 +188,7 @@ export default function CartDrawer() {
                 </div>
 
                 <button
-                  onClick={() => {
-                    dispatch({ type: "CLOSE_CART" });
-                    router.push("/checkout");
-                  }}
+                  onClick={handleCheckout}
                   className="btn-gold w-full py-4 text-sm tracking-widest uppercase font-bold flex items-center justify-center gap-2"
                 >
                   <ShoppingCart size={16} />
@@ -196,6 +206,22 @@ export default function CartDrawer() {
           </motion.aside>
         </>
       )}
+      <MealExtrasPrompt
+        open={askExtras}
+        title="Would you like anything extra with your meals?"
+        body="You can still add more meat, plantain, a drink, or other sides before you check out."
+        confirmLabel="Yes, take me to extras"
+        declineLabel="No thank you, continue to checkout"
+        onConfirm={() => {
+          setAskExtras(false);
+          dispatch({ type: "CLOSE_CART" });
+          router.push("/food");
+        }}
+        onDecline={() => {
+          dispatch({ type: "DECLINE_MEAL_EXTRAS" });
+          goToCheckout();
+        }}
+      />
     </AnimatePresence>
   );
 }
