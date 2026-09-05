@@ -186,3 +186,29 @@
     display: none;
   }
 }
+
+html.nayo-loading {
+  background-color: #ffffff !important;
+}
+
+html.nayo-loading body {
+  overflow: hidden !important;
+  background-color: #ffffff;
+}
+
+html.nayo-loading .nayo-home {
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+#nayo-boot-cover {
+  display: none;
+}
+
+html.nayo-loading #nayo-boot-cover {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #ffffff;
+}

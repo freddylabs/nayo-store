@@ -6,10 +6,14 @@ import Image from "next/image";
 
 const TYPING_WORDS = ["Taste it", "Wear it", "Love it"];
 
+function clearBootCover() {
+  document.documentElement.classList.remove("nayo-loading");
+  document.body.style.overflow = "auto";
+}
+
 export default function VideoLoader() {
-  const [showLoader, setShowLoader] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
-  
+  const [showLoader, setShowLoader] = useState(false);
+
   // Typing state
   const [phase, setPhase] = useState<"typing" | "logo">("typing");
   const [wordIndex, setWordIndex] = useState(0);
@@ -17,34 +21,32 @@ export default function VideoLoader() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-    const hasSeen = sessionStorage.getItem("nayo_loader_seen");
-    if (hasSeen) {
-      setShowLoader(false);
-    } else {
+    const shouldShow =
+      document.documentElement.classList.contains("nayo-loading");
+    if (shouldShow) {
+      setShowLoader(true);
       document.body.style.overflow = "hidden";
+    } else {
+      clearBootCover();
     }
   }, []);
 
-  // Typing Effect Logic
   useEffect(() => {
-    if (phase !== "typing") return;
-    
+    if (!showLoader || phase !== "typing") return;
+
     if (wordIndex >= TYPING_WORDS.length) return;
     const currentWord = TYPING_WORDS[wordIndex];
 
     const timer = setTimeout(() => {
       if (!isDeleting) {
         setText(currentWord.substring(0, text.length + 1));
-        
-        // Pause when word is fully typed
+
         if (text === currentWord) {
           setTimeout(() => setIsDeleting(true), 600);
         }
       } else {
         setText(currentWord.substring(0, text.length - 1));
-        
-        // Move to next word when deleted
+
         if (text === "") {
           if (wordIndex === TYPING_WORDS.length - 1) {
             setPhase("logo");
@@ -57,25 +59,21 @@ export default function VideoLoader() {
     }, isDeleting ? 40 : 100);
 
     return () => clearTimeout(timer);
-  }, [text, isDeleting, phase, wordIndex]);
+  }, [showLoader, text, isDeleting, phase, wordIndex]);
 
-  // Logo Phase Logic
   useEffect(() => {
-    if (phase === "logo") {
-      const timer = setTimeout(() => {
-        handleDismiss();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [phase]);
+    if (!showLoader || phase !== "logo") return;
+    const timer = setTimeout(() => {
+      handleDismiss();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [showLoader, phase]);
 
   const handleDismiss = () => {
     setShowLoader(false);
     sessionStorage.setItem("nayo_loader_seen", "true");
-    document.body.style.overflow = "auto";
+    clearBootCover();
   };
-
-  if (!isMounted) return null;
 
   return (
     <AnimatePresence>
@@ -84,9 +82,8 @@ export default function VideoLoader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] bg-nayo-white flex items-center justify-center"
+          className="fixed inset-0 z-[110] bg-nayo-white flex items-center justify-center"
         >
-          {/* Typing Phase */}
           <AnimatePresence mode="wait">
             {phase === "typing" && (
               <motion.div
@@ -110,7 +107,6 @@ export default function VideoLoader() {
               </motion.div>
             )}
 
-            {/* Logo Phase */}
             {phase === "logo" && (
               <motion.div
                 key="logo"

@@ -14,17 +14,19 @@ export default async function Home() {
   return (
     <main className="relative">
       <VideoLoader />
-      <Navbar />
-      <Hero copy={copy} />
-      <ShopCollections products={products} copy={copy} />
-      <SectionClose
-        eyebrow={copy.landingCloseEyebrow}
-        title={copy.landingCloseTitle}
-        body={copy.landingCloseBody}
-        href="/contact"
-        cta={copy.landingCloseCta}
-      />
-      <Footer />
+      <div className="nayo-home">
+        <Navbar />
+        <Hero copy={copy} />
+        <ShopCollections products={products} copy={copy} />
+        <SectionClose
+          eyebrow={copy.landingCloseEyebrow}
+          title={copy.landingCloseTitle}
+          body={copy.landingCloseBody}
+          href="/contact"
+          cta={copy.landingCloseCta}
+        />
+        <Footer />
+      </div>
     </main>
   );
 }
