@@ -28,9 +28,10 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+    overscroll-behavior-y: none;
     font-family: var(--font-body);
-    background-color: #FFFFFF;
+    background-color: #000000;
     color: #0A0A0A;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -38,6 +39,7 @@
 
   body {
     overflow-x: hidden;
+    overscroll-behavior-y: none;
     background-color: #FFFFFF;
     color: #0A0A0A;
   }

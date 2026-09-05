@@ -49,22 +49,8 @@ const hours = [
 ];
 
 export default function Footer() {
-  const handleNav = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <footer id="footer" className="relative bg-black overflow-hidden">
-      {/* Background accent */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none opacity-5"
-        style={{
-          background: "radial-gradient(ellipse, rgba(212,175,55,0.8) 0%, transparent 70%)",
-          filter: "blur(60px)",
-        }}
-      />
-
+    <footer id="footer" className="relative bg-black">
       {/* Main grid */}
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 xl:px-16 py-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">

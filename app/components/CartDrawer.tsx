@@ -108,6 +108,11 @@ export default function CartDrawer() {
                             <p className="text-sm font-semibold text-nayo-black leading-tight line-clamp-1">
                               {item.name}
                             </p>
+                            {item.note && (
+                              <p className="text-[11px] text-nayo-black/50 mt-0.5 leading-snug line-clamp-2">
+                                {item.note}
+                              </p>
+                            )}
                             <p className="text-[10px] text-nayo-black/40 tracking-wider uppercase mt-0.5 font-mono">
                               {item.lineId}
                             </p>

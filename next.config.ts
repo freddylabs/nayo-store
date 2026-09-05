@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Allow all local images; add external hostnames here if needed
+    qualities: [75, 90, 95, 100],
     remotePatterns: [
       {
         protocol: "https",

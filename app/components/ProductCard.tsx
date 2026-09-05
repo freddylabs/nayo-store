@@ -5,17 +5,20 @@ import { motion } from "framer-motion";
 import { ShoppingCart, Plus } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
+import { productImageSize } from "@/app/lib/meal";
 
 interface ProductCardProps {
   product: Product;
   index?: number;
   variant?: "dark" | "light";
+  imageFit?: "cover" | "contain";
 }
 
 export default function ProductCard({
   product,
   index = 0,
   variant = "dark",
+  imageFit = "cover",
 }: ProductCardProps) {
   const { dispatch } = useCart();
 
@@ -59,29 +62,42 @@ export default function ProductCard({
       )}
 
       {/* Image */}
-      <div className="relative h-56 sm:h-64 overflow-hidden">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/50 via-transparent to-transparent" />
-
-        {/* Quick add overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="absolute inset-0 bg-nayo-black/30 backdrop-blur-sm" />
-          <button
-            onClick={handleAdd}
-            className="relative z-10 btn-gold flex items-center gap-2 px-6 py-3 text-xs tracking-widest uppercase font-bold"
-            aria-label={`Add ${product.name} to cart`}
-          >
-            <Plus size={14} />
-            Quick Add
-          </button>
+      {imageFit === "contain" ? (
+        <div className="relative bg-nayo-white">
+          <Image
+            src={product.image}
+            alt={product.name}
+            width={productImageSize(product.image).width}
+            height={productImageSize(product.image).height}
+            quality={95}
+            className="w-full h-auto"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+          />
         </div>
-      </div>
+      ) : (
+        <div className="relative h-64 sm:h-80 bg-[#F3F4F6] overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            quality={95}
+            className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-nayo-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 bg-nayo-black/30 backdrop-blur-sm" />
+            <button
+              onClick={handleAdd}
+              className="relative z-10 btn-gold flex items-center gap-2 px-6 py-3 text-xs tracking-widest uppercase font-bold"
+              aria-label={`Add ${product.name} to cart`}
+            >
+              <Plus size={14} />
+              Quick Add
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Info */}
       <div className="p-5 space-y-3">

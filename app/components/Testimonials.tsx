@@ -25,7 +25,7 @@ const testimonials = [
       "I've had jollof from London to Lagos. Nayo's version made me call my mother. That's the highest compliment I know how to give.",
     rating: 5,
     productImage: "/hero-food.png",
-    productName: "Jollof & Fried Chicken",
+      productName: "Jollof and Beef",
     avatar: "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=100&q=80",
   },
   {

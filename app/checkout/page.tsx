@@ -54,6 +54,7 @@ export default function CheckoutPage() {
             price: item.price,
             qty: item.qty,
             image: item.image,
+            note: item.note,
           })),
           fulfillment,
           customerName,
@@ -231,6 +232,9 @@ export default function CheckoutPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-nayo-black line-clamp-1">{item.name}</p>
+                      {item.note && (
+                        <p className="text-[11px] text-nayo-black/50 leading-snug line-clamp-2">{item.note}</p>
+                      )}
                       <p className="text-[10px] font-mono text-nayo-black/40">{item.lineId}</p>
                       <p className="text-xs text-nayo-black/50">Qty {item.qty}</p>
                     </div>

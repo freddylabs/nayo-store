@@ -1,3 +1,18 @@
+export interface MealItem {
+  id: string;
+  name: string;
+}
+
+export interface MealExtra extends MealItem {
+  price: number;
+}
+
+export interface MealConfig {
+  included: MealItem[];
+  complimentary: MealItem[];
+  extras: MealExtra[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -8,19 +23,31 @@ export interface Product {
   badge?: string;
   rating?: number;
   reviews?: number;
+  meal?: MealConfig;
 }
 
 export const fashionProducts: Product[] = [
   {
     id: "f-001",
-    name: "Amber Silk Maxi",
-    description: "Flowing silk-blend maxi dress with structural shoulders. A statement piece.",
-    price: 385,
-    image: "/hero-fashion.png",
+    name: "Royal Blue Embroidered Gown",
+    description: "Mermaid gown in royal blue and turquoise, finished with gold filigree embroidery.",
+    price: 640,
+    image: "/apparel-royal-gown.jpg",
     category: "fashion",
-    badge: "Bestseller",
+    badge: "New",
+    rating: 4.9,
+    reviews: 28,
+  },
+  {
+    id: "f-009",
+    name: "Emerald Cape Dress",
+    description: "Forest-green midi with gold embroidery, a structured collar, and cape sleeves.",
+    price: 580,
+    image: "/apparel-emerald-dress.jpg",
+    category: "fashion",
+    badge: "New",
     rating: 4.8,
-    reviews: 214,
+    reviews: 21,
   },
   {
     id: "f-002",
@@ -53,118 +80,271 @@ export const fashionProducts: Product[] = [
     rating: 4.6,
     reviews: 81,
   },
-  {
-    id: "f-006",
-    name: "Athletic Club Jersey",
-    description: "Breathable mesh jersey featuring the iconic Nayo crest. Streetwear essential.",
-    price: 85,
-    image: "/jersey.png",
-    category: "fashion",
-    rating: 4.5,
-    reviews: 142,
-  },
-  {
-    id: "f-008",
-    name: "Classic Polo",
-    description: "Everyday luxury polo with subtle gold embroidery. Perfect for corporate casual.",
-    price: 110,
-    image: "/polo.png",
-    category: "fashion",
-    rating: 4.6,
-    reviews: 117,
-  },
 ];
 
 export const apparelProducts = fashionProducts;
 
+const onTheHouse: MealItem[] = [
+  { id: "shito", name: "Shito pepper sauce" },
+  { id: "napkins", name: "Serviettes" },
+  { id: "water", name: "Bottled water" },
+];
+
+const sharedExtras: MealExtra[] = [
+  { id: "plantain", name: "Fried plantain", price: 3.5 },
+  { id: "rice", name: "Extra rice", price: 4 },
+  { id: "salad", name: "Garden salad", price: 3 },
+  { id: "egg", name: "Fried egg", price: 2 },
+  { id: "kelewele", name: "Kelewele", price: 4.5 },
+  { id: "coleslaw", name: "Coleslaw", price: 3 },
+  { id: "drink", name: "Malt or soft drink", price: 2.5 },
+  { id: "avocado", name: "Avocado", price: 2.5 },
+];
+
 export const foodProducts: Product[] = [
   {
     id: "fd-001",
-    name: "Jollof & Fried Chicken",
-    description: "Signature smoky jollof rice with crispy marinated fried chicken. Feeds 2.",
+    name: "Jollof and Beef",
+    description:
+      "Smoky party jollof with grilled beef.",
     price: 24.99,
     image: "/hero-food.png",
     category: "food",
     badge: "Fan Favourite",
     rating: 4.9,
     reviews: 320,
+    meal: {
+      included: [
+        { id: "jollof", name: "Jollof rice" },
+        { id: "beef", name: "Grilled beef" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "extra-beef", name: "Beef", price: 6 },
+        ...sharedExtras,
+      ],
+    },
   },
   {
-    id: "fd-002",
-    name: "Suya Platter",
-    description: "Chargrilled suya skewers, spiced with yaji, served with grilled peppers.",
-    price: 18.99,
-    image: "/food-suya.png",
+    id: "fd-008",
+    name: "Jollof and Chicken",
+    description:
+      "Party jollof with grilled chicken and fried plantain.",
+    price: 23.99,
+    image: "/food-jollof-chicken.jpg",
     category: "food",
-    badge: "Chef's Pick",
+    badge: "New",
+    rating: 4.9,
+    reviews: 86,
+    meal: {
+      included: [
+        { id: "jollof", name: "Jollof rice" },
+        { id: "chicken", name: "Grilled chicken" },
+        { id: "plantain", name: "Fried plantain" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "extra-chicken", name: "Chicken", price: 5.5 },
+        { id: "plantain", name: "Fried plantain", price: 3.5 },
+        { id: "rice", name: "Extra rice", price: 4 },
+        { id: "salad", name: "Garden salad", price: 3 },
+        { id: "egg", name: "Fried egg", price: 2 },
+        { id: "kelewele", name: "Kelewele", price: 4.5 },
+        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+      ],
+    },
+  },
+  {
+    id: "fd-009",
+    name: "Jollof with Goat Meat",
+    description:
+      "Jollof with slow-cooked goat, fried plantain, and a fresh salad.",
+    price: 26.99,
+    image: "/food-jollof-goat.jpg",
+    category: "food",
+    badge: "New",
     rating: 4.8,
-    reviews: 188,
+    reviews: 54,
+    meal: {
+      included: [
+        { id: "jollof", name: "Jollof rice" },
+        { id: "goat", name: "Goat meat stew" },
+        { id: "plantain", name: "Fried plantain" },
+        { id: "salad", name: "Garden salad" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "extra-goat", name: "Goat meat", price: 7 },
+        { id: "plantain", name: "Fried plantain", price: 3.5 },
+        { id: "salad", name: "Garden salad", price: 3 },
+        { id: "rice", name: "Extra rice", price: 4 },
+        { id: "egg", name: "Fried egg", price: 2 },
+        { id: "kelewele", name: "Kelewele", price: 4.5 },
+        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+      ],
+    },
   },
   {
     id: "fd-003",
     name: "Classic Fried Rice",
-    description: "Sizzling wok-tossed fried rice with diced vegetables and savory hot dog slices.",
+    description:
+      "Wok-tossed fried rice with peppers, peas, corn, and spring onion.",
     price: 19.99,
-    image: "/friedrice.jpg",
+    image: "/food-fried-rice.jpg",
     category: "food",
     rating: 4.7,
     reviews: 156,
+    meal: {
+      included: [{ id: "fried-rice", name: "Vegetable fried rice" }],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "extra-chicken", name: "Grilled chicken", price: 5.5 },
+        { id: "egg", name: "Fried egg", price: 2 },
+        { id: "plantain", name: "Fried plantain", price: 3.5 },
+        { id: "rice", name: "Extra fried rice", price: 4 },
+        { id: "salad", name: "Garden salad", price: 3 },
+        { id: "kelewele", name: "Kelewele", price: 4.5 },
+        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+      ],
+    },
   },
   {
-    id: "fd-004",
-    name: "Nayo Meal Box",
-    description: "Perfectly portioned rice, glazed chicken, and roasted veggies in a premium box.",
-    price: 29.99,
-    image: "/mealbox.png",
+    id: "fd-006",
+    name: "Plantain Ampesi",
+    description:
+      "Boiled ripe plantain with garden egg stew, grilled fish, eggs, and avocado.",
+    price: 23.99,
+    image: "/food-ampesi-plantain.jpg",
     category: "food",
-    badge: "Limited",
-    rating: 4.8,
-    reviews: 91,
+    badge: "New",
+    rating: 4.9,
+    reviews: 42,
+    meal: {
+      included: [
+        { id: "plantain", name: "Boiled plantain" },
+        { id: "stew", name: "Garden egg stew" },
+        { id: "fish", name: "Grilled fish" },
+        { id: "egg", name: "Boiled eggs" },
+        { id: "avocado", name: "Avocado" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "fish", name: "Grilled fish", price: 6 },
+        { id: "egg", name: "Eggs", price: 2 },
+        { id: "avocado", name: "Avocado", price: 2.5 },
+        { id: "plantain", name: "Extra plantain", price: 3.5 },
+        { id: "salad", name: "Garden salad", price: 3 },
+        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+      ],
+    },
   },
   {
-    id: "fd-005",
-    name: "Egusi Soup",
-    description: "Rich melon-seed stew with spinach and tender protein, served with swallow.",
-    price: 22.99,
-    image: "/food-egusi.png",
+    id: "fd-007",
+    name: "Yam & Kontomire Ampesi",
+    description:
+      "Boiled yam and plantain with kontomire stew, boiled egg, and fresh avocado.",
+    price: 24.99,
+    image: "/food-ampesi-kontomire.jpg",
     category: "food",
+    badge: "New",
     rating: 4.8,
-    reviews: 74,
+    reviews: 37,
+    meal: {
+      included: [
+        { id: "yam", name: "Boiled yam" },
+        { id: "plantain", name: "Boiled plantain" },
+        { id: "kontomire", name: "Kontomire stew" },
+        { id: "egg", name: "Boiled egg" },
+        { id: "avocado", name: "Avocado" },
+      ],
+      complimentary: onTheHouse,
+      extras: [
+        { id: "egg", name: "Eggs", price: 2 },
+        { id: "avocado", name: "Avocado", price: 2.5 },
+        { id: "fish", name: "Grilled fish", price: 6 },
+        { id: "plantain", name: "Extra plantain", price: 3.5 },
+        { id: "salad", name: "Garden salad", price: 3 },
+        { id: "drink", name: "Malt or soft drink", price: 2.5 },
+      ],
+    },
   },
 ];
+
 
 export const healthProducts: Product[] = [
   {
     id: "h-001",
-    name: "Nayo Signature Scrubs",
-    description: "Premium medical scrubs offering unparalleled comfort and a tailored fit.",
-    price: 120,
-    image: "/hero-scrubs.png",
+    name: "Charcoal Signature Scrubs",
+    description: "Charcoal jogger scrubs with a tailored V-neck and utility pockets.",
+    price: 128,
+    image: "/health-scrub-charcoal.jpg",
     category: "health",
-    badge: "Medical",
+    badge: "New",
     rating: 4.9,
     reviews: 186,
   },
   {
     id: "h-002",
-    name: "Tailored Lab Coat",
-    description: "Professional medical coat with structural shoulders and gold-button details.",
-    price: 165,
-    image: "/labcoat.png",
+    name: "Sage Clinical Set",
+    description: "Sage green shift set with cargo pockets and a comfortable jogger cut.",
+    price: 128,
+    image: "/health-scrub-sage.jpg",
     category: "health",
-    badge: "Medical",
-    rating: 4.7,
+    badge: "New",
+    rating: 4.8,
     reviews: 94,
   },
   {
     id: "h-003",
-    name: "Clinical Comfort Set",
-    description: "Shift-ready layers designed for long hours on the floor.",
-    price: 148,
-    image: "/hero-scrubs.png",
+    name: "Sky Blue Shift Set",
+    description: "Light blue scrubs with a clean V-neck and elastic-cuff joggers.",
+    price: 132,
+    image: "/health-scrub-sky.jpg",
     category: "health",
     rating: 4.8,
     reviews: 61,
+  },
+  {
+    id: "h-004",
+    name: "Teal & Burgundy Cargo Scrubs",
+    description: "Modern cargo scrubs in teal and burgundy, made for movement on the floor.",
+    price: 136,
+    image: "/health-duo-teal-burgundy.jpg",
+    category: "health",
+    rating: 4.9,
+    reviews: 48,
+  },
+  {
+    id: "h-005",
+    name: "Navy, Black & Burgundy Set",
+    description: "Core colorways for the team: navy, black, and burgundy utility scrubs.",
+    price: 140,
+    image: "/health-team-three.jpg",
+    category: "health",
+    rating: 4.7,
+    reviews: 39,
+  },
+  {
+    id: "h-006",
+    name: "Nayo Health Ensemble",
+    description: "The full color story — six looks, one collection, built for every shift.",
+    price: 148,
+    image: "/health-team-group.jpg",
+    category: "health",
+    badge: "Collection",
+    rating: 4.9,
+    reviews: 72,
+  },
+  {
+    id: "h-008",
+    name: "Nursing Student Lanyard",
+    description: "Black medical-print lanyard with badge reel and vertical ID holder.",
+    price: 22,
+    image: "/health-nurse-lanyard.jpg",
+    category: "health",
+    badge: "New",
+    rating: 4.7,
+    reviews: 41,
   },
 ];
 

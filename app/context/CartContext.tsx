@@ -18,6 +18,8 @@ export interface CartItem {
   image: string;
   category: string;
   qty: number;
+  note?: string;
+  optionsKey?: string;
 }
 
 interface CartState {
@@ -34,6 +36,8 @@ type CartAction =
         price: number;
         image: string;
         category: string;
+        note?: string;
+        optionsKey?: string;
       };
     }
   | { type: "REMOVE_ITEM"; payload: string }
@@ -45,22 +49,26 @@ type CartAction =
   | { type: "CLEAR_CART" }
   | { type: "HYDRATE"; payload: CartItem[] };
 
-const STORAGE_KEY = "nayo_cart_v2";
+const STORAGE_KEY = "nayo_cart_v3";
 
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "HYDRATE":
       return { ...state, items: action.payload };
     case "ADD_ITEM": {
+      const optionsKey = action.payload.optionsKey ?? "";
       const existing = state.items.find(
-        (i) => i.productId === action.payload.productId
+        (i) =>
+          i.productId === action.payload.productId &&
+          (i.optionsKey ?? "") === optionsKey
       );
       return {
         ...state,
         isOpen: true,
         items: existing
           ? state.items.map((i) =>
-              i.productId === action.payload.productId
+              i.productId === action.payload.productId &&
+              (i.optionsKey ?? "") === optionsKey
                 ? { ...i, qty: i.qty + 1 }
                 : i
             )
@@ -73,6 +81,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
                 price: action.payload.price,
                 image: action.payload.image,
                 category: action.payload.category,
+                note: action.payload.note,
+                optionsKey: action.payload.optionsKey,
                 qty: 1,
               },
             ],

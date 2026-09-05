@@ -8,6 +8,7 @@ type CheckoutItem = {
   price: number;
   qty: number;
   image?: string;
+  note?: string;
 };
 
 type CheckoutBody = {
@@ -86,7 +87,9 @@ export async function POST(request: Request) {
         currency: "usd",
         unit_amount: Math.round(item.price * 100),
         product_data: {
-          name: `${item.name} (${item.lineId})`,
+          name: item.note
+            ? `${item.name} — ${item.note}`
+            : `${item.name} (${item.lineId})`,
         },
       },
     }));
