@@ -27,7 +27,6 @@ const IconYoutube = () => (
 );
 
 const quickLinks = [
-  { label: "Apparel", href: "/fashion" },
   { label: "Food", href: "/food" },
   { label: "Health", href: "/health" },
   { label: "About", href: "/about" },

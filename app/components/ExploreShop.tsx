@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export const shops = [
-  { label: "Apparel", href: "/fashion" },
   { label: "Foods", href: "/food" },
   { label: "Health", href: "/health" },
 ] as const;

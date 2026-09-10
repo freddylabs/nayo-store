@@ -112,7 +112,7 @@ export default function CheckoutPage() {
                 Your cart is empty
               </h1>
               <p className="mt-4 text-white/75 max-w-md mx-auto">
-                Add items from Apparel, Foods, or Health, then come back to
+                Add items from Foods or Health, then come back to
                 check out.
               </p>
             </div>

@@ -34,27 +34,6 @@ const heroSlides = [
     ],
   },
   {
-    label: "Apparel",
-    brand: "Nayo Apparel",
-    title: "Wear What Speaks For You",
-    href: "/fashion",
-    cta: "Shop Fashion",
-    images: [
-      {
-        src: "/apparel-royal-gown.jpg",
-        caption: "Royal blue embroidered mermaid gown",
-      },
-      {
-        src: "/fashion-blazer.png",
-        caption: "Onyx blazer with gold trim",
-      },
-      {
-        src: "/fashion-velvet.png",
-        caption: "Velvet evening gown",
-      },
-    ],
-  },
-  {
     label: "Health",
     brand: "Nayo Health",
     title: "Crafted For Every Shift",

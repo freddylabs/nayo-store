@@ -46,7 +46,6 @@ export default function ShopCollections({
   copy?: SiteCopy;
 }) {
   const food = products.filter((item) => item.category === "food");
-  const apparel = products.filter((item) => item.category === "fashion");
   const health = products.filter((item) => item.category === "health");
 
   return (
@@ -55,7 +54,6 @@ export default function ShopCollections({
         {copy.shopEyebrow}
       </p>
       <ShopRow title={copy.shopFoodTitle} products={food} href="/food" />
-      <ShopRow title={copy.shopApparelTitle} products={apparel} href="/fashion" />
       <ShopRow title={copy.shopHealthTitle} products={health} href="/health" />
     </div>
   );
