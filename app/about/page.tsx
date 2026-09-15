@@ -42,7 +42,7 @@ const values = [
   {
     n: "04",
     name: "Authenticity",
-    line: "Heritage in the cloth and in the kitchen — never a costume.",
+    line: "Heritage in the cloth and in the kitchen, never a costume.",
   },
   {
     n: "05",
@@ -95,7 +95,7 @@ export default function AboutPage() {
               <div className="mt-6 space-y-4 text-nayo-black/65 leading-relaxed max-w-xl">
                 <p>
                   NAYO was founded with a vision to create more than just a
-                  business — it was created to build a legacy. Rooted in strong
+                  business, it was created to build a legacy. Rooted in strong
                   family values and a passion for excellence, NAYO brings
                   together two everyday essentials: quality fashion and great
                   food under one trusted brand.

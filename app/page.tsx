@@ -1,6 +1,7 @@
 import Navbar from "@/app/components/Navbar";
 import Hero from "@/app/components/Hero";
 import ShopCollections from "@/app/components/ShopCollections";
+import Testimonials from "@/app/components/Testimonials";
 import SectionClose from "@/app/components/SectionClose";
 import Footer from "@/app/components/Footer";
 import VideoLoader from "@/app/components/VideoLoader";
@@ -18,12 +19,14 @@ export default async function Home() {
         <Navbar />
         <Hero copy={copy} />
         <ShopCollections products={products} copy={copy} />
+        <Testimonials />
         <SectionClose
           eyebrow={copy.landingCloseEyebrow}
           title={copy.landingCloseTitle}
           body={copy.landingCloseBody}
           href="/contact"
           cta={copy.landingCloseCta}
+          tone="light"
         />
         <Footer />
       </div>

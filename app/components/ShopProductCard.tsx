@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Heart, Star, ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
-import { productImageSize } from "@/app/lib/meal";
 import FoodCustomizeModal from "./FoodCustomizeModal";
 
 export default function ShopProductCard({ product }: { product: Product }) {
@@ -15,7 +14,6 @@ export default function ShopProductCard({ product }: { product: Product }) {
   const rating = product.rating ?? 4.8;
   const reviews = product.reviews ?? 48;
   const filled = Math.round(rating);
-  const size = productImageSize(product.image);
   const isHealth = product.category === "health";
   const isFood = product.category === "food";
   const brand =
@@ -45,32 +43,20 @@ export default function ShopProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="group min-w-[180px] w-[180px] sm:min-w-0 sm:w-auto">
-      <div
-        className={`relative rounded-xl overflow-hidden ${
-          isHealth ? "bg-nayo-white" : "bg-[#F3F4F6] aspect-[4/5]"
-        }`}
-      >
-        {isHealth ? (
-          <Image
-            src={product.image}
-            alt={product.name}
-            width={size.width}
-            height={size.height}
-            quality={95}
-            className="w-full h-auto"
-            sizes="(max-width: 640px) 180px, (max-width: 1024px) 30vw, 280px"
-          />
-        ) : (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            quality={95}
-            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 180px, (max-width: 1024px) 30vw, 280px"
-          />
-        )}
+    <article className="group min-w-[168px] w-[168px] sm:min-w-0 sm:w-auto">
+      <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-[#F3F4F6]">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          quality={95}
+          className={
+            isHealth
+              ? "object-contain object-top"
+              : "object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          }
+          sizes="(max-width: 640px) 168px, (max-width: 1024px) 45vw, 280px"
+        />
         <button
           type="button"
           onClick={() => setSaved((v) => !v)}

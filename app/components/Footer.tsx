@@ -42,7 +42,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer id="footer" className="relative bg-black">
+    <footer id="footer" className="relative bg-nayo-green">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 xl:px-16 py-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           <div className="space-y-6 sm:col-span-2 lg:col-span-1">
@@ -55,7 +55,7 @@ export default function Footer() {
 
             <p className="text-nayo-white/70 text-sm leading-relaxed max-w-xs">
               Live the NAYO Lifestyle. A brand of family, heritage, and
-              entrepreneurship — where style meets flavor.
+              entrepreneurship, where style meets flavor.
             </p>
 
             <div className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function Footer() {
                   key={label}
                   type="button"
                   aria-label={`${label} (link coming soon)`}
-                  title={`${label} — link coming soon`}
+                  title={`${label}, link coming soon`}
                   className="w-9 h-9 rounded-full border border-nayo-gold/40 flex items-center justify-center text-nayo-white hover:text-nayo-gold hover:border-nayo-gold transition-all duration-300"
                 >
                   <Icon />

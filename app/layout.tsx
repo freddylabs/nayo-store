@@ -19,12 +19,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Nayo — Wear It. Taste It. Love It.",
+  title: "Nayo, Wear It. Taste It. Love It.",
   description:
     "A luxury lifestyle brand celebrating African heritage through fashion, food, and culture. Wear it. Taste it. Love it.",
   keywords: "Nayo, luxury fashion, African food, cultural accessories, lifestyle brand",
   openGraph: {
-    title: "Nayo — Wear It. Taste It. Love It.",
+    title: "Nayo, Wear It. Taste It. Love It.",
     description:
       "A luxury lifestyle brand celebrating African heritage through fashion, food, and culture. Wear it. Taste it. Love it.",
     type: "website",

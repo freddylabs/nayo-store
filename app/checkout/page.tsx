@@ -139,7 +139,7 @@ export default function CheckoutPage() {
               Checkout
             </p>
             <h1 className="text-display text-4xl sm:text-5xl font-bold text-white leading-tight mt-3">
-              Pickup or delivery — we will take care of the rest.
+              Pickup or delivery, we will take care of the rest.
             </h1>
             <p className="mt-4 text-white/80 max-w-xl text-sm sm:text-base leading-relaxed">
               We fulfill orders on Mondays, Fridays, and Saturdays, 9:00 AM –

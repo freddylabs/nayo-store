@@ -89,7 +89,7 @@ export async function POST(request: Request) {
         unit_amount: Math.round(item.price * 100),
         product_data: {
           name: item.note
-            ? `${item.name} — ${item.note}`
+            ? `${item.name}, ${item.note}`
             : `${item.name} (${item.lineId})`,
         },
       },

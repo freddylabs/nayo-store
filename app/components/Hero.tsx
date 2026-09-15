@@ -136,201 +136,156 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
   };
 
   const ring = 2 * Math.PI * 22;
-  const [isDesktop, setIsDesktop] = useState(true);
-
-  useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(desktop.matches);
-    update();
-    desktop.addEventListener("change", update);
-    return () => desktop.removeEventListener("change", update);
-  }, []);
+  const slide = heroSlides[current];
+  const shownImage = slide.images[photo] ?? slide.images[0];
+  const innerCount = slide.images.length;
+  const ringFill = (photo + progress) / innerCount;
 
   return (
     <section className="relative bg-nayo-green">
       <div className="pt-[5.75rem] sm:pt-[6.5rem] max-sm:h-[100dvh] max-sm:flex max-sm:flex-col">
         <div className="relative overflow-hidden max-sm:flex-1 max-sm:min-h-0 sm:h-[min(64vh,620px)] lg:h-[min(78vh,780px)]">
-          {heroSlides.map((slide, i) => {
-            const length = heroSlides.length;
-            const offset = (i - current + length) % length;
-            const isActive = offset === 0;
-            const isNext = offset === 1;
-            const isPrev = offset === length - 1;
-            const isVisible = isDesktop && (isActive || isNext || isPrev);
-            const scale = isActive ? 1 : 0.9;
-            const shownPhoto = isActive ? photo : 0;
-            const shownImage = slide.images[shownPhoto] ?? slide.images[0];
-            const innerCount = slide.images.length;
-            const ringFill = isActive
-              ? (photo + progress) / innerCount
-              : i < current
-                ? 1
-                : 0;
-
-            return (
-              <motion.div
-                key={slide.label}
-                onClick={() => {
-                  if (!isActive) goToCard(i);
-                }}
-                animate={{
-                  x: isActive
-                    ? "-50%"
-                    : isNext
-                      ? "calc(-50% + 34vw)"
-                      : "calc(-50% - 34vw)",
-                  y: "-50%",
-                  scale,
-                  opacity: isActive ? 1 : isVisible ? 0.7 : 0,
-                }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className={`absolute left-1/2 top-1/2 w-[94vw] max-sm:h-[98%] sm:w-[min(72vw,480px)] lg:w-[560px] sm:h-[min(54vh,520px)] lg:h-[640px] ${
-                  isActive
-                    ? "z-20"
-                    : isVisible
-                      ? "z-10 cursor-pointer"
-                      : "z-0 pointer-events-none"
-                }`}
-                aria-hidden={!isActive}
-              >
-                <div className="h-full w-full rounded-[22px] lg:rounded-[28px] bg-black/25 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.28)] flex flex-col overflow-hidden">
-                  <div className="flex items-start justify-between gap-3 px-3 pt-3 pb-2 lg:px-5 lg:pt-5 lg:pb-3">
-                    <span className="px-2.5 py-1 lg:px-3 rounded-md gold-gradient text-[9px] lg:text-[10px] font-bold tracking-[0.2em] uppercase text-nayo-black">
-                      {slide.label}
-                    </span>
-                    <div className="flex flex-col items-end gap-1.5">
-                      <div className="relative w-10 h-10 lg:w-12 lg:h-12 pointer-events-none shrink-0">
-                        <svg
-                          viewBox="0 0 56 56"
-                          className="w-full h-full -rotate-90"
-                        >
-                          <circle
-                            cx="28"
-                            cy="28"
-                            r="22"
-                            fill="none"
-                            stroke="rgba(255,255,255,0.35)"
-                            strokeWidth="3"
-                          />
-                          <circle
-                            cx="28"
-                            cy="28"
-                            r="22"
-                            fill="none"
-                            stroke="#D4AF37"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeDasharray={ring}
-                            strokeDashoffset={ring * (1 - ringFill)}
-                          />
-                        </svg>
-                        <span className="absolute inset-0 flex items-center justify-center text-[10px] lg:text-[11px] font-bold text-white">
-                          {String(
-                            isActive ? shownPhoto + 1 : innerCount
-                          ).padStart(2, "0")}
-                        </span>
-                      </div>
-                      {innerCount > 1 && isActive && (
-                        <div className="w-10 lg:w-12 flex flex-col gap-1">
-                          {slide.images.map((image, pi) => (
-                            <button
-                              key={image.src}
-                              type="button"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                goToPhoto(pi);
-                              }}
-                              className="relative h-1 w-full rounded-full bg-white/30 overflow-hidden"
-                              aria-label={`Show ${image.caption}`}
-                            >
-                              <span
-                                className="absolute inset-y-0 left-0 rounded-full bg-nayo-gold"
-                                style={{
-                                  width:
-                                    pi < photo
-                                      ? "100%"
-                                      : pi === photo
-                                        ? `${progress * 100}%`
-                                        : "0%",
-                                }}
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="relative flex-1 mx-2 sm:mx-3 lg:mx-5 min-h-0 rounded-xl lg:rounded-2xl bg-nayo-green/80 overflow-hidden">
-                    <AnimatePresence initial={false}>
-                      <motion.div
-                        key={shownImage.src}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.45 }}
-                        className="absolute inset-1 sm:inset-3 lg:inset-4"
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={slide.label}
+              initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-42%" }}
+              animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+              exit={{ opacity: 0, scale: 0.92, x: "-50%", y: "-58%" }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute left-1/2 top-1/2 z-20 w-[94vw] max-sm:h-[98%] sm:w-[min(72vw,480px)] lg:w-[560px] sm:h-[min(54vh,520px)] lg:h-[640px]"
+            >
+              <div className="h-full w-full rounded-[22px] lg:rounded-[28px] bg-black/25 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.28)] flex flex-col overflow-hidden">
+                <div className="flex items-start justify-between gap-3 px-3 pt-3 pb-2 lg:px-5 lg:pt-5 lg:pb-3">
+                  <span className="px-2.5 py-1 lg:px-3 rounded-md gold-gradient text-[9px] lg:text-[10px] font-bold tracking-[0.2em] uppercase text-nayo-black">
+                    {slide.label}
+                  </span>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <div className="relative w-10 h-10 lg:w-12 lg:h-12 pointer-events-none shrink-0">
+                      <svg
+                        viewBox="0 0 56 56"
+                        className="w-full h-full -rotate-90"
                       >
-                        {shownImage.type === "video" ? (
-                          <video
-                            ref={isActive ? videoRef : undefined}
-                            src={shownImage.src}
-                            muted
-                            playsInline
-                            preload="auto"
-                            className="absolute inset-0 h-full w-full object-contain object-center"
-                            onEnded={() => {
-                              if (isActive) goNext();
-                            }}
-                            onTimeUpdate={(event) => {
-                              if (!isActive) return;
-                              const video = event.currentTarget;
-                              if (video.duration > 0) {
-                                setProgress(video.currentTime / video.duration);
-                              }
-                            }}
-                          />
-                        ) : (
-                          <Image
-                            src={shownImage.src}
-                            alt={shownImage.caption}
-                            fill
-                            unoptimized
-                            quality={100}
-                            className={
-                              slide.label === "Health"
-                                ? "object-contain object-top"
-                                : "object-contain object-center"
-                            }
-                            sizes="(max-width: 640px) 94vw, (max-width: 1024px) 58vw, 560px"
-                            priority={i === 0}
-                          />
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  <div className="px-3 pt-2 pb-2.5 lg:px-5 lg:pt-4 lg:pb-5">
-                    <h2 className="text-display text-xl sm:text-2xl lg:text-4xl font-bold text-white leading-tight">
-                      {slide.brand}
-                    </h2>
-                    <p className="mt-0.5 text-white/75 text-xs sm:text-sm lg:text-base leading-snug line-clamp-1 lg:line-clamp-2">
-                      {isActive ? shownImage.caption : slide.title}
-                    </p>
-                    <Link
-                      href={slide.href}
-                      className="mt-1.5 lg:mt-3 inline-flex items-center gap-2 text-white/90 text-xs sm:text-sm tracking-wide hover:text-nayo-gold transition-colors"
-                    >
-                      <span className="w-6 h-6 lg:w-7 lg:h-7 rounded-full border border-white/70 flex items-center justify-center">
-                        <ArrowRight size={12} />
+                        <circle
+                          cx="28"
+                          cy="28"
+                          r="22"
+                          fill="none"
+                          stroke="rgba(255,255,255,0.35)"
+                          strokeWidth="3"
+                        />
+                        <circle
+                          cx="28"
+                          cy="28"
+                          r="22"
+                          fill="none"
+                          stroke="#D4AF37"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeDasharray={ring}
+                          strokeDashoffset={ring * (1 - ringFill)}
+                        />
+                      </svg>
+                      <span className="absolute inset-0 flex items-center justify-center text-[10px] lg:text-[11px] font-bold text-white">
+                        {String(photo + 1).padStart(2, "0")}
                       </span>
-                      {slide.cta}
-                    </Link>
+                    </div>
+                    {innerCount > 1 && (
+                      <div className="w-10 lg:w-12 flex flex-col gap-1">
+                        {slide.images.map((image, pi) => (
+                          <button
+                            key={image.src}
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              goToPhoto(pi);
+                            }}
+                            className="relative h-1 w-full rounded-full bg-white/30 overflow-hidden"
+                            aria-label={`Show ${image.caption}`}
+                          >
+                            <span
+                              className="absolute inset-y-0 left-0 rounded-full bg-nayo-gold"
+                              style={{
+                                width:
+                                  pi < photo
+                                    ? "100%"
+                                    : pi === photo
+                                      ? `${progress * 100}%`
+                                      : "0%",
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </motion.div>
-            );
-          })}
+
+                <div className="relative flex-1 mx-2 sm:mx-3 lg:mx-5 min-h-0 rounded-xl lg:rounded-2xl bg-nayo-green/80 overflow-hidden">
+                  <AnimatePresence initial={false}>
+                    <motion.div
+                      key={shownImage.src}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.45 }}
+                      className="absolute inset-1 sm:inset-3 lg:inset-4"
+                    >
+                      {shownImage.type === "video" ? (
+                        <video
+                          ref={videoRef}
+                          src={shownImage.src}
+                          muted
+                          playsInline
+                          preload="auto"
+                          className="absolute inset-0 h-full w-full object-contain object-center"
+                          onEnded={() => goNext()}
+                          onTimeUpdate={(event) => {
+                            const video = event.currentTarget;
+                            if (video.duration > 0) {
+                              setProgress(video.currentTime / video.duration);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <Image
+                          src={shownImage.src}
+                          alt={shownImage.caption}
+                          fill
+                          unoptimized
+                          quality={100}
+                          className={
+                            slide.label === "Health"
+                              ? "object-contain object-top"
+                              : "object-contain object-center"
+                          }
+                          sizes="(max-width: 640px) 94vw, (max-width: 1024px) 58vw, 560px"
+                          priority={current === 0}
+                        />
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="px-3 pt-2 pb-2.5 lg:px-5 lg:pt-4 lg:pb-5">
+                  <h2 className="text-display text-xl sm:text-2xl lg:text-4xl font-bold text-white leading-tight">
+                    {slide.brand}
+                  </h2>
+                  <p className="mt-0.5 text-white/75 text-xs sm:text-sm lg:text-base leading-snug line-clamp-1 lg:line-clamp-2">
+                    {shownImage.caption}
+                  </p>
+                  <Link
+                    href={slide.href}
+                    className="mt-1.5 lg:mt-3 inline-flex items-center gap-2 text-white/90 text-xs sm:text-sm tracking-wide hover:text-nayo-gold transition-colors"
+                  >
+                    <span className="w-6 h-6 lg:w-7 lg:h-7 rounded-full border border-white/70 flex items-center justify-center">
+                      <ArrowRight size={12} />
+                    </span>
+                    {slide.cta}
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4 px-4 sm:px-10 lg:px-16 py-3 sm:py-5 lg:py-6 max-sm:shrink-0">

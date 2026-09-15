@@ -7,23 +7,35 @@ export default function SectionClose({
   body,
   href,
   cta,
+  tone = "green",
 }: {
   eyebrow: string;
   title: string;
   body: string;
   href: string;
   cta: string;
+  tone?: "green" | "light";
 }) {
+  const light = tone === "light";
+
   return (
-    <div className="bg-nayo-green">
+    <div className={light ? "bg-nayo-white" : "bg-nayo-green"}>
       <div className="max-w-[800px] mx-auto px-6 py-16 sm:py-20 text-center">
         <p className="text-nayo-gold text-xs tracking-[0.25em] uppercase font-semibold">
           {eyebrow}
         </p>
-        <h2 className="text-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3 leading-tight">
+        <h2
+          className={`text-display text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 leading-tight ${
+            light ? "text-nayo-black" : "text-white"
+          }`}
+        >
           {title}
         </h2>
-        <p className="mt-4 text-white/75 text-sm sm:text-base leading-relaxed">
+        <p
+          className={`mt-4 text-sm sm:text-base leading-relaxed ${
+            light ? "text-nayo-black/65" : "text-white/75"
+          }`}
+        >
           {body}
         </p>
         <Link

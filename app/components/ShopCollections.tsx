@@ -29,7 +29,7 @@ function ShopRow({
           <ChevronRight size={16} />
         </Link>
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-2 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible hide-scrollbar">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible hide-scrollbar">
         {products.slice(0, 4).map((product) => (
           <ShopProductCard key={product.id} product={product} />
         ))}
@@ -49,12 +49,14 @@ export default function ShopCollections({
   const health = products.filter((item) => item.category === "health");
 
   return (
-    <div className="bg-nayo-white pb-12 sm:pb-16 space-y-12 sm:space-y-16">
-      <p className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 pt-4 text-center text-[11px] tracking-[0.22em] uppercase font-semibold text-nayo-gold">
+    <div className="bg-nayo-white pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16">
+      <p className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 text-center text-[11px] tracking-[0.22em] uppercase font-semibold text-nayo-gold mb-5 sm:mb-6 lg:mb-8">
         {copy.shopEyebrow}
       </p>
-      <ShopRow title={copy.shopFoodTitle} products={food} href="/food" />
-      <ShopRow title={copy.shopHealthTitle} products={health} href="/health" />
+      <div className="space-y-10 sm:space-y-12 lg:space-y-14">
+        <ShopRow title={copy.shopFoodTitle} products={food} href="/food" />
+        <ShopRow title={copy.shopHealthTitle} products={health} href="/health" />
+      </div>
     </div>
   );
 }

@@ -49,7 +49,7 @@ export default function LegacySection() {
             {...fadeUp(0.1)}
             className="text-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-nayo-black"
           >
-            Every Nayo creation holds what money cannot buy — <span className="gold-text italic">a bloodline, a promise.</span>
+            Every Nayo creation holds what money cannot buy, <span className="gold-text italic">a bloodline, a promise.</span>
           </motion.h2>
           <motion.p
             {...fadeUp(0.2)}

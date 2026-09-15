@@ -334,7 +334,7 @@ export const healthProducts: Product[] = [
   {
     id: "h-006",
     name: "Nayo Health Ensemble",
-    description: "The full color story — six looks, one collection, built for every shift.",
+    description: "The full color story, six looks, one collection, built for every shift.",
     price: 148,
     image: "/health-team-group.jpg",
     category: "health",

@@ -55,7 +55,7 @@ export default function About() {
               className="space-y-5 text-nayo-black/65 leading-relaxed"
             >
               <p>
-                NAYO was founded with a vision to create more than just a business—it was created to build a legacy. Rooted in strong family values and a passion for excellence, NAYO brings together two everyday essentials: quality fashion and great food under one trusted brand.
+                NAYO was founded with a vision to create more than just a business, it was created to build a legacy. Rooted in strong family values and a passion for excellence, NAYO brings together two everyday essentials: quality fashion and great food under one trusted brand.
               </p>
               <p>
                 We believe that what people wear and what they eat should reflect confidence, quality, and care. Every product and service we offer is designed to enrich lives, celebrate culture, and create meaningful experiences for our customers.
@@ -78,7 +78,7 @@ export default function About() {
             >
               <Image
                 src="/hero-fashion.png"
-                alt="Nayo brand story — luxury fashion"
+                alt="Nayo brand story, luxury fashion"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 55vw"

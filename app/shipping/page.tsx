@@ -30,7 +30,7 @@ export default function ShippingPage() {
         <p>
           Choose pickup at checkout. There is no pickup fee. Have your order
           name or confirmation ready when you collect. Meals are prepared to
-          order — please allow time for cooking on busy days.
+          order, please allow time for cooking on busy days.
         </p>
       </LegalSection>
 

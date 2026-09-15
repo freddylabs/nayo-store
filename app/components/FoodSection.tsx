@@ -1,39 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Leaf, Plus } from "lucide-react";
 import FoodOrderCard from "./FoodOrderCard";
 import SectionClose from "./SectionClose";
 import type { Product } from "@/app/data/products";
 import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
-
-const features = [
-  {
-    src: "/food-kenkey-platter.jpg",
-    name: "Kenkey Combo Platter",
-    note: "Fish, sausage, egg & plantain",
-  },
-  {
-    src: "/hero-food.png",
-    name: "Jollof and Beef",
-    note: "The original plate",
-  },
-  {
-    src: "/food-jollof-chicken.jpg",
-    name: "Jollof and Chicken",
-    note: "With fried plantain",
-  },
-  {
-    src: "/food-jollof-goat.jpg",
-    name: "Jollof with Goat Meat",
-    note: "Plantain and salad",
-  },
-  {
-    src: "/food-fried-rice.jpg",
-    name: "Classic Fried Rice",
-    note: "Fresh from the wok",
-  },
-];
 
 export default function FoodSection({
   products,
@@ -47,7 +18,7 @@ export default function FoodSection({
       <div className="relative bg-nayo-green overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-nayo-green via-nayo-green to-[#123224]" />
 
-        <div className="relative max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-10 sm:pt-14 pb-8">
+        <div className="relative max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-16">
           <p className="text-nayo-gold text-xs tracking-[0.25em] uppercase font-semibold">
             {copy.foodEyebrow}
           </p>
@@ -57,35 +28,6 @@ export default function FoodSection({
           <p className="mt-4 text-white/80 max-w-lg text-sm sm:text-base">
             {copy.foodIntro}
           </p>
-        </div>
-
-        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-16 pb-10 sm:pb-14">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-            {features.map((item) => (
-              <figure
-                key={item.src}
-                className="relative rounded-2xl overflow-hidden bg-nayo-green border border-white/10"
-              >
-                <div className="relative aspect-[4/5]">
-                  <Image
-                    src={item.src}
-                    alt={item.name}
-                    fill
-                    quality={95}
-                    className="object-cover object-center"
-                    sizes="(max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-nayo-green via-nayo-green/25 to-transparent" />
-                </div>
-                <figcaption className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                  <p className="text-white text-sm font-medium leading-snug">
-                    {item.name}
-                  </p>
-                  <p className="text-white/70 text-[11px] mt-0.5">{item.note}</p>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
         </div>
       </div>
 

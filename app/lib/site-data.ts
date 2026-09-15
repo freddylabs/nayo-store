@@ -96,7 +96,7 @@ export const defaultCopy: SiteCopy = {
   landingCloseEyebrow: "Nayo",
   landingCloseTitle: "Live the NAYO Lifestyle.",
   landingCloseBody:
-    "From stylish clothing and healthcare uniforms to meals made with care — get in touch and we will help you find what you need.",
+    "From stylish clothing and healthcare uniforms to meals made with care, get in touch and we will help you find what you need.",
   landingCloseCta: "Get in touch",
   apparelEyebrow: "Nayo Apparel",
   apparelTitle: "Wear What Speaks For You.",
@@ -104,7 +104,7 @@ export const defaultCopy: SiteCopy = {
     "NAYO Apparel is dedicated to producing fashionable, comfortable, and high-quality clothing for everyday wear and professional use.",
   apparelBand1Title: "Made for the night",
   apparelBand1Body:
-    "Mermaid hems, cape sleeves, and gold embroidery that reads from across the floor — without shouting.",
+    "Mermaid hems, cape sleeves, and gold embroidery that reads from across the floor, without shouting.",
   apparelBand2Title: "Cut with intention",
   apparelBand2Body:
     "Structured tailoring and heritage cloth, finished so the piece feels as considered as the occasion.",
@@ -120,7 +120,7 @@ export const defaultCopy: SiteCopy = {
     "NAYO Foods delivers delicious meals prepared with quality ingredients and authentic flavors.",
   foodBand1Title: "On the plate",
   foodBand1Body:
-    "Rice, protein, and the sides that belong with that dish. Drop anything you do not want — the plate price stays put.",
+    "Rice, protein, and the sides that belong with that dish. Drop anything you do not want, the plate price stays put.",
   foodBand2Title: "Make it extra",
   foodBand2Body:
     "More meat, extra plantain, a fried egg, kelewele, salad, or a malt. Open Add extra on a plate and pick only what you want.",
@@ -129,7 +129,7 @@ export const defaultCopy: SiteCopy = {
     "Tap what stays on the plate, drop what you do not want, and add extras before it goes in the cart.",
   foodCloseTitle: "Come hungry. Leave looking after yourself.",
   foodCloseBody:
-    "Catering, weekday plates, and the dishes you grew up on — cooked to order, packed to travel.",
+    "Catering, weekday plates, and the dishes you grew up on, cooked to order, packed to travel.",
   healthEyebrow: "Nayo Health",
   healthTitle: "Crafted For Every Shift.",
   healthIntro:

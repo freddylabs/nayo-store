@@ -28,7 +28,7 @@ export default function ContactPage() {
               We would love to hear from you.
             </h1>
             <p className="mt-5 text-white/80 max-w-xl text-sm sm:text-base leading-relaxed">
-              Questions about an order, a meal, apparel, or uniforms — send us
+              Questions about an order, a meal, apparel, or uniforms, send us
               a note and we will get back to you.
             </p>
           </div>

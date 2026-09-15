@@ -78,7 +78,7 @@ export default function CultureSection() {
               transition={{ duration: 0.6, delay: 0.35 }}
               className="text-nayo-black/60 leading-relaxed max-w-md"
             >
-              These are not souvenirs. They are living artefacts — each one
+              These are not souvenirs. They are living artefacts, each one
               carrying a story, a symbol, a place. Wear the culture. Pass it on.
             </motion.p>
 
