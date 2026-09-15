@@ -104,14 +104,24 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
     return () => cancelAnimationFrame(frame);
   }, [paused, current, photo, activeIsVideo]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!activeIsVideo || !video) return;
+  const playHeroVideo = (video: HTMLVideoElement | null) => {
+    if (!video) return;
+    video.muted = true;
+    const start = () => {
+      video.play().catch(() => {});
+    };
+    if (video.readyState >= 2) start();
+    else video.addEventListener("canplay", start, { once: true });
+  };
 
-    video.currentTime = 0;
-    if (!paused) video.play().catch(() => {});
+  useEffect(() => {
+    if (!activeIsVideo) return;
+    const frame = requestAnimationFrame(() => {
+      playHeroVideo(videoRef.current);
+    });
     return () => {
-      video.pause();
+      cancelAnimationFrame(frame);
+      videoRef.current?.pause();
     };
   }, [activeIsVideo, current, photo]);
 
@@ -119,7 +129,7 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
     const video = videoRef.current;
     if (!activeIsVideo || !video) return;
     if (paused) video.pause();
-    else video.play().catch(() => {});
+    else playHeroVideo(video);
   }, [paused, activeIsVideo]);
 
   const goToCard = (index: number) => {
@@ -145,7 +155,7 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
     <section className="relative bg-nayo-green">
       <div className="pt-[5.75rem] sm:pt-[6.5rem] max-sm:h-[100dvh] max-sm:flex max-sm:flex-col">
         <div className="relative overflow-hidden max-sm:flex-1 max-sm:min-h-0 sm:h-[min(64vh,620px)] lg:h-[min(78vh,780px)]">
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence initial={false}>
             <motion.div
               key={slide.label}
               initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-42%" }}
@@ -224,7 +234,9 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
                   <AnimatePresence initial={false}>
                     <motion.div
                       key={shownImage.src}
-                      initial={{ opacity: 0 }}
+                      initial={
+                        shownImage.type === "video" ? false : { opacity: 0 }
+                      }
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.45 }}
@@ -232,12 +244,19 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
                     >
                       {shownImage.type === "video" ? (
                         <video
-                          ref={videoRef}
+                          ref={(el) => {
+                            videoRef.current = el;
+                            if (el && !paused) playHeroVideo(el);
+                          }}
                           src={shownImage.src}
+                          autoPlay
                           muted
                           playsInline
                           preload="auto"
-                          className="absolute inset-0 h-full w-full object-contain object-center"
+                          className="absolute inset-0 h-full w-full object-contain object-center bg-nayo-green"
+                          onCanPlay={(event) => {
+                            if (!paused) playHeroVideo(event.currentTarget);
+                          }}
                           onEnded={() => goNext()}
                           onTimeUpdate={(event) => {
                             const video = event.currentTarget;

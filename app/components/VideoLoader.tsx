@@ -114,7 +114,7 @@ export default function VideoLoader() {
                 animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
                 exit={{ scale: 1.8, opacity: 0, filter: "blur(20px)" }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="relative w-[min(94vw,780px)] h-[min(90vh,836px)] absolute"
+                className="relative w-[min(94vw,780px)] h-[min(70vh,640px)]"
               >
                 <Image
                   src="/Nayo_logo_white.jpeg"
