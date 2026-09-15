@@ -7,7 +7,7 @@ export default function SectionClose({
   body,
   href,
   cta,
-  tone = "green",
+  tone = "light",
 }: {
   eyebrow: string;
   title: string;
