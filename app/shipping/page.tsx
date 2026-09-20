@@ -76,10 +76,10 @@ export default function ShippingPage() {
           </a>{" "}
           or{" "}
           <a
-            href="mailto:hello@nayo.store"
+            href="mailto:info@nayo.market"
             className="text-nayo-green font-semibold"
           >
-            hello@nayo.store
+            info@nayo.market
           </a>
           . Nayo Ltd.
         </p>

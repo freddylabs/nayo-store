@@ -139,10 +139,10 @@ export default function Footer() {
                     Email
                   </p>
                   <a
-                    href="mailto:hello@nayo.store"
+                    href="mailto:info@nayo.market"
                     className="text-sm text-nayo-white/80 hover:text-nayo-gold transition-colors duration-300"
                   >
-                    hello@nayo.store
+                    info@nayo.market
                   </a>
                 </div>
               </li>

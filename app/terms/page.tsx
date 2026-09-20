@@ -105,10 +105,10 @@ export default function TermsPage() {
           </a>
           . Email{" "}
           <a
-            href="mailto:hello@nayo.store"
+            href="mailto:info@nayo.market"
             className="text-nayo-green font-semibold"
           >
-            hello@nayo.store
+            info@nayo.market
           </a>
           .
         </p>

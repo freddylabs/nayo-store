@@ -112,10 +112,10 @@ export default function ContactPage() {
                       Email us
                     </p>
                     <a
-                      href="mailto:hello@nayo.store"
+                      href="mailto:info@nayo.market"
                       className="text-nayo-black font-medium mt-1 block"
                     >
-                      hello@nayo.store
+                      info@nayo.market
                     </a>
                     <p className="text-sm text-nayo-black/50 mt-1">
                       We aim to reply within one working day.
