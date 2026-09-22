@@ -46,12 +46,12 @@ const heroSlides = [
         caption: "Crafted For Every Shift",
       },
       {
-        src: "/health-team-group.jpg",
-        caption: "Uniforms made for every shift",
+        src: "/health-nurse-dress.jpg",
+        caption: "Nurse scrub dresses for every shift",
       },
       {
-        src: "/health-duo-teal-burgundy.jpg",
-        caption: "Made for the floor",
+        src: "/health-scrub-charcoal.jpg",
+        caption: "Signature scrubs",
       },
     ],
   },

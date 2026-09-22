@@ -133,9 +133,10 @@ export const defaultCopy: SiteCopy = {
   healthEyebrow: "Nayo Health",
   healthTitle: "Crafted For Every Shift.",
   healthIntro:
-    "Modern scrubs and small essentials with a tailored fit, built for long hours and a confident presence on the floor.",
+    "Nurse dresses, signature scrubs, and shift essentials with a tailored fit, built for long hours and a confident presence on the floor.",
   healthCollectionTitle: "Shop the collection",
-  healthCollectionBody: "Scrubs and lanyards that work as hard as you do.",
+  healthCollectionBody:
+    "Uniforms, clipboards, stethoscopes, and the small pieces that finish a shift.",
   healthCloseTitle: "Show up looking like you belong.",
   healthCloseBody:
     "Every shift is a promise. Dress for the work, the team, and the people who trust you with their care.",

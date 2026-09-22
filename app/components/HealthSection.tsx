@@ -13,34 +13,39 @@ const SLIDE_MS = 5000;
 
 const lookbook = [
   {
-    src: "/health-team-group.jpg",
-    alt: "Nayo Health team in colorful scrubs",
-    caption: "The full color story",
+    src: "/health-nurse-dress.jpg",
+    alt: "Nayo nurse scrub dresses in teal and green",
+    caption: "Nayo nurse scrub dress",
+  },
+  {
+    src: "/health-nurse-dress-neutral.jpg",
+    alt: "Nayo nurse scrub dresses in black and beige",
+    caption: "Black and beige scrub dress",
   },
   {
     src: "/health-scrub-charcoal.jpg",
     alt: "Charcoal jogger scrubs",
-    caption: "Charcoal signature scrubs",
+    caption: "Signature scrubs",
   },
   {
-    src: "/health-scrub-sage.jpg",
-    alt: "Sage clinical scrubs",
-    caption: "Sage clinical set",
+    src: "/health-clipboard-folio.jpg",
+    alt: "Nayo Nurse Notebook clipboard folio",
+    caption: "Nayo Nurse Notebook",
   },
   {
-    src: "/health-duo-teal-burgundy.jpg",
-    alt: "Teal and burgundy cargo scrubs",
-    caption: "Teal and burgundy cargo",
+    src: "/health-stethoscope.jpg",
+    alt: "Nayo clinical stethoscope",
+    caption: "Clinical stethoscope",
   },
   {
-    src: "/health-scrub-sky.jpg",
-    alt: "Sky blue shift scrubs",
-    caption: "Sky blue shift set",
+    src: "/health-lanyard-teal.jpg",
+    alt: "Nurse lanyard",
+    caption: "Nurse lanyard",
   },
   {
-    src: "/health-nurse-lanyard.jpg",
-    alt: "Nursing student lanyard and badge",
-    caption: "Nursing student lanyard",
+    src: "/health-socks-clinical.jpg",
+    alt: "Clinical print crew socks",
+    caption: "Shift socks",
   },
 ];
 

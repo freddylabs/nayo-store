@@ -44,7 +44,11 @@ export default function ShopProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group min-w-[168px] w-[168px] sm:min-w-0 sm:w-auto">
-      <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-[#F3F4F6]">
+      <div
+        className={`relative aspect-[4/5] rounded-xl overflow-hidden ${
+          isHealth ? "bg-white" : "bg-[#F3F4F6]"
+        }`}
+      >
         <Image
           src={product.image}
           alt={product.name}
@@ -52,7 +56,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
           quality={95}
           className={
             isHealth
-              ? "object-contain object-top"
+              ? "object-cover object-top transition-transform duration-500 group-hover:scale-105"
               : "object-cover object-center transition-transform duration-500 group-hover:scale-105"
           }
           sizes="(max-width: 640px) 168px, (max-width: 1024px) 45vw, 280px"
