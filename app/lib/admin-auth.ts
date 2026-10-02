@@ -10,21 +10,31 @@ export function getAdminPassword(): string {
   );
 }
 
-function tokenFor(password: string): string {
-  return createHmac("sha256", password).update("nayo-admin").digest("hex");
+export function getAdminEmail(): string {
+  return normalizeEmail(process.env.ADMIN_EMAIL || "info@nayo.market");
+}
+
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+function tokenFor(email: string, password: string): string {
+  return createHmac("sha256", password)
+    .update(`nayo-admin:${normalizeEmail(email)}`)
+    .digest("hex");
 }
 
 export function makeAdminToken(): string | null {
   const password = getAdminPassword();
   if (!password) return null;
-  return tokenFor(password);
+  return tokenFor(getAdminEmail(), password);
 }
 
-export function passwordMatches(input: string): boolean {
+export function credentialsMatch(email: string, input: string): boolean {
   const password = getAdminPassword();
-  if (!password || !input) return false;
-  const a = Buffer.from(tokenFor(input));
-  const b = Buffer.from(tokenFor(password));
+  if (!password || !email || !input) return false;
+  const a = Buffer.from(tokenFor(email, input));
+  const b = Buffer.from(tokenFor(getAdminEmail(), password));
   return a.length === b.length && timingSafeEqual(a, b);
 }
 

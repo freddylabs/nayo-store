@@ -171,6 +171,7 @@ function emptyProduct(category: Category): Product {
 export default function AdminDashboard() {
   const [ready, setReady] = useState(false);
   const [authed, setAuthed] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [tab, setTab] = useState<Tab>("items");
   const [category, setCategory] = useState<Category>("food");
@@ -220,7 +221,7 @@ export default function AdminDashboard() {
     const res = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     });
     const data = (await res.json()) as { error?: string };
     if (!res.ok) {
@@ -298,10 +299,21 @@ export default function AdminDashboard() {
           orders.
         </p>
         <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          autoComplete="username"
+          required
+          className="w-full border border-nayo-black/15 rounded-lg px-4 py-3 text-sm"
+        />
+        <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          autoComplete="current-password"
+          required
           className="w-full border border-nayo-black/15 rounded-lg px-4 py-3 text-sm"
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
