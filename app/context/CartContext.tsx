@@ -138,6 +138,8 @@ interface CartContextValue {
   dispatch: React.Dispatch<CartAction>;
   totalItems: number;
   totalPrice: number;
+  /** True once the saved cart has been loaded from localStorage. */
+  ready: boolean;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -177,7 +179,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const totalPrice = state.items.reduce((sum, i) => sum + i.qty * i.price, 0);
 
   return (
-    <CartContext.Provider value={{ state, dispatch, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ state, dispatch, totalItems, totalPrice, ready }}>
       {children}
     </CartContext.Provider>
   );

@@ -99,7 +99,7 @@ export default function Footer() {
             </h4>
             <div className="space-y-3">
               <p className="text-sm text-nayo-white/80 leading-relaxed">
-                Mondays, Fridays, and Saturdays
+                Saturdays
               </p>
               <p className="text-sm text-nayo-white/70">9:00 AM – 9:00 PM</p>
               <p className="text-xs text-nayo-gold/80 uppercase tracking-wider font-semibold flex items-center gap-2 pt-1">

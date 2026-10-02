@@ -1,7 +1,8 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getDeliveryFee, type FulfillmentMethod } from "@/app/lib/checkout";
 import { addOrder, createOrderNumber } from "@/app/lib/store";
+import { stripeClient } from "@/app/lib/fulfill";
 
 type CheckoutItem = {
   lineId: string;
@@ -27,8 +28,8 @@ type CheckoutBody = {
 };
 
 export async function POST(request: Request) {
-  const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret) {
+  const stripe = stripeClient();
+  if (!stripe) {
     return NextResponse.json(
       {
         error:
@@ -69,9 +70,9 @@ export async function POST(request: Request) {
     }
   }
 
-  const subtotal = body.items.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
+  const cents = (value: number) => Math.round(value * 100) / 100;
+  const subtotal = cents(
+    body.items.reduce((sum, item) => sum + item.price * item.qty, 0)
   );
   const deliveryFee = getDeliveryFee(subtotal, body.fulfillment);
   const origin =
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_SITE_URL ||
     "http://127.0.0.1:3000";
 
-  const stripe = new Stripe(secret);
+  const orderNumber = createOrderNumber();
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
     body.items.map((item) => ({
@@ -88,9 +89,7 @@ export async function POST(request: Request) {
         currency: "usd",
         unit_amount: Math.round(item.price * 100),
         product_data: {
-          name: item.note
-            ? `${item.name}, ${item.note}`
-            : `${item.name} (${item.lineId})`,
+          name: item.note ? `${item.name}, ${item.note}` : item.name,
         },
       },
     }));
@@ -113,6 +112,7 @@ export async function POST(request: Request) {
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/checkout`,
     metadata: {
+      orderNumber,
       fulfillment: body.fulfillment,
       customerName: body.customerName,
       phone: body.phone || "",
@@ -128,26 +128,33 @@ export async function POST(request: Request) {
     );
   }
 
-  await addOrder({
-    id: session.id,
-    orderNumber: createOrderNumber(),
-    createdAt: new Date().toISOString(),
-    customerName: body.customerName,
-    email: body.email,
-    phone: body.phone || "",
-    fulfillment: body.fulfillment,
-    address: body.fulfillment === "delivery" ? body.address : undefined,
-    items: body.items.map((item) => ({
-      name: item.name,
-      qty: item.qty,
-      price: item.price,
-      note: item.note,
-    })),
-    subtotal,
-    deliveryFee,
-    total: subtotal + deliveryFee,
-    status: "to_send",
-  });
+  try {
+    await addOrder({
+      id: session.id,
+      orderNumber,
+      createdAt: new Date().toISOString(),
+      customerName: body.customerName,
+      email: body.email,
+      phone: body.phone || "",
+      fulfillment: body.fulfillment,
+      address: body.fulfillment === "delivery" ? body.address : undefined,
+      items: body.items.map((item) => ({
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        note: item.note,
+        image: item.image,
+      })),
+      subtotal,
+      deliveryFee,
+      total: cents(subtotal + deliveryFee),
+      status: "to_send",
+      paymentStatus: "pending",
+    });
+  } catch (error) {
+    // Payment must still go through; the order is rebuilt from Stripe once paid.
+    console.error("[checkout] could not save pending order", error);
+  }
 
   return NextResponse.json({ url: session.url });
 }

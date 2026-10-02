@@ -15,13 +15,12 @@ export default function ShippingPage() {
 
       <LegalSection title="Working hours and days">
         <p>
-          Pickup and delivery are available on <strong>Mondays</strong>,{" "}
-          <strong>Fridays</strong>, and <strong>Saturdays</strong>, from{" "}
-          <strong>9:00 AM to 9:00 PM</strong>.
+          Pickup and delivery are available on <strong>Saturdays</strong>,
+          from <strong>9:00 AM to 9:00 PM</strong>.
         </p>
         <p>
-          Orders placed outside these days or hours will be scheduled for the
-          next available working day. We will confirm timing by phone or email
+          Orders placed outside these hours will be scheduled for the next
+          Saturday. We will confirm timing by phone or email
           when needed.
         </p>
       </LegalSection>

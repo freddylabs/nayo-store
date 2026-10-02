@@ -52,7 +52,7 @@ export default function ContactPage() {
                 Working hours
               </p>
               <p className="text-display text-2xl font-bold text-nayo-black mt-2">
-                Mon, Fri &amp; Sat
+                Saturdays
               </p>
               <p className="text-sm text-nayo-black/55 mt-1">9:00 AM – 9:00 PM</p>
             </div>
@@ -98,7 +98,7 @@ export default function ContactPage() {
                       +1 (240) 308-3183
                     </a>
                     <p className="text-sm text-nayo-black/50 mt-1">
-                      Mondays, Fridays, and Saturdays, 9:00 AM – 9:00 PM
+                      Saturdays, 9:00 AM – 9:00 PM
                     </p>
                   </div>
                 </div>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                       Working hours and days
                     </p>
                     <p className="text-nayo-black font-medium mt-1">
-                      Mondays, Fridays, and Saturdays
+                      Saturdays
                     </p>
                     <p className="text-sm text-nayo-black/50 mt-1">
                       9:00 AM – 9:00 PM

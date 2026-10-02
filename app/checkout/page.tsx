@@ -142,8 +142,7 @@ export default function CheckoutPage() {
               Pickup or delivery, we will take care of the rest.
             </h1>
             <p className="mt-4 text-white/80 max-w-xl text-sm sm:text-base leading-relaxed">
-              We fulfill orders on Mondays, Fridays, and Saturdays, 9:00 AM –
-              9:00 PM. Questions? Call{" "}
+              We fulfill orders on Saturdays, 9:00 AM – 9:00 PM. Questions? Call{" "}
               <a href="tel:+12403083183" className="text-nayo-gold font-semibold">
                 +1 (240) 308-3183
               </a>
@@ -198,8 +197,7 @@ export default function CheckoutPage() {
               </div>
               <p className="mt-4 text-sm text-nayo-black/55 flex items-start gap-2 leading-relaxed">
                 <Clock size={14} className="mt-0.5 shrink-0 text-nayo-gold" />
-                Mondays, Fridays, and Saturdays, 9:00 AM – 9:00 PM. Pickup and
-                delivery only.
+                Saturdays, 9:00 AM – 9:00 PM. Pickup and delivery only.
               </p>
             </section>
 

@@ -6,7 +6,13 @@ import {
   type Product,
   type MealExtra,
 } from "@/app/data/products";
-import { defaultCopy, type Order, type OrderStatus, type SiteCopy } from "@/app/lib/site-data";
+import {
+  defaultCopy,
+  isOrderPaid,
+  type Order,
+  type OrderStatus,
+  type SiteCopy,
+} from "@/app/lib/site-data";
 
 type Tab = "items" | "copy" | "orders";
 type Category = "fashion" | "food" | "health";
@@ -706,115 +712,137 @@ function OrdersBoard({
     },
   ];
 
+  const paidOrders = orders.filter(isOrderPaid);
+  const awaitingPayment = orders.length - paidOrders.length;
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-      {columns.map((col) => (
-        <div key={col.key} className="rounded-2xl bg-white p-4 min-h-[280px]">
-          <h2 className="text-display text-xl font-bold text-nayo-black">
-            {col.title}
-          </h2>
-          <p className="text-xs text-nayo-black/50 mb-4">{col.hint}</p>
-          <div className="space-y-3">
-            {orders
-              .filter((order) => order.status === col.key)
-              .map((order) => (
-                <article
-                  key={order.id}
-                  className="rounded-xl border border-nayo-black/10 p-3 space-y-2"
-                >
-                  <p className="text-xs tracking-widest uppercase text-nayo-gold font-semibold">
-                    {order.orderNumber}
-                  </p>
-                  <p className="font-semibold text-nayo-black">
-                    {order.customerName}
-                  </p>
-                  <p className="text-xs text-nayo-black/55">
-                    {order.fulfillment === "pickup" ? "Pickup" : "Delivery"} · $
-                    {order.total.toFixed(2)}
-                  </p>
-                  <p className="text-xs text-nayo-black/55">{order.phone}</p>
-                  <p className="text-xs text-nayo-black/55">{order.email}</p>
-                  {order.address && (
-                    <p className="text-xs text-nayo-black/55">
-                      {order.address.line1}, {order.address.city},{" "}
-                      {order.address.region} {order.address.postalCode}
+    <div className="space-y-3">
+      {awaitingPayment > 0 && (
+        <p className="text-xs text-nayo-black/50">
+          {awaitingPayment} checkout{awaitingPayment === 1 ? "" : "s"} started
+          but not paid yet. They will appear here once payment goes through.
+        </p>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {columns.map((col) => (
+          <div key={col.key} className="rounded-2xl bg-white p-4 min-h-[280px]">
+            <h2 className="text-display text-xl font-bold text-nayo-black">
+              {col.title}
+            </h2>
+            <p className="text-xs text-nayo-black/50 mb-4">{col.hint}</p>
+            <div className="space-y-3">
+              {paidOrders
+                .filter((order) => order.status === col.key)
+                .map((order) => (
+                  <article
+                    key={order.id}
+                    className="rounded-xl border border-nayo-black/10 p-3 space-y-2"
+                  >
+                    <p className="text-xs tracking-widest uppercase text-nayo-gold font-semibold">
+                      {order.orderNumber}
                     </p>
-                  )}
-                  <ul className="text-xs text-nayo-black/70">
-                    {order.items.map((item, i) => (
-                      <li key={i}>
-                        {item.qty} × {item.name}
-                      </li>
-                    ))}
-                  </ul>
-                  {col.key === "shipped" && (
-                    <div className="space-y-2">
-                      <input
-                        defaultValue={order.trackingNumber}
-                        placeholder="Tracking number"
-                        onBlur={(e) =>
-                          onUpdate(order.id, {
-                            trackingNumber: e.target.value,
-                          })
-                        }
-                        className="w-full border border-nayo-black/15 rounded-lg px-2 py-1.5 text-xs"
-                      />
-                      <textarea
-                        defaultValue={order.labelNote}
-                        placeholder="Label / carrier notes"
-                        onBlur={(e) =>
-                          onUpdate(order.id, { labelNote: e.target.value })
-                        }
-                        rows={2}
-                        className="w-full border border-nayo-black/15 rounded-lg px-2 py-1.5 text-xs"
-                      />
+                    <p className="font-semibold text-nayo-black">
+                      {order.customerName}
+                    </p>
+                    <p className="text-xs text-nayo-black/55">
+                      {order.fulfillment === "pickup" ? "Pickup" : "Delivery"} · $
+                      {order.total.toFixed(2)}
+                    </p>
+                    <p className="text-[11px] text-nayo-green font-semibold">
+                      Paid
+                      {order.paidAt &&
+                        ` ${new Date(order.paidAt).toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })}`}
+                      {order.receiptSentAt && " · Receipt emailed"}
+                    </p>
+                    <p className="text-xs text-nayo-black/55">{order.phone}</p>
+                    <p className="text-xs text-nayo-black/55">{order.email}</p>
+                    {order.address && (
+                      <p className="text-xs text-nayo-black/55">
+                        {order.address.line1}, {order.address.city},{" "}
+                        {order.address.region} {order.address.postalCode}
+                      </p>
+                    )}
+                    <ul className="text-xs text-nayo-black/70">
+                      {order.items.map((item, i) => (
+                        <li key={i}>
+                          {item.qty} × {item.name}
+                        </li>
+                      ))}
+                    </ul>
+                    {col.key === "shipped" && (
+                      <div className="space-y-2">
+                        <input
+                          defaultValue={order.trackingNumber}
+                          placeholder="Tracking number"
+                          onBlur={(e) =>
+                            onUpdate(order.id, {
+                              trackingNumber: e.target.value,
+                            })
+                          }
+                          className="w-full border border-nayo-black/15 rounded-lg px-2 py-1.5 text-xs"
+                        />
+                        <textarea
+                          defaultValue={order.labelNote}
+                          placeholder="Label / carrier notes"
+                          onBlur={(e) =>
+                            onUpdate(order.id, { labelNote: e.target.value })
+                          }
+                          rows={2}
+                          className="w-full border border-nayo-black/15 rounded-lg px-2 py-1.5 text-xs"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {col.key === "to_send" && order.fulfillment === "delivery" && (
+                        <button
+                          type="button"
+                          onClick={() => onUpdate(order.id, { status: "sent" })}
+                          className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
+                        >
+                          Mark sent
+                        </button>
+                      )}
+                      {col.key === "to_send" && order.fulfillment === "pickup" && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            onUpdate(order.id, { status: "picked_up" })
+                          }
+                          className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
+                        >
+                          Mark picked up
+                        </button>
+                      )}
+                      {col.key === "sent" && (
+                        <button
+                          type="button"
+                          onClick={() => onUpdate(order.id, { status: "shipped" })}
+                          className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
+                        >
+                          Add tracking
+                        </button>
+                      )}
+                      {col.key !== "to_send" && (
+                        <button
+                          type="button"
+                          onClick={() => onUpdate(order.id, { status: "to_send" })}
+                          className="text-[10px] uppercase tracking-widest text-nayo-black/40"
+                        >
+                          Move back
+                        </button>
+                      )}
                     </div>
-                  )}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {col.key === "to_send" && order.fulfillment === "delivery" && (
-                      <button
-                        type="button"
-                        onClick={() => onUpdate(order.id, { status: "sent" })}
-                        className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
-                      >
-                        Mark sent
-                      </button>
-                    )}
-                    {col.key === "to_send" && order.fulfillment === "pickup" && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          onUpdate(order.id, { status: "picked_up" })
-                        }
-                        className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
-                      >
-                        Mark picked up
-                      </button>
-                    )}
-                    {col.key === "sent" && (
-                      <button
-                        type="button"
-                        onClick={() => onUpdate(order.id, { status: "shipped" })}
-                        className="text-[10px] uppercase tracking-widest font-bold text-nayo-green"
-                      >
-                        Add tracking
-                      </button>
-                    )}
-                    {col.key !== "to_send" && (
-                      <button
-                        type="button"
-                        onClick={() => onUpdate(order.id, { status: "to_send" })}
-                        className="text-[10px] uppercase tracking-widest text-nayo-black/40"
-                      >
-                        Move back
-                      </button>
-                    )}
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

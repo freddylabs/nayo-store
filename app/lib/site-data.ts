@@ -2,11 +2,14 @@ import type { Product } from "@/app/data/products";
 
 export type OrderStatus = "to_send" | "sent" | "shipped" | "picked_up";
 
+export type PaymentStatus = "pending" | "paid";
+
 export interface OrderItem {
   name: string;
   qty: number;
   price: number;
   note?: string;
+  image?: string;
 }
 
 export interface OrderAddress {
@@ -30,9 +33,17 @@ export interface Order {
   deliveryFee: number;
   total: number;
   status: OrderStatus;
+  /** Orders saved before payment tracking existed have no value and count as paid. */
+  paymentStatus?: PaymentStatus;
+  paidAt?: string;
+  receiptSentAt?: string;
   trackingNumber?: string;
   labelNote?: string;
   updatedAt?: string;
+}
+
+export function isOrderPaid(order: Order): boolean {
+  return order.paymentStatus !== "pending";
 }
 
 export interface SiteCopy {
