@@ -66,7 +66,9 @@ export default function FoodSection({
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {products.map((product, i) => (
-            <FoodOrderCard key={product.id} product={product} index={i} />
+            <div key={product.id} id={`product-${product.id}`} className="scroll-mt-28">
+              <FoodOrderCard product={product} index={i} />
+            </div>
           ))}
         </div>
       </div>

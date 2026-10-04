@@ -1,11 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Heart, Star, ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
 import FoodCustomizeModal from "./FoodCustomizeModal";
+
+const categoryHref: Record<Product["category"], string> = {
+  food: "/food",
+  health: "/health",
+  fashion: "/fashion",
+  culture: "/",
+};
 
 export default function ShopProductCard({ product }: { product: Product }) {
   const { dispatch } = useCart();
@@ -49,18 +57,24 @@ export default function ShopProductCard({ product }: { product: Product }) {
           isHealth ? "bg-white" : "bg-[#F3F4F6]"
         }`}
       >
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          quality={95}
-          className={
-            isHealth
-              ? "object-cover object-top transition-transform duration-500 group-hover:scale-105"
-              : "object-cover object-center transition-transform duration-500 group-hover:scale-105"
-          }
-          sizes="(max-width: 640px) 168px, (max-width: 1024px) 45vw, 280px"
-        />
+        <Link
+          href={`${categoryHref[product.category]}#product-${product.id}`}
+          aria-label={`View ${product.name}`}
+          className="absolute inset-0"
+        >
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            quality={95}
+            className={
+              isHealth
+                ? "object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                : "object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            }
+            sizes="(max-width: 640px) 168px, (max-width: 1024px) 45vw, 280px"
+          />
+        </Link>
         <button
           type="button"
           onClick={() => setSaved((v) => !v)}
@@ -82,7 +96,12 @@ export default function ShopProductCard({ product }: { product: Product }) {
             brand ? "text-xs min-h-[2rem]" : "text-sm min-h-[2.5rem]"
           }`}
         >
-          {product.name}
+          <Link
+            href={`${categoryHref[product.category]}#product-${product.id}`}
+            className="hover:text-nayo-green transition-colors"
+          >
+            {product.name}
+          </Link>
         </h3>
         <div className="flex items-center gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
