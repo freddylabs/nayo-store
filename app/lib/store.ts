@@ -226,9 +226,10 @@ export async function getOrdersByEmail(email: string): Promise<Order[]> {
   return rows.map(fromRow);
 }
 
+/** `null` for deliveryMethod and "" for text fields clear the stored value. */
 export type OrderPatch = {
   status?: OrderStatus;
-  deliveryMethod?: Order["deliveryMethod"];
+  deliveryMethod?: Order["deliveryMethod"] | null;
   trackingNumber?: string;
   labelNote?: string;
 };
@@ -241,7 +242,9 @@ export async function updateOrder(
     const next: Order = {
       ...order,
       ...Object.fromEntries(
-        Object.entries(patch).filter(([, value]) => value !== undefined)
+        Object.entries(patch)
+          .filter(([, value]) => value !== undefined)
+          .map(([key, value]) => [key, value === null || value === "" ? undefined : value])
       ),
       updatedAt: new Date().toISOString(),
     };
@@ -250,10 +253,8 @@ export async function updateOrder(
       next.shippedAt = now;
     }
     if (next.status === "delivered" && !next.deliveredAt) next.deliveredAt = now;
-    if (next.status === "to_send") {
-      next.shippedAt = undefined;
-      next.deliveredAt = undefined;
-    }
+    if (next.status !== "delivered") next.deliveredAt = undefined;
+    if (next.status === "to_send") next.shippedAt = undefined;
     return next;
   };
 

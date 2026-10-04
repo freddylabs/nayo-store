@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { isAdminRequest } from "@/app/lib/admin-auth";
-import { getOrder, getOrders, updateOrder, type OrderPatch } from "@/app/lib/store";
+import {
+  getOrder,
+  getOrders,
+  releaseShippingEmail,
+  updateOrder,
+  type OrderPatch,
+} from "@/app/lib/store";
 import { notifyShipped } from "@/app/lib/shipping";
 import {
   orderStatuses,
@@ -25,7 +31,7 @@ export async function PATCH(request: Request) {
   let body: {
     id?: string;
     status?: OrderStatus;
-    deliveryMethod?: DeliveryMethod;
+    deliveryMethod?: DeliveryMethod | null;
     trackingNumber?: string;
     labelNote?: string;
   };
@@ -45,7 +51,9 @@ export async function PATCH(request: Request) {
 
   const patch: OrderPatch = {};
   if (body.status && orderStatuses.includes(body.status)) patch.status = body.status;
-  if (body.deliveryMethod && methods.includes(body.deliveryMethod)) {
+  if (body.deliveryMethod === null) {
+    patch.deliveryMethod = null;
+  } else if (body.deliveryMethod && methods.includes(body.deliveryMethod)) {
     patch.deliveryMethod = body.deliveryMethod;
   }
   if (typeof body.trackingNumber === "string") {
@@ -69,6 +77,9 @@ export async function PATCH(request: Request) {
   const order = await updateOrder(body.id, patch);
   if (!order) {
     return NextResponse.json({ error: "Order not found." }, { status: 404 });
+  }
+  if (order.status === "to_send" && order.shippingEmailSentAt) {
+    await releaseShippingEmail(order.id);
   }
 
   await notifyShipped(order).catch((error) =>

@@ -47,7 +47,7 @@ import {
 
 export type OrderPatch = {
   status?: OrderStatus;
-  deliveryMethod?: DeliveryMethod;
+  deliveryMethod?: DeliveryMethod | null;
   trackingNumber?: string;
   labelNote?: string;
 };
@@ -925,7 +925,11 @@ function OrderDrawer({
         </section>
 
         {order.fulfillment === "delivery" && order.deliveryMethod === "ups" && (
-          <UpsSection key={`${order.id}-ups`} order={order} onUpdate={onUpdate} />
+          <UpsSection
+            key={`${order.id}-ups-${order.trackingNumber ?? ""}`}
+            order={order}
+            onUpdate={onUpdate}
+          />
         )}
 
         {order.fulfillment === "delivery" && order.deliveryMethod === "local" && (
@@ -934,6 +938,7 @@ function OrderDrawer({
               Driver notes
             </p>
             <textarea
+              key={order.labelNote ?? ""}
               defaultValue={order.labelNote}
               placeholder="Driver name, delivery window, gate code…"
               rows={3}
@@ -967,11 +972,10 @@ function UpsSection({
 
   const save = async (markShipped: boolean) => {
     setBusy(true);
-    const ok = await onUpdate(order.id, {
+    await onUpdate(order.id, {
       trackingNumber: cleaned,
       ...(markShipped ? { status: "shipped" as const } : {}),
     });
-    if (ok) setTracking(cleaned);
     setBusy(false);
   };
 
@@ -1046,6 +1050,7 @@ function UpsSection({
         </p>
       )}
       <textarea
+        key={order.labelNote ?? ""}
         defaultValue={order.labelNote}
         placeholder="Label notes (box size, weight, service level)"
         rows={2}

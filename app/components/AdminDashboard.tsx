@@ -10,6 +10,7 @@ import {
   PenLine,
   Search,
   Shirt,
+  Undo2,
 } from "lucide-react";
 import type { Product } from "@/app/data/products";
 import {
@@ -39,7 +40,7 @@ const tabs: { id: Tab; label: string; short: string; icon: typeof ClipboardList;
   { id: "copy", label: "Page writing", short: "Writing", icon: PenLine, search: "Search page writing…" },
 ];
 
-type Toast = { text: string; kind: "ok" | "error" } | null;
+type Toast = { text: string; kind: "ok" | "error"; undo?: () => Promise<void> } | null;
 
 export default function AdminDashboard() {
   const [ready, setReady] = useState(false);
@@ -49,8 +50,10 @@ export default function AdminDashboard() {
   const [orderFilter, setOrderFilter] = useState<OrderFilter>("all");
   const [products, setProducts] = useState<Product[]>([]);
   const [copy, setCopy] = useState<SiteCopy>(defaultCopy);
+  const savedCopy = useRef<SiteCopy>(defaultCopy);
   const [orders, setOrders] = useState<Order[]>([]);
   const [toast, setToast] = useState<Toast>(null);
+  const [undoing, setUndoing] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [bellOpen, setBellOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationsData>(null);
@@ -90,10 +93,20 @@ export default function AdminDashboard() {
     };
   }, [authed, refreshOrders, refreshNotifications]);
 
-  const notify = (text: string, kind: "ok" | "error" = "ok") => {
+  const notify = (text: string, kind: "ok" | "error" = "ok", undo?: () => Promise<void>) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
-    setToast({ text, kind });
-    toastTimer.current = setTimeout(() => setToast(null), 3200);
+    setToast({ text, kind, undo });
+    toastTimer.current = setTimeout(() => setToast(null), undo ? 10_000 : 3200);
+  };
+
+  const runUndo = async (undo: () => Promise<void>) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setUndoing(true);
+    try {
+      await undo();
+    } finally {
+      setUndoing(false);
+    }
   };
 
   const load = async () => {
@@ -111,6 +124,7 @@ export default function AdminDashboard() {
     const ordersData = (await o.json()) as { orders: Order[] };
     setProducts(productsData.products);
     setCopy(copyData.copy);
+    savedCopy.current = copyData.copy;
     setOrders(ordersData.orders);
     setAuthed(true);
   };
@@ -124,7 +138,8 @@ export default function AdminDashboard() {
       .finally(() => setReady(true));
   }, []);
 
-  const saveProducts = async (next: Product[]) => {
+  const saveProducts = async (next: Product[], isUndo = false) => {
+    const before = products;
     const res = await fetch("/api/admin/products", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -136,24 +151,40 @@ export default function AdminDashboard() {
       return false;
     }
     setProducts(next);
-    notify("Items saved. They are live in the shop.");
+    if (isUndo) notify("Change undone. The shop is back to how it was.");
+    else
+      notify("Items saved. They are live in the shop.", "ok", async () => {
+        await saveProducts(before, true);
+      });
+    return true;
+  };
+
+  const putCopy = async (next: SiteCopy) => {
+    const res = await fetch("/api/admin/copy", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ copy: next }),
+    });
+    if (!res.ok) {
+      notify("Could not save the writing. Please try again.", "error");
+      return false;
+    }
+    savedCopy.current = next;
     return true;
   };
 
   const saveCopy = async () => {
-    const res = await fetch("/api/admin/copy", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ copy }),
+    const before = savedCopy.current;
+    if (!(await putCopy(copy))) return;
+    notify("Page writing saved.", "ok", async () => {
+      if (!(await putCopy(before))) return;
+      setCopy(before);
+      notify("Change undone. The writing is back to how it was.");
     });
-    if (!res.ok) {
-      notify("Could not save the writing. Please try again.", "error");
-      return;
-    }
-    notify("Page writing saved.");
   };
 
-  const updateOrder = async (id: string, patch: OrderPatch) => {
+  const updateOrder = async (id: string, patch: OrderPatch, undoOf?: Order) => {
+    const before = orders.find((item) => item.id === id);
     const res = await fetch("/api/admin/orders", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -166,10 +197,33 @@ export default function AdminDashboard() {
     }
     const order = data.order;
     setOrders((current) => current.map((item) => (item.id === id ? order : item)));
+
+    if (undoOf) {
+      notify(
+        undoOf.shippingEmailSentAt && order.status === "to_send"
+          ? `${order.orderNumber} change undone. The customer already got a tracking email; shipping again sends the new number.`
+          : `${order.orderNumber} change undone.`
+      );
+      return true;
+    }
+    const restore: OrderPatch | null = before
+      ? {
+          status: before.status,
+          deliveryMethod: before.deliveryMethod ?? null,
+          trackingNumber: before.trackingNumber ?? "",
+          labelNote: before.labelNote ?? "",
+        }
+      : null;
     notify(
       patch.status === "shipped" && order.shippingEmailSentAt
         ? `${order.orderNumber} shipped. Tracking emailed to the customer.`
-        : `${order.orderNumber} updated.`
+        : `${order.orderNumber} updated.`,
+      "ok",
+      restore
+        ? async () => {
+            await updateOrder(id, restore, order);
+          }
+        : undefined
     );
     return true;
   };
@@ -405,12 +459,25 @@ export default function AdminDashboard() {
       {toast && (
         <div
           role="status"
-          className={`fixed z-[60] left-1/2 -translate-x-1/2 bottom-24 lg:bottom-8 lg:left-auto lg:right-8 lg:translate-x-0 rounded-xl px-4 py-3 text-sm font-medium shadow-xl ${
+          className={`fixed z-[60] left-1/2 -translate-x-1/2 bottom-24 lg:bottom-8 lg:left-auto lg:right-8 lg:translate-x-0 w-[calc(100%-2rem)] max-w-md sm:w-auto flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-xl ${
             toast.kind === "ok" ? "bg-nayo-black text-white" : "bg-red-600 text-white"
           }`}
         >
-          {toast.kind === "ok" && <span className="text-nayo-gold mr-1.5">●</span>}
-          {toast.text}
+          <span className="flex-1">
+            {toast.kind === "ok" && <span className="text-nayo-gold mr-1.5">●</span>}
+            {toast.text}
+          </span>
+          {toast.undo && (
+            <button
+              type="button"
+              disabled={undoing}
+              onClick={() => void runUndo(toast.undo!)}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-nayo-amber hover:bg-white/20 disabled:opacity-60"
+            >
+              <Undo2 size={14} />
+              {undoing ? "Undoing…" : "Undo"}
+            </button>
+          )}
         </div>
       )}
     </div>
