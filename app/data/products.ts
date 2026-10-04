@@ -199,7 +199,7 @@ export const foodProducts: Product[] = [
     description:
       "Boiled yam and plantain with kontomire stew, boiled egg, and fresh avocado.",
     price: 18.99,
-    image: "/food-ampesi-kontomire.jpg",
+    image: "/food-ampesi-yam-kontomire.jpg",
     category: "food",
     badge: "New",
     rating: 4.8,

@@ -86,6 +86,7 @@ export function productImageSize(src: string): { width: number; height: number }
   if (src.includes("food-jollof-goat")) return { width: 1024, height: 683 };
   if (src.includes("food-fried-rice")) return { width: 683, height: 1024 };
   if (src.includes("food-jollof-chicken")) return { width: 819, height: 1024 };
+  if (src.includes("food-ampesi-yam-kontomire")) return { width: 928, height: 626 };
   if (src.includes("food-ampesi-kontomire")) return { width: 1024, height: 731 };
   if (src.includes("food-ampesi-plantain")) return { width: 496, height: 618 };
   if (src.includes("food-kenkey-platter")) return { width: 766, height: 790 };

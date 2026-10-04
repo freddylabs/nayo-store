@@ -24,7 +24,7 @@ function buildSlides(copy: SiteCopy) {
       images: [
         { src: "/hero-food.png", caption: copy.heroFoodCaption1 },
         { src: "/food-ampesi-plantain.jpg", caption: copy.heroFoodCaption2 },
-        { src: "/food-ampesi-kontomire.jpg", caption: copy.heroFoodCaption3 },
+        { src: "/food-ampesi-yam-kontomire.jpg", caption: copy.heroFoodCaption3 },
         { src: "/food-abom-fish-eggs.jpg", caption: copy.heroFoodCaption4 },
       ] as HeroMedia[],
     },

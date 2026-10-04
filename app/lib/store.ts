@@ -100,6 +100,15 @@ const catalogMigrations: { id: string; run: (list: Product[]) => Product[] }[] =
           : item
       ),
   },
+  {
+    id: "2026-10-yam-ampesi-photo",
+    run: (list) =>
+      list.map((item) =>
+        item.id === "fd-007" && item.image === "/food-ampesi-kontomire.jpg"
+          ? { ...item, image: "/food-ampesi-yam-kontomire.jpg" }
+          : item
+      ),
+  },
 ];
 
 async function writeCatalog(products: Product[]) {
