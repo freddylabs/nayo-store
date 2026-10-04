@@ -28,8 +28,6 @@ const categories: { id: Category; label: string; page: string }[] = [
   { id: "health", label: "Health", page: "/health" },
 ];
 
-const onLanding = (category: Category) => category === "food" || category === "health";
-
 /** Moves an item one place up or down among the items in its own category. */
 function moveWithinCategory(products: Product[], id: string, direction: -1 | 1): Product[] {
   const index = products.findIndex((p) => p.id === id);
@@ -133,15 +131,9 @@ export default function ItemsView({
 
       <div className={`${cardClass} p-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-sm`}>
         <p className="text-nayo-black/65">
-          {onLanding(category) ? (
-            <>
-              <Star size={13} className="inline -mt-0.5 mr-1 fill-nayo-gold text-nayo-gold" />
-              Starred items show first in the landing page row (up to {LANDING_ROW_SIZE}). Use the arrows to set the order on the{" "}
-              {categories.find((c) => c.id === category)!.label} page.
-            </>
-          ) : (
-            <>Use the arrows to set the order items appear on the Apparel page.</>
-          )}
+          <Star size={13} className="inline -mt-0.5 mr-1 fill-nayo-gold text-nayo-gold" />
+          Starred items show first in the landing page row (up to {LANDING_ROW_SIZE}). Use the arrows to set the order on the{" "}
+          {categories.find((c) => c.id === category)!.label} page.
         </p>
         <a
           href={categories.find((c) => c.id === category)!.page}
@@ -169,28 +161,26 @@ export default function ItemsView({
                     {item.badge}
                   </span>
                 )}
-                {onLanding(category) && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void onSave(
-                        products.map((p) =>
-                          p.id === item.id ? { ...p, featured: !p.featured } : p
-                        )
+                <button
+                  type="button"
+                  onClick={() =>
+                    void onSave(
+                      products.map((p) =>
+                        p.id === item.id ? { ...p, featured: !p.featured } : p
                       )
-                    }
-                    aria-label={item.featured ? "Remove from landing page" : "Show on landing page"}
-                    title={item.featured ? "On the landing page" : "Show on the landing page"}
-                    className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest shadow transition ${
-                      item.featured
-                        ? "bg-nayo-gold text-nayo-green"
-                        : "bg-white/90 text-nayo-black/55 hover:text-nayo-black"
-                    }`}
-                  >
-                    <Star size={11} className={item.featured ? "fill-nayo-green" : ""} />
-                    {item.featured ? "Landing" : "Add to landing"}
-                  </button>
-                )}
+                    )
+                  }
+                  aria-label={item.featured ? "Remove from landing page" : "Show on landing page"}
+                  title={item.featured ? "On the landing page" : "Show on the landing page"}
+                  className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest shadow transition ${
+                    item.featured
+                      ? "bg-nayo-gold text-nayo-green"
+                      : "bg-white/90 text-nayo-black/55 hover:text-nayo-black"
+                  }`}
+                >
+                  <Star size={11} className={item.featured ? "fill-nayo-green" : ""} />
+                  {item.featured ? "Landing" : "Add to landing"}
+                </button>
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <p className="font-semibold text-nayo-black leading-snug">{item.name}</p>
@@ -412,22 +402,26 @@ function ProductEditor({
           </label>
         </div>
 
-        {onLanding(draft.category as Category) && (
-          <label className="flex items-center gap-3 rounded-xl border border-nayo-gold/30 bg-nayo-gold/[0.07] px-4 py-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(draft.featured)}
-              onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
-              className="w-4 h-4 accent-[#1A412E]"
-            />
-            <span className="text-sm text-nayo-black/75">
-              <strong className="text-nayo-black">Show on the landing page</strong>
-              <span className="block text-xs text-nayo-black/50">
-                Appears in the {draft.category === "food" ? "Best Sellers" : "Latest collection"} row.
-              </span>
+        <label className="flex items-center gap-3 rounded-xl border border-nayo-gold/30 bg-nayo-gold/[0.07] px-4 py-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={Boolean(draft.featured)}
+            onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
+            className="w-4 h-4 accent-[#1A412E]"
+          />
+          <span className="text-sm text-nayo-black/75">
+            <strong className="text-nayo-black">Show on the landing page</strong>
+            <span className="block text-xs text-nayo-black/50">
+              Appears in the{" "}
+              {draft.category === "food"
+                ? "Food"
+                : draft.category === "fashion"
+                  ? "Apparel"
+                  : "Health"}{" "}
+              row.
             </span>
-          </label>
-        )}
+          </span>
+        </label>
 
         <label className="block">
           <Label>Photo path</Label>

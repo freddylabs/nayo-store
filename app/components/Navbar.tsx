@@ -10,6 +10,7 @@ import ExploreShop from "./ExploreShop";
 
 const navLinks = [
   { label: "Home", href: "/" },
+  { label: "Apparel", href: "/fashion" },
   { label: "Food", href: "/food" },
   { label: "Health", href: "/health" },
   { label: "About", href: "/about" },

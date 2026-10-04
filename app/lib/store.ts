@@ -63,21 +63,50 @@ async function writeSetting(key: string, value: unknown) {
   `;
 }
 
+type StoredCatalog = Product[] | { products: Product[]; migrations?: string[] };
+
+/** One-time changes applied to catalogs the owner saved before the change shipped. */
+const catalogMigrations: { id: string; run: (list: Product[]) => Product[] }[] = [
+  {
+    id: "2026-10-ghana-jerseys",
+    run: (list) => {
+      const jerseyIds = fashionProducts.map((item) => item.id);
+      const kept = list.filter(
+        (item) => item.category !== "fashion" || jerseyIds.includes(item.id)
+      );
+      const missing = fashionProducts.filter((item) => !kept.some((p) => p.id === item.id));
+      const firstFood = kept.findIndex((item) => item.category !== "fashion");
+      const at = firstFood < 0 ? kept.length : firstFood;
+      return [...kept.slice(0, at), ...missing, ...kept.slice(at)];
+    },
+  },
+];
+
+async function writeCatalog(products: Product[]) {
+  const value = { products, migrations: catalogMigrations.map((m) => m.id) };
+  if (hasDatabase()) return writeSetting("catalog", value);
+  await writeJson(catalogFile, value);
+}
+
 export async function getCatalog(): Promise<Product[]> {
   const stored = hasDatabase()
-    ? await readSetting<Product[]>("catalog")
-    : await readJson<Product[] | { products: Product[] } | undefined>(
-        catalogFile,
-        undefined
-      );
+    ? await readSetting<StoredCatalog>("catalog")
+    : await readJson<StoredCatalog | undefined>(catalogFile, undefined);
   if (!stored) return seedProducts;
-  const list = Array.isArray(stored) ? stored : stored.products;
-  return list.length ? list : seedProducts;
+  let list = Array.isArray(stored) ? stored : stored.products;
+  if (!list.length) return seedProducts;
+
+  const applied = Array.isArray(stored) ? [] : stored.migrations ?? [];
+  const pending = catalogMigrations.filter((m) => !applied.includes(m.id));
+  if (pending.length) {
+    for (const migration of pending) list = migration.run(list);
+    await writeCatalog(list);
+  }
+  return list;
 }
 
 export async function saveCatalog(products: Product[]) {
-  if (hasDatabase()) return writeSetting("catalog", products);
-  await writeJson(catalogFile, products);
+  await writeCatalog(products);
 }
 
 export async function getCopy(): Promise<SiteCopy> {

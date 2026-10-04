@@ -57,6 +57,7 @@ export default function ShopCollections({
   products: Product[];
   copy?: SiteCopy;
 }) {
+  const apparel = landingPicks(products, "fashion");
   const food = landingPicks(products, "food");
   const health = landingPicks(products, "health");
 
@@ -66,6 +67,9 @@ export default function ShopCollections({
         {copy.shopEyebrow}
       </p>
       <div className="space-y-10 sm:space-y-12 lg:space-y-14">
+        {apparel.length > 0 && (
+          <ShopRow title={copy.shopApparelTitle} products={apparel} href="/fashion" />
+        )}
         <ShopRow title={copy.shopFoodTitle} products={food} href="/food" />
         <ShopRow title={copy.shopHealthTitle} products={health} href="/health" />
       </div>

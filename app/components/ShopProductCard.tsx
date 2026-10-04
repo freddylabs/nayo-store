@@ -19,9 +19,7 @@ export default function ShopProductCard({ product }: { product: Product }) {
   const { dispatch } = useCart();
   const [saved, setSaved] = useState(false);
   const [customize, setCustomize] = useState(false);
-  const rating = product.rating ?? 4.8;
-  const reviews = product.reviews ?? 48;
-  const filled = Math.round(rating);
+  const filled = Math.round(product.rating ?? 0);
   const isHealth = product.category === "health";
   const isFood = product.category === "food";
   const brand =
@@ -103,20 +101,22 @@ export default function ShopProductCard({ product }: { product: Product }) {
             {product.name}
           </Link>
         </h3>
-        <div className="flex items-center gap-1">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              size={12}
-              className={
-                i < filled
-                  ? "fill-nayo-gold text-nayo-gold"
-                  : "fill-nayo-black/15 text-nayo-black/15"
-              }
-            />
-          ))}
-          <span className="text-[11px] text-nayo-black/45">({reviews})</span>
-        </div>
+        {product.rating && product.reviews ? (
+          <div className="flex items-center gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                size={12}
+                className={
+                  i < filled
+                    ? "fill-nayo-gold text-nayo-gold"
+                    : "fill-nayo-black/15 text-nayo-black/15"
+                }
+              />
+            ))}
+            <span className="text-[11px] text-nayo-black/45">({product.reviews})</span>
+          </div>
+        ) : null}
         <p className="text-sm font-bold text-nayo-black">
           ${product.price.toFixed(2)}
         </p>

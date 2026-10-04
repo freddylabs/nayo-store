@@ -197,7 +197,7 @@ export const defaultCopy: SiteCopy = {
   brandCloser: "Style Meets Flavor.",
   shopEyebrow: "Fashion. Food. Culture.",
   shopFoodTitle: "Best Sellers",
-  shopApparelTitle: "Newest in store",
+  shopApparelTitle: "Now in NAYO Apparel",
   shopHealthTitle: "Latest collection",
   landingCloseEyebrow: "Nayo",
   landingCloseTitle: "Live the NAYO Lifestyle.",
@@ -208,15 +208,15 @@ export const defaultCopy: SiteCopy = {
   apparelTitle: "Wear What Speaks For You.",
   apparelIntro:
     "NAYO Apparel is dedicated to producing fashionable, comfortable, and high-quality clothing for everyday wear and professional use.",
-  apparelBand1Title: "Made for the night",
+  apparelBand1Title: "Black Stars pride",
   apparelBand1Body:
-    "Mermaid hems, cape sleeves, and gold embroidery that reads from across the floor, without shouting.",
-  apparelBand2Title: "Cut with intention",
+    "The Black Star at the centre, the GFA crest over the heart, and the red, gold and green of home.",
+  apparelBand2Title: "Made for match day",
   apparelBand2Body:
-    "Structured tailoring and heritage cloth, finished so the piece feels as considered as the occasion.",
-  apparelCollectionTitle: "The collection",
+    "Light, breathable fabric with a relaxed fan fit, for the stands, the watch party, or any day you want to rep Ghana.",
+  apparelCollectionTitle: "Ghana jerseys",
   apparelCollectionBody:
-    "Gowns, a tailored blazer, and a wrap set for evenings and occasions.",
+    "The white home jersey with its Kwaku Ananse web print and the sunny gold away jersey inspired by Makola Market.",
   apparelCloseTitle: "Excellence in everything we do.",
   apparelCloseBody:
     "At NAYO, we are committed to excellence in everything we do. Whether through stylish apparel, professional healthcare uniforms, or delicious meals, we strive to deliver products and services that inspire confidence, celebrate culture, and exceed expectations.",
