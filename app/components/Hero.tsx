@@ -166,9 +166,12 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
             >
               <div className="h-full w-full rounded-[22px] lg:rounded-[28px] bg-black/25 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.28)] flex flex-col overflow-hidden">
                 <div className="flex items-start justify-between gap-3 px-3 pt-3 pb-2 lg:px-5 lg:pt-5 lg:pb-3">
-                  <span className="px-2.5 py-1 lg:px-3 rounded-md gold-gradient text-[9px] lg:text-[10px] font-bold tracking-[0.2em] uppercase text-nayo-black">
+                  <Link
+                    href={slide.href}
+                    className="px-2.5 py-1 lg:px-3 rounded-md gold-gradient text-[9px] lg:text-[10px] font-bold tracking-[0.2em] uppercase text-nayo-black hover:brightness-110 transition"
+                  >
                     {slide.label}
-                  </span>
+                  </Link>
                   <div className="flex flex-col items-end gap-1.5">
                     <div className="relative w-10 h-10 lg:w-12 lg:h-12 pointer-events-none shrink-0">
                       <svg
@@ -230,7 +233,11 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
                   </div>
                 </div>
 
-                <div className="relative flex-1 mx-2 sm:mx-3 lg:mx-5 min-h-0 rounded-xl lg:rounded-2xl bg-nayo-green/80 overflow-hidden">
+                <Link
+                  href={slide.href}
+                  aria-label={slide.cta}
+                  className="group relative block flex-1 mx-2 sm:mx-3 lg:mx-5 min-h-0 rounded-xl lg:rounded-2xl bg-nayo-green/80 overflow-hidden cursor-pointer"
+                >
                   <AnimatePresence initial={false}>
                     <motion.div
                       key={shownImage.src}
@@ -283,11 +290,13 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
                       )}
                     </motion.div>
                   </AnimatePresence>
-                </div>
+                </Link>
 
                 <div className="px-3 pt-2 pb-2.5 lg:px-5 lg:pt-4 lg:pb-5">
                   <h2 className="text-display text-xl sm:text-2xl lg:text-4xl font-bold text-white leading-tight">
-                    {slide.brand}
+                    <Link href={slide.href} className="hover:text-nayo-gold transition-colors">
+                      {slide.brand}
+                    </Link>
                   </h2>
                   <p className="mt-0.5 text-white/75 text-xs sm:text-sm lg:text-base leading-snug line-clamp-1 lg:line-clamp-2">
                     {shownImage.caption}

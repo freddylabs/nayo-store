@@ -19,7 +19,9 @@ function ShopRow({
     <section className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
       <div className="flex items-center justify-between gap-3 mb-5">
         <h2 className="text-xl sm:text-2xl font-bold text-nayo-black">
-          {title}
+          <Link href={href} className="hover:text-nayo-green transition-colors">
+            {title}
+          </Link>
         </h2>
         <Link
           href={href}

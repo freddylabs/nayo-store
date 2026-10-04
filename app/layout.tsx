@@ -35,7 +35,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${displayFont.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${displayFont.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
       <body className="bg-nayo-white text-nayo-black antialiased">
         <Script
           id="nayo-boot"
