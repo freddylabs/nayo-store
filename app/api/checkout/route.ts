@@ -1,20 +1,14 @@
 import type Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { getDeliveryFee, type FulfillmentMethod } from "@/app/lib/checkout";
-import { addOrder, createOrderNumber } from "@/app/lib/store";
+import { addOrder, createOrderNumber, getCatalog } from "@/app/lib/store";
 import { stripeClient } from "@/app/lib/fulfill";
+import { priceCart, type CartLineRequest } from "@/app/lib/pricing";
 
-type CheckoutItem = {
-  lineId: string;
-  name: string;
-  price: number;
-  qty: number;
-  image?: string;
-  note?: string;
-};
+const MAX_LINES = 40;
 
 type CheckoutBody = {
-  items: CheckoutItem[];
+  items: CartLineRequest[];
   fulfillment: FulfillmentMethod;
   customerName: string;
   email: string;
@@ -46,7 +40,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (!body.items?.length || !body.customerName || !body.email) {
+  if (!Array.isArray(body.items) || !body.items.length || !body.customerName || !body.email) {
     return NextResponse.json(
       { error: "Name, email, and cart items are required." },
       { status: 400 }
@@ -70,9 +64,22 @@ export async function POST(request: Request) {
     }
   }
 
+  if (body.items.length > MAX_LINES) {
+    return NextResponse.json(
+      { error: "Your cart has too many items. Please call us for large orders." },
+      { status: 400 }
+    );
+  }
+
+  const priced = priceCart(body.items, await getCatalog());
+  if ("error" in priced) {
+    return NextResponse.json({ error: priced.error }, { status: 400 });
+  }
+  const items = priced.items;
+
   const cents = (value: number) => Math.round(value * 100) / 100;
   const subtotal = cents(
-    body.items.reduce((sum, item) => sum + item.price * item.qty, 0)
+    items.reduce((sum, item) => sum + item.price * item.qty, 0)
   );
   const deliveryFee = getDeliveryFee(subtotal, body.fulfillment);
   const origin =
@@ -83,7 +90,7 @@ export async function POST(request: Request) {
   const orderNumber = createOrderNumber();
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-    body.items.map((item) => ({
+    items.map((item) => ({
       quantity: item.qty,
       price_data: {
         currency: "usd",
@@ -117,7 +124,7 @@ export async function POST(request: Request) {
       customerName: body.customerName,
       phone: body.phone || "",
       address: body.fulfillment === "delivery" ? JSON.stringify(body.address) : "",
-      lineIds: body.items.map((i) => i.lineId).join(","),
+      productIds: items.map((i) => i.productId).join(",").slice(0, 500),
     },
   });
 
@@ -138,7 +145,7 @@ export async function POST(request: Request) {
       phone: body.phone || "",
       fulfillment: body.fulfillment,
       address: body.fulfillment === "delivery" ? body.address : undefined,
-      items: body.items.map((item) => ({
+      items: items.map((item) => ({
         name: item.name,
         qty: item.qty,
         price: item.price,

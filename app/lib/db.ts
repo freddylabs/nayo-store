@@ -63,6 +63,14 @@ async function createSchema(sql: Sql) {
       updated_at timestamptz NOT NULL DEFAULT now()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS login_attempts (
+      key          text PRIMARY KEY,
+      failures     integer NOT NULL DEFAULT 0,
+      window_start timestamptz NOT NULL DEFAULT now(),
+      locked_until timestamptz
+    )
+  `;
 }
 
 export async function db(): Promise<Sql> {
