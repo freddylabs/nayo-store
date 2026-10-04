@@ -93,7 +93,8 @@ export function productImageSize(src: string): { width: number; height: number }
   if (
     src.includes("fashion-blazer") ||
     src.includes("fashion-velvet") ||
-    src.includes("culture-kente")
+    src.includes("culture-kente") ||
+    src.includes("apparel-ghana-jerseys")
   ) {
     return { width: 1024, height: 1024 };
   }

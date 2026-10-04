@@ -30,25 +30,14 @@ export interface Product {
 
 export const fashionProducts: Product[] = [
   {
-    id: "f-ghana-home",
-    name: "Ghana Black Stars Home Jersey",
+    id: "f-ghana-jersey",
+    name: "Ghana Black Stars Jersey",
     description:
-      "White 2026 fan jersey with the Kwaku Ananse web print in red, gold and green, the Black Star and the GFA crest.",
+      "2026 fan jersey in white home or sunny gold away, with the Black Star and GFA crest. We'll confirm your style and size after you order.",
     price: 49.99,
-    image: "/apparel-ghana-home.jpg",
+    image: "/apparel-ghana-jerseys.jpg",
     category: "fashion",
-    badge: "New",
-    featured: true,
-  },
-  {
-    id: "f-ghana-away",
-    name: "Ghana Black Stars Away Jersey",
-    description:
-      "Sunny gold 2026 fan jersey with a Makola Market pattern, flag-colour collar, the Black Star and the GFA crest.",
-    price: 49.99,
-    image: "/apparel-ghana-away.jpg",
-    category: "fashion",
-    badge: "New",
+    badge: "Home & Away",
     featured: true,
   },
 ];

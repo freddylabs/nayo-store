@@ -65,20 +65,31 @@ async function writeSetting(key: string, value: unknown) {
 
 type StoredCatalog = Product[] | { products: Product[]; migrations?: string[] };
 
+/** Adds any seed apparel the list lacks, after the apparel already in it. */
+function addMissingApparel(list: Product[]): Product[] {
+  const missing = fashionProducts.filter((item) => !list.some((p) => p.id === item.id));
+  const firstOther = list.findIndex((item) => item.category !== "fashion");
+  const at = firstOther < 0 ? list.length : firstOther;
+  return [...list.slice(0, at), ...missing, ...list.slice(at)];
+}
+
 /** One-time changes applied to catalogs the owner saved before the change shipped. */
 const catalogMigrations: { id: string; run: (list: Product[]) => Product[] }[] = [
   {
     id: "2026-10-ghana-jerseys",
     run: (list) => {
       const jerseyIds = fashionProducts.map((item) => item.id);
-      const kept = list.filter(
-        (item) => item.category !== "fashion" || jerseyIds.includes(item.id)
+      return addMissingApparel(
+        list.filter((item) => item.category !== "fashion" || jerseyIds.includes(item.id))
       );
-      const missing = fashionProducts.filter((item) => !kept.some((p) => p.id === item.id));
-      const firstFood = kept.findIndex((item) => item.category !== "fashion");
-      const at = firstFood < 0 ? kept.length : firstFood;
-      return [...kept.slice(0, at), ...missing, ...kept.slice(at)];
     },
+  },
+  {
+    id: "2026-10-ghana-jersey-single",
+    run: (list) =>
+      addMissingApparel(
+        list.filter((item) => item.id !== "f-ghana-home" && item.id !== "f-ghana-away")
+      ),
   },
 ];
 
