@@ -11,53 +11,39 @@ import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 const SLIDE_MS = 5500;
 
-const heroSlides = [
-  {
-    label: "Food",
-    brand: "Nayo Foods",
-    title: "Taste What Feeds The Soul",
-    href: "/food",
-    cta: "Explore Foods",
-    images: [
-      {
-        src: "/hero-food.png",
-        caption: "Jollof and beef",
-      },
-      {
-        src: "/food-ampesi-plantain.jpg",
-        caption: "Plantain Ampesi, grilled fish & eggs",
-      },
-      {
-        src: "/food-ampesi-kontomire.jpg",
-        caption: "Yam, plantain & kontomire stew",
-      },
-    ],
-  },
-  {
-    label: "Health",
-    brand: "Nayo Health",
-    title: "Crafted For Every Shift",
-    href: "/health",
-    cta: "Shop Health",
-    images: [
-      {
-        type: "video" as const,
-        src: "/health-professionals.mp4",
-        caption: "Crafted For Every Shift",
-      },
-      {
-        src: "/health-nurse-dress.jpg",
-        caption: "Nurse scrub dresses for every shift",
-      },
-      {
-        src: "/health-scrub-charcoal.jpg",
-        caption: "Signature scrubs",
-      },
-    ],
-  },
-];
+type HeroMedia = { type?: "video"; src: string; caption: string };
+
+function buildSlides(copy: SiteCopy) {
+  return [
+    {
+      key: "food",
+      label: copy.heroFoodLabel,
+      brand: copy.heroFoodBrand,
+      href: "/food",
+      cta: copy.heroFoodCta,
+      images: [
+        { src: "/hero-food.png", caption: copy.heroFoodCaption1 },
+        { src: "/food-ampesi-plantain.jpg", caption: copy.heroFoodCaption2 },
+        { src: "/food-ampesi-kontomire.jpg", caption: copy.heroFoodCaption3 },
+      ] as HeroMedia[],
+    },
+    {
+      key: "health",
+      label: copy.heroHealthLabel,
+      brand: copy.heroHealthBrand,
+      href: "/health",
+      cta: copy.heroHealthCta,
+      images: [
+        { type: "video", src: "/health-professionals.mp4", caption: copy.heroHealthCaption1 },
+        { src: "/health-nurse-dress.jpg", caption: copy.heroHealthCaption2 },
+        { src: "/health-scrub-charcoal.jpg", caption: copy.heroHealthCaption3 },
+      ] as HeroMedia[],
+    },
+  ];
+}
 
 export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
+  const heroSlides = buildSlides(copy);
   const [current, setCurrent] = useState(0);
   const [photo, setPhoto] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -157,7 +143,7 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
         <div className="relative overflow-hidden max-sm:flex-1 max-sm:min-h-0 sm:h-[min(64vh,620px)] lg:h-[min(78vh,780px)]">
           <AnimatePresence initial={false}>
             <motion.div
-              key={slide.label}
+              key={slide.key}
               initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-42%" }}
               animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
               exit={{ opacity: 0, scale: 0.92, x: "-50%", y: "-58%" }}
@@ -280,7 +266,7 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
                           unoptimized
                           quality={100}
                           className={
-                            slide.label === "Health"
+                            slide.key === "health"
                               ? "object-contain object-top"
                               : "object-contain object-center"
                           }
@@ -342,7 +328,7 @@ export default function Hero({ copy = defaultCopy }: { copy?: SiteCopy }) {
 
               return (
                 <button
-                  key={slide.label}
+                  key={slide.key}
                   type="button"
                   onClick={() => goToCard(i)}
                   className="relative h-1.5 flex-1 rounded-full bg-white/30 overflow-hidden"

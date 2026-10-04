@@ -112,6 +112,10 @@ type OrderRow = {
   receipt_sent_at: Date | null;
   tracking_number: string | null;
   label_note: string | null;
+  delivery_method: Order["deliveryMethod"] | null;
+  shipped_at: Date | null;
+  delivered_at: Date | null;
+  shipping_email_sent_at: Date | null;
 };
 
 function fromRow(row: OrderRow): Order {
@@ -135,6 +139,10 @@ function fromRow(row: OrderRow): Order {
     receiptSentAt: row.receipt_sent_at?.toISOString(),
     trackingNumber: row.tracking_number ?? undefined,
     labelNote: row.label_note ?? undefined,
+    deliveryMethod: row.delivery_method ?? undefined,
+    shippedAt: row.shipped_at?.toISOString(),
+    deliveredAt: row.delivered_at?.toISOString(),
+    shippingEmailSentAt: row.shipping_email_sent_at?.toISOString(),
   };
 }
 
@@ -203,8 +211,24 @@ export async function addOrder(order: Order) {
   return order;
 }
 
+export async function getOrdersByEmail(email: string): Promise<Order[]> {
+  const needle = email.trim().toLowerCase();
+  if (!needle) return [];
+  if (!hasDatabase()) {
+    return (await readOrderFile())
+      .filter((order) => order.email.trim().toLowerCase() === needle)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  const sql = await db();
+  const rows = await sql<OrderRow[]>`
+    SELECT * FROM orders WHERE lower(email) = ${needle} ORDER BY created_at DESC
+  `;
+  return rows.map(fromRow);
+}
+
 export type OrderPatch = {
   status?: OrderStatus;
+  deliveryMethod?: Order["deliveryMethod"];
   trackingNumber?: string;
   labelNote?: string;
 };
@@ -213,13 +237,25 @@ export async function updateOrder(
   id: string,
   patch: OrderPatch
 ): Promise<Order | null> {
-  const merge = (order: Order): Order => ({
-    ...order,
-    ...Object.fromEntries(
-      Object.entries(patch).filter(([, value]) => value !== undefined)
-    ),
-    updatedAt: new Date().toISOString(),
-  });
+  const merge = (order: Order): Order => {
+    const next: Order = {
+      ...order,
+      ...Object.fromEntries(
+        Object.entries(patch).filter(([, value]) => value !== undefined)
+      ),
+      updatedAt: new Date().toISOString(),
+    };
+    const now = new Date().toISOString();
+    if ((next.status === "sent" || next.status === "shipped") && !next.shippedAt) {
+      next.shippedAt = now;
+    }
+    if (next.status === "delivered" && !next.deliveredAt) next.deliveredAt = now;
+    if (next.status === "to_send") {
+      next.shippedAt = undefined;
+      next.deliveredAt = undefined;
+    }
+    return next;
+  };
 
   if (!hasDatabase()) return changeOrderFile(id, merge);
 
@@ -230,13 +266,45 @@ export async function updateOrder(
   const rows = await sql<OrderRow[]>`
     UPDATE orders SET
       status = ${next.status},
+      delivery_method = ${next.deliveryMethod ?? null},
       tracking_number = ${next.trackingNumber ?? null},
       label_note = ${next.labelNote ?? null},
+      shipped_at = ${next.shippedAt ?? null},
+      delivered_at = ${next.deliveredAt ?? null},
       updated_at = now()
     WHERE id = ${id}
     RETURNING *
   `;
   return rows[0] ? fromRow(rows[0]) : null;
+}
+
+/** Marks the shipping email as sent; returns false if it already went out. */
+export async function claimShippingEmail(id: string): Promise<boolean> {
+  if (!hasDatabase()) {
+    let claimed = false;
+    await changeOrderFile(id, (order) => {
+      if (order.shippingEmailSentAt) return null;
+      claimed = true;
+      return { ...order, shippingEmailSentAt: new Date().toISOString() };
+    });
+    return claimed;
+  }
+  const sql = await db();
+  const rows = await sql`
+    UPDATE orders SET shipping_email_sent_at = now()
+    WHERE id = ${id} AND shipping_email_sent_at IS NULL
+    RETURNING id
+  `;
+  return rows.length > 0;
+}
+
+export async function releaseShippingEmail(id: string) {
+  if (!hasDatabase()) {
+    await changeOrderFile(id, (order) => ({ ...order, shippingEmailSentAt: undefined }));
+    return;
+  }
+  const sql = await db();
+  await sql`UPDATE orders SET shipping_email_sent_at = NULL WHERE id = ${id}`;
 }
 
 export async function markOrderPaid(id: string): Promise<Order | null> {

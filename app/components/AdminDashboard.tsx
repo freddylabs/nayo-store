@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
@@ -18,10 +18,18 @@ import {
   type Order,
   type SiteCopy,
 } from "@/app/lib/site-data";
-import OrdersView, { type OrderPatch } from "@/app/components/admin/OrdersView";
+import OrdersView, {
+  type OrderFilter,
+  type OrderPatch,
+} from "@/app/components/admin/OrdersView";
 import ItemsView from "@/app/components/admin/ItemsView";
 import CopyView from "@/app/components/admin/CopyView";
 import { fieldClass } from "@/app/components/admin/ui";
+import NotificationsPanel, {
+  orderAlerts,
+  unreadCount,
+  type NotificationsData,
+} from "@/app/components/admin/NotificationsPanel";
 
 type Tab = "orders" | "items" | "copy";
 
@@ -38,11 +46,49 @@ export default function AdminDashboard() {
   const [authed, setAuthed] = useState(false);
   const [tab, setTab] = useState<Tab>("orders");
   const [query, setQuery] = useState("");
+  const [orderFilter, setOrderFilter] = useState<OrderFilter>("all");
   const [products, setProducts] = useState<Product[]>([]);
   const [copy, setCopy] = useState<SiteCopy>(defaultCopy);
   const [orders, setOrders] = useState<Order[]>([]);
   const [toast, setToast] = useState<Toast>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [bellOpen, setBellOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationsData>(null);
+  const [checking, setChecking] = useState(false);
+
+  const refreshOrders = useCallback(async () => {
+    const res = await fetch("/api/admin/orders");
+    if (!res.ok) return;
+    const data = (await res.json()) as { orders: Order[] };
+    setOrders(data.orders);
+  }, []);
+
+  const refreshNotifications = useCallback(async () => {
+    setChecking(true);
+    try {
+      const res = await fetch("/api/admin/notifications");
+      if (res.ok) setNotifications((await res.json()) as NotificationsData);
+    } finally {
+      setChecking(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!authed) return;
+    const tick = () => {
+      if (document.visibilityState !== "visible") return;
+      void refreshOrders();
+      void refreshNotifications();
+    };
+    const first = setTimeout(() => void refreshNotifications(), 0);
+    const timer = setInterval(tick, 60_000);
+    window.addEventListener("focus", tick);
+    return () => {
+      clearTimeout(first);
+      clearInterval(timer);
+      window.removeEventListener("focus", tick);
+    };
+  }, [authed, refreshOrders, refreshNotifications]);
 
   const notify = (text: string, kind: "ok" | "error" = "ok") => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -85,7 +131,8 @@ export default function AdminDashboard() {
       body: JSON.stringify({ products: next }),
     });
     if (!res.ok) {
-      notify("Could not save items. Please try again.", "error");
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      notify(data.error || "Could not save items. Please try again.", "error");
       return false;
     }
     setProducts(next);
@@ -112,13 +159,19 @@ export default function AdminDashboard() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, ...patch }),
     });
-    if (!res.ok) {
-      notify("Could not update the order.", "error");
-      return;
+    const data = (await res.json().catch(() => ({}))) as { order?: Order; error?: string };
+    if (!res.ok || !data.order) {
+      notify(data.error || "Could not update the order.", "error");
+      return false;
     }
-    const data = (await res.json()) as { order: Order };
-    setOrders((current) => current.map((item) => (item.id === id ? data.order : item)));
-    notify(`${data.order.orderNumber} updated.`);
+    const order = data.order;
+    setOrders((current) => current.map((item) => (item.id === id ? order : item)));
+    notify(
+      patch.status === "shipped" && order.shippingEmailSentAt
+        ? `${order.orderNumber} shipped. Tracking emailed to the customer.`
+        : `${order.orderNumber} updated.`
+    );
+    return true;
   };
 
   const signOut = async () => {
@@ -144,6 +197,8 @@ export default function AdminDashboard() {
 
   const waiting = orders.filter((o) => isOrderPaid(o) && o.status === "to_send").length;
   const activeTab = tabs.find((t) => t.id === tab)!;
+  const unread = unreadCount(notifications);
+  const bellCount = orderAlerts(orders).waiting + unread;
 
   return (
     <div className="min-h-dvh bg-[#F4F1EA] lg:pl-[104px]">
@@ -224,18 +279,55 @@ export default function AdminDashboard() {
               className="w-full rounded-full border border-nayo-black/[0.07] bg-white pl-11 pr-4 py-2.5 sm:py-3 text-sm outline-none shadow-[0_1px_2px_rgba(10,10,10,0.04)] focus:border-nayo-gold focus:ring-4 focus:ring-nayo-gold/15"
             />
           </label>
-          <button
-            type="button"
-            onClick={() => switchTab("orders")}
-            className="relative w-10 h-10 sm:w-11 sm:h-11 shrink-0 rounded-full bg-white border border-nayo-black/[0.07] flex items-center justify-center text-nayo-black/70 hover:text-nayo-black"
-            aria-label={`${waiting} orders to fulfill`}
-            title={`${waiting} orders to fulfill`}
-          >
-            <Bell size={17} />
-            {waiting > 0 && (
-              <span className="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-nayo-gold ring-2 ring-white" />
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              data-bell
+              onClick={() => {
+                const next = !bellOpen;
+                setBellOpen(next);
+                if (next) {
+                  void refreshOrders();
+                  void refreshNotifications();
+                }
+              }}
+              className={`relative w-10 h-10 sm:w-11 sm:h-11 rounded-full border flex items-center justify-center transition ${
+                bellOpen
+                  ? "bg-nayo-green border-nayo-green text-nayo-amber"
+                  : "bg-white border-nayo-black/[0.07] text-nayo-black/70 hover:text-nayo-black"
+              }`}
+              aria-label={`Notifications: ${waiting} orders to fulfill, ${unread} unread emails`}
+              aria-expanded={bellOpen}
+              title="Notifications"
+            >
+              <Bell size={17} />
+              {bellCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#E4572E] text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-[#F4F1EA]">
+                  {bellCount > 99 ? "99+" : bellCount}
+                </span>
+              )}
+            </button>
+            {bellOpen && (
+              <NotificationsPanel
+                orders={orders}
+                data={notifications}
+                loading={checking}
+                onRefresh={() => {
+                  void refreshOrders();
+                  void refreshNotifications();
+                }}
+                onClose={() => setBellOpen(false)}
+                onShowOrders={(filter) => {
+                  setOrderFilter(filter);
+                  switchTab("orders");
+                  setBellOpen(false);
+                  requestAnimationFrame(() =>
+                    document.getElementById("order-list")?.scrollIntoView({ behavior: "smooth" })
+                  );
+                }}
+              />
             )}
-          </button>
+          </div>
           <div className="hidden sm:flex items-center gap-2.5 shrink-0 rounded-full bg-white border border-nayo-black/[0.07] pl-1.5 pr-4 py-1.5">
             <span className="w-8 h-8 rounded-full bg-nayo-green text-nayo-amber text-xs font-bold flex items-center justify-center">
               N
@@ -258,7 +350,14 @@ export default function AdminDashboard() {
 
       <main className="mx-auto max-w-[1500px] px-4 sm:px-8 pt-6 sm:pt-8 pb-28 lg:pb-12">
         {tab === "orders" && (
-          <OrdersView orders={orders} products={products} query={query} onUpdate={updateOrder} />
+          <OrdersView
+            orders={orders}
+            products={products}
+            query={query}
+            filter={orderFilter}
+            onFilter={setOrderFilter}
+            onUpdate={updateOrder}
+          />
         )}
         {tab === "items" && <ItemsView products={products} query={query} onSave={saveProducts} />}
         {tab === "copy" && (

@@ -9,11 +9,14 @@ import {
   releaseReceipt,
 } from "@/app/lib/store";
 import { sendEmail } from "@/app/lib/email";
-import { renderReceiptEmail } from "@/app/lib/receipt-email";
+import { emailBaseUrl, renderReceiptEmail } from "@/app/lib/receipt-email";
+import { ensureCustomer, pinLinkUrl, type Customer } from "@/app/lib/customers";
+
+export type CustomerSummary = { id: string; hasPin: boolean };
 
 export type CheckoutOutcome =
-  | { state: "paid"; order: Order }
-  | { state: "processing"; order: Order }
+  | { state: "paid"; order: Order; customer: CustomerSummary | null }
+  | { state: "processing"; order: Order; customer: CustomerSummary | null }
   | { state: "unpaid"; order: Order }
   | { state: "not_found" }
   | { state: "unconfigured" };
@@ -74,13 +77,22 @@ function orderFromSession(session: Stripe.Checkout.Session): Order {
   };
 }
 
-async function sendReceiptOnce(order: Order) {
+async function sendReceiptOnce(order: Order, customer: Customer | null) {
   if (!order.email) return;
   // If the store is unreachable, fall back on Resend's idempotency key to avoid duplicates.
   const claimed = (await attempt("claim receipt", () => claimReceipt(order.id))) ?? true;
   if (!claimed) return;
 
-  const { subject, html, text } = renderReceiptEmail(order);
+  const base = emailBaseUrl();
+  const { subject, html, text } = renderReceiptEmail(order, {
+    baseUrl: base,
+    account: customer
+      ? {
+          customerId: customer.id,
+          pinUrl: customer.pinHash ? undefined : pinLinkUrl(customer, base),
+        }
+      : undefined,
+  });
   const result = await sendEmail({
     to: order.email,
     subject,
@@ -115,13 +127,24 @@ export async function finalizeCheckout(sessionId: string): Promise<CheckoutOutco
   }
 
   if (session.payment_status === "unpaid") {
-    return { state: session.status === "complete" ? "processing" : "unpaid", order };
+    if (session.status !== "complete") return { state: "unpaid", order };
+    const pending = order.email
+      ? await attempt("ensure customer", () => ensureCustomer(order!.email))
+      : null;
+    return { state: "processing", order, customer: summarize(pending) };
   }
 
   const paid =
     (await attempt("mark paid", () => markOrderPaid(session.id))) ??
     ({ ...order, paymentStatus: "paid", paidAt: new Date().toISOString() } as Order);
 
-  await sendReceiptOnce(paid);
-  return { state: "paid", order: paid };
+  const customer = paid.email
+    ? await attempt("ensure customer", () => ensureCustomer(paid.email))
+    : null;
+  await sendReceiptOnce(paid, customer);
+  return { state: "paid", order: paid, customer: summarize(customer) };
+}
+
+function summarize(customer: Customer | null): CustomerSummary | null {
+  return customer ? { id: customer.id, hasPin: Boolean(customer.pinHash) } : null;
 }

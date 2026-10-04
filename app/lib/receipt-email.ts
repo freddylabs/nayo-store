@@ -1,22 +1,22 @@
 import type { Order } from "@/app/lib/site-data";
 
-const GREEN = "#1A412E";
-const GREEN_DEEP = "#123224";
-const GOLD = "#D4AF37";
-const GOLD_TEXT = "#9A7A1E";
-const INK = "#1C1C1C";
-const MUTED = "#6F6A60";
-const CREAM = "#F4F1EA";
-const PANEL = "#FAF7F0";
+export const GREEN = "#1A412E";
+export const GREEN_DEEP = "#123224";
+export const GOLD = "#D4AF37";
+export const GOLD_TEXT = "#9A7A1E";
+export const INK = "#1C1C1C";
+export const MUTED = "#6F6A60";
+export const CREAM = "#F4F1EA";
+export const PANEL = "#FAF7F0";
 const RULE = "#E8E1D0";
 
-const PHONE_DISPLAY = "+1 (240) 308-3183";
-const PHONE_LINK = "tel:+12403083183";
-const CONTACT_EMAIL = "info@nayo.market";
+export const PHONE_DISPLAY = "+1 (240) 308-3183";
+export const PHONE_LINK = "tel:+12403083183";
+export const CONTACT_EMAIL = "info@nayo.market";
 const HOURS = "Saturdays, 9:00 AM – 9:00 PM";
 
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS =
+export const SERIF = "Georgia, 'Times New Roman', serif";
+export const SANS =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
 
 /** Email images must load from a public https host, never localhost. */
@@ -26,7 +26,7 @@ export function emailBaseUrl(): string {
   return "https://nayo.market";
 }
 
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -71,9 +71,40 @@ function fulfillmentFee(order: Order): string {
   return money(order.deliveryFee);
 }
 
+export type ReceiptAccount = { customerId: string; pinUrl?: string };
+
+function accountBlock(base: string, account?: ReceiptAccount): string {
+  if (!account) return "";
+  const id = escapeHtml(account.customerId);
+  const action = account.pinUrl
+    ? `<p style="margin:8px 0 0;font-family:${SANS};font-size:14px;line-height:22px;color:${MUTED};">Set a 4-digit PIN to check this order and every order you make with us.</p>
+       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;"><tr>
+         <td bgcolor="${GREEN}" style="background-color:${GREEN};border-radius:999px;">
+           <a href="${escapeHtml(account.pinUrl)}" style="display:inline-block;padding:11px 24px;font-family:${SANS};font-size:11px;line-height:16px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:${GOLD};text-decoration:none;border-radius:999px;">Set your PIN</a>
+         </td>
+       </tr></table>`
+    : `<p style="margin:8px 0 0;font-family:${SANS};font-size:14px;line-height:22px;color:${MUTED};">Sign in at <a href="${base}/account" style="color:${GREEN};font-weight:600;text-decoration:none;">nayo.market/account</a> with your PIN to follow this order.</p>`;
+  return `<tr>
+          <td class="nayo-pad" style="padding:20px 48px 0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${PANEL};border-radius:14px;">
+              <tr>
+                <td style="padding:20px 22px;">
+                  <div style="font-family:${SANS};font-size:11px;line-height:16px;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:${GOLD_TEXT};">Track your orders</div>
+                  <div style="font-family:${SANS};font-size:14px;line-height:22px;color:${INK};padding-top:8px;">Your customer ID: <strong style="font-size:16px;letter-spacing:1px;">${id}</strong></div>
+                  ${action}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>`;
+}
+
 export function renderReceiptEmail(
   order: Order,
-  { baseUrl = emailBaseUrl() }: { baseUrl?: string } = {}
+  {
+    baseUrl = emailBaseUrl(),
+    account,
+  }: { baseUrl?: string; account?: ReceiptAccount } = {}
 ) {
   const base = baseUrl;
   const name = escapeHtml(firstName(order));
@@ -224,6 +255,7 @@ export function renderReceiptEmail(
             </table>
           </td>
         </tr>
+        ${accountBlock(base, account)}
 
         <tr>
           <td align="center" class="nayo-pad" style="padding:36px 48px 8px;">
@@ -287,7 +319,15 @@ ${isPickup ? "Pickup" : "Delivery"}: ${fulfillmentFee(order)}
 Total: ${money(order.total)}
 
 ${fulfillmentText}
-
+${
+  account
+    ? `\nYour customer ID: ${account.customerId}\n${
+        account.pinUrl
+          ? `Set a 4-digit PIN to track your orders: ${account.pinUrl}`
+          : `Track your orders at ${base}/account`
+      }\n`
+    : ""
+}
 Questions? Reply to this email, write to ${CONTACT_EMAIL}, or call ${PHONE_DISPLAY}.
 
 Nayo, Fashion, Food, Culture

@@ -54,7 +54,14 @@ export async function GET(request: Request) {
   const order: Order = pickup
     ? { ...sample, fulfillment: "pickup", address: undefined }
     : sample;
-  const { html } = renderReceiptEmail(order, { baseUrl: url.origin });
+  const { html } = renderReceiptEmail(order, {
+    baseUrl: url.origin,
+    account: {
+      customerId: "NY-K7Q2MX",
+      pinUrl:
+        url.searchParams.get("haspin") === "1" ? undefined : `${url.origin}/account/pin?token=preview`,
+    },
+  });
   return new NextResponse(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },
   });

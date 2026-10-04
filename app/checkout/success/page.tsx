@@ -128,6 +128,29 @@ export default async function CheckoutSuccessPage({
         </h1>
         <p className="text-nayo-black/55 mb-8 leading-relaxed">{view.body}</p>
 
+        {(outcome?.state === "paid" || outcome?.state === "processing") && outcome.customer && (
+          <div className="mb-6 rounded-2xl bg-nayo-green p-6 text-left text-white">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-nayo-gold">
+              Track your orders
+            </p>
+            <p className="mt-2 text-sm text-white/75">Your customer ID</p>
+            <p className="text-display text-3xl font-bold tracking-wider text-nayo-amber">
+              {outcome.customer.id}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-white/75">
+              {outcome.customer.hasPin
+                ? "Sign in with your email or customer ID and your 4-digit PIN to follow this order."
+                : "We emailed you a link to set a 4-digit PIN. Use it with your email or customer ID to follow this order and see past orders."}
+            </p>
+            <Link
+              href="/account"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-nayo-gold/60 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-nayo-gold hover:bg-nayo-gold hover:text-nayo-green"
+            >
+              {outcome.customer.hasPin ? "Go to my orders" : "My orders"}
+            </Link>
+          </div>
+        )}
+
         {view.order && (
           <div className="mb-10">
             <OrderSummary order={view.order} />

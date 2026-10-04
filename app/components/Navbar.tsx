@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, UserRound, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
@@ -84,6 +84,18 @@ export default function Navbar() {
                 <ExploreShop variant="dropdown" />
               </div>
 
+              <Link
+                href="/account"
+                className="p-2.5 rounded-full border border-nayo-gold/50 hover:border-nayo-gold hover:bg-nayo-gold/10 transition-all duration-300 group flex-shrink-0"
+                aria-label="My orders"
+                title="My orders"
+              >
+                <UserRound
+                  size={20}
+                  className="text-nayo-white group-hover:text-nayo-gold transition-colors duration-300"
+                />
+              </Link>
+
               <button
                 id="cart-toggle-btn"
                 onClick={() => dispatch({ type: "TOGGLE_CART" })}
@@ -128,6 +140,13 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/account"
+              onClick={handleMobileNav}
+              className="text-left text-2xl font-display text-nayo-white/90 hover:text-nayo-gold transition-colors duration-300 border-b border-nayo-gold/20 pb-4 block"
+            >
+              My orders
+            </Link>
             <ExploreShop onNavigate={handleMobileNav} />
           </motion.div>
         )}

@@ -1,20 +1,27 @@
 import { db, hasDatabase } from "@/app/lib/db";
 
-const MAX_FAILURES = 5;
-const WINDOW_MS = 15 * 60 * 1000;
-const LOCK_MS = 15 * 60 * 1000;
+export type LimitRule = { max: number; windowMs: number; lockMs: number };
+
+const DEFAULT_RULE: LimitRule = {
+  max: 5,
+  windowMs: 15 * 60 * 1000,
+  lockMs: 15 * 60 * 1000,
+};
 
 type Attempt = { failures: number; windowStart: number; lockedUntil: number };
 
 const memory = new Map<string, Attempt>();
 
-export function clientKey(request: Request): string {
+export function clientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwarded || request.headers.get("x-real-ip") || "unknown";
-  return `admin-login:${ip}`;
+  return forwarded || request.headers.get("x-real-ip") || "unknown";
 }
 
-/** Minutes left on a lockout, or 0 when this client may try to sign in. */
+export function clientKey(request: Request, scope = "admin-login"): string {
+  return `${scope}:${clientIp(request)}`;
+}
+
+/** Minutes left on a lockout, or 0 when this key may try again. */
 export async function lockedMinutes(key: string): Promise<number> {
   let lockedUntil = 0;
   if (hasDatabase()) {
@@ -30,12 +37,13 @@ export async function lockedMinutes(key: string): Promise<number> {
   return left > 0 ? Math.ceil(left / 60000) : 0;
 }
 
-export async function recordFailure(key: string): Promise<void> {
+/** Counts one attempt against the key and locks it once the rule's max is reached. */
+export async function recordFailure(key: string, rule: LimitRule = DEFAULT_RULE): Promise<void> {
   const now = Date.now();
   if (hasDatabase()) {
     const sql = await db();
-    const windowStart = new Date(now - WINDOW_MS);
-    const lockUntil = new Date(now + LOCK_MS);
+    const windowStart = new Date(now - rule.windowMs);
+    const lockUntil = new Date(now + rule.lockMs);
     await sql`
       INSERT INTO login_attempts (key, failures, window_start)
       VALUES (${key}, 1, now())
@@ -52,18 +60,18 @@ export async function recordFailure(key: string): Promise<void> {
     await sql`
       UPDATE login_attempts
       SET locked_until = ${lockUntil}, failures = 0, window_start = now()
-      WHERE key = ${key} AND failures >= ${MAX_FAILURES}
+      WHERE key = ${key} AND failures >= ${rule.max}
     `;
     return;
   }
 
   const current = memory.get(key);
-  const fresh = !current || now - current.windowStart > WINDOW_MS;
+  const fresh = !current || now - current.windowStart > rule.windowMs;
   const next: Attempt = fresh
     ? { failures: 1, windowStart: now, lockedUntil: current?.lockedUntil ?? 0 }
     : { ...current, failures: current.failures + 1 };
-  if (next.failures >= MAX_FAILURES) {
-    next.lockedUntil = now + LOCK_MS;
+  if (next.failures >= rule.max) {
+    next.lockedUntil = now + rule.lockMs;
     next.failures = 0;
     next.windowStart = now;
   }
@@ -77,4 +85,14 @@ export async function clearFailures(key: string): Promise<void> {
     return;
   }
   memory.delete(key);
+}
+
+/** Runs attempt tracking without letting a database hiccup block sign in. */
+export async function safely<T>(task: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await task();
+  } catch (error) {
+    console.error("[login-limit] attempt tracking failed", error);
+    return fallback;
+  }
 }

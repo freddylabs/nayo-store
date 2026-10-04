@@ -21,16 +21,22 @@ export const statusMeta: Record<
     dot: "bg-[#D4AF37]",
   },
   sent: {
-    label: "Out for delivery",
-    done: "Sent out",
+    label: "With driver",
+    done: "With driver",
     pill: "text-[#1D4ED8] bg-[#EAF1FE] border-[#C9DAFB]",
     dot: "bg-[#3B82F6]",
   },
   shipped: {
-    label: "Shipped",
+    label: "Shipped · UPS",
     done: "Shipped",
     pill: "text-[#6D28D9] bg-[#F2ECFE] border-[#DCCDFB]",
     dot: "bg-[#8B5CF6]",
+  },
+  delivered: {
+    label: "Delivered",
+    done: "Delivered",
+    pill: "text-[#1A412E] bg-[#E6F2EA] border-[#BFDCC9]",
+    dot: "bg-[#2D7A4F]",
   },
   picked_up: {
     label: "Picked up",

@@ -1,6 +1,17 @@
 import type { Product } from "@/app/data/products";
 
-export type OrderStatus = "to_send" | "sent" | "shipped" | "picked_up";
+export type OrderStatus = "to_send" | "sent" | "shipped" | "delivered" | "picked_up";
+
+export const orderStatuses: OrderStatus[] = [
+  "to_send",
+  "sent",
+  "shipped",
+  "delivered",
+  "picked_up",
+];
+
+/** How a delivery order travels: our own driver, or shipped with UPS. */
+export type DeliveryMethod = "local" | "ups";
 
 export type PaymentStatus = "pending" | "paid";
 
@@ -37,13 +48,65 @@ export interface Order {
   paymentStatus?: PaymentStatus;
   paidAt?: string;
   receiptSentAt?: string;
+  deliveryMethod?: DeliveryMethod;
   trackingNumber?: string;
   labelNote?: string;
+  shippedAt?: string;
+  deliveredAt?: string;
+  shippingEmailSentAt?: string;
   updatedAt?: string;
 }
 
 export function isOrderPaid(order: Order): boolean {
   return order.paymentStatus !== "pending";
+}
+
+export function isOrderDone(order: Order): boolean {
+  return order.status === "delivered" || order.status === "picked_up";
+}
+
+/** A paid delivery order where the owner has not yet chosen driver or UPS. */
+export function needsDeliveryChoice(order: Order): boolean {
+  return (
+    isOrderPaid(order) &&
+    order.fulfillment === "delivery" &&
+    !order.deliveryMethod &&
+    order.status === "to_send"
+  );
+}
+
+export function upsTrackingUrl(trackingNumber: string): string {
+  return `https://www.ups.com/track?loc=en_US&tracknum=${encodeURIComponent(
+    trackingNumber.replace(/\s+/g, "")
+  )}`;
+}
+
+/** UPS numbers usually look like 1Z followed by 16 letters or digits. */
+export function looksLikeUpsNumber(trackingNumber: string): boolean {
+  return /^1Z[0-9A-Z]{16}$/i.test(trackingNumber.replace(/\s+/g, ""));
+}
+
+/** The steps an order moves through, based on how it reaches the customer. */
+export function orderSteps(order: Order): OrderStatus[] {
+  if (order.fulfillment === "pickup") return ["to_send", "picked_up"];
+  if (order.deliveryMethod === "ups") return ["to_send", "shipped", "delivered"];
+  return ["to_send", "sent", "delivered"];
+}
+
+/** Wording customers see for each status. */
+export function customerStatusLabel(order: Order): string {
+  switch (order.status) {
+    case "to_send":
+      return order.fulfillment === "pickup" ? "Being prepared" : "Preparing your order";
+    case "sent":
+      return "Out for delivery";
+    case "shipped":
+      return "Shipped with UPS";
+    case "delivered":
+      return "Delivered";
+    case "picked_up":
+      return "Picked up";
+  }
 }
 
 export interface SiteCopy {
@@ -90,6 +153,38 @@ export interface SiteCopy {
   healthCollectionBody: string;
   healthCloseTitle: string;
   healthCloseBody: string;
+  heroFoodLabel: string;
+  heroFoodBrand: string;
+  heroFoodCta: string;
+  heroFoodCaption1: string;
+  heroFoodCaption2: string;
+  heroFoodCaption3: string;
+  heroHealthLabel: string;
+  heroHealthBrand: string;
+  heroHealthCta: string;
+  heroHealthCaption1: string;
+  heroHealthCaption2: string;
+  heroHealthCaption3: string;
+  testimonialsEyebrow: string;
+  testimonialsTitle: string;
+  testimonialsTitleGold: string;
+  aboutEyebrow: string;
+  aboutTitle: string;
+  aboutBody1: string;
+  aboutBody2: string;
+  aboutBody3: string;
+  aboutVision: string;
+  aboutMission: string;
+  aboutValuesTitle: string;
+  aboutValuesIntro: string;
+  aboutFutureTitle: string;
+  aboutFutureBody: string;
+  aboutCloseTitle: string;
+  aboutCloseBody: string;
+  contactEyebrow: string;
+  contactTitle: string;
+  contactIntro: string;
+  contactReplyNote: string;
 }
 
 export const defaultCopy: SiteCopy = {
@@ -151,6 +246,46 @@ export const defaultCopy: SiteCopy = {
   healthCloseTitle: "Show up looking like you belong.",
   healthCloseBody:
     "Every shift is a promise. Dress for the work, the team, and the people who trust you with their care.",
+  heroFoodLabel: "Food",
+  heroFoodBrand: "Nayo Foods",
+  heroFoodCta: "Explore Foods",
+  heroFoodCaption1: "Jollof and beef",
+  heroFoodCaption2: "Plantain Ampesi, grilled fish & eggs",
+  heroFoodCaption3: "Yam, plantain & kontomire stew",
+  heroHealthLabel: "Health",
+  heroHealthBrand: "Nayo Health",
+  heroHealthCta: "Shop Health",
+  heroHealthCaption1: "Crafted For Every Shift",
+  heroHealthCaption2: "Nurse scrub dresses for every shift",
+  heroHealthCaption3: "Signature scrubs",
+  testimonialsEyebrow: "What Our Customers Say",
+  testimonialsTitle: "Loved by Those Who",
+  testimonialsTitleGold: "Live It.",
+  aboutEyebrow: "Our story",
+  aboutTitle: "A legacy of family, excellence, and care.",
+  aboutBody1:
+    "NAYO was founded with a vision to create more than just a business, it was created to build a legacy. Rooted in strong family values and a passion for excellence, NAYO brings together two everyday essentials: quality fashion and great food under one trusted brand.",
+  aboutBody2:
+    "We believe that what people wear and what they eat should reflect confidence, quality, and care. Every product and service we offer is designed to enrich lives, celebrate culture, and create meaningful experiences for our customers.",
+  aboutBody3:
+    "As we grow, our commitment remains the same: to deliver exceptional products, outstanding service, and lasting value while making a positive impact in the communities we serve.",
+  aboutVision:
+    "To become a trusted lifestyle brand recognized for delivering quality fashion, professional apparel, and exceptional food experiences that enrich everyday life.",
+  aboutMission:
+    "To provide stylish clothing, professional uniforms, and delicious food that inspire confidence, celebrate culture, and bring people together through outstanding quality and service.",
+  aboutValuesTitle: "Our core values",
+  aboutValuesIntro: "The standards we cut, cook, and serve by.",
+  aboutFutureTitle: "Future growth",
+  aboutFutureBody:
+    "NAYO aims to grow into new collections and services, while staying one trusted brand.",
+  aboutCloseTitle: "Live the NAYO Lifestyle.",
+  aboutCloseBody:
+    "Shop our apparel, food, and health collections, or get in touch if you need something specific.",
+  contactEyebrow: "Nayo Ltd.",
+  contactTitle: "We would love to hear from you.",
+  contactIntro:
+    "Questions about an order, a meal, apparel, or uniforms, send us a note and we will get back to you.",
+  contactReplyNote: "We aim to reply within one working day.",
 };
 
 export type CatalogProduct = Product;

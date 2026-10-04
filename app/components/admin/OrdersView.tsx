@@ -9,9 +9,11 @@ import {
   CircleDollarSign,
   ClipboardList,
   Download,
+  ExternalLink,
   Hourglass,
   Mail,
   MapPin,
+  Package,
   Phone,
   Printer,
   Receipt,
@@ -20,7 +22,16 @@ import {
   Truck,
 } from "lucide-react";
 import type { Product } from "@/app/data/products";
-import { isOrderPaid, type Order, type OrderStatus } from "@/app/lib/site-data";
+import {
+  isOrderPaid,
+  looksLikeUpsNumber,
+  needsDeliveryChoice,
+  orderSteps,
+  upsTrackingUrl,
+  type DeliveryMethod,
+  type Order,
+  type OrderStatus,
+} from "@/app/lib/site-data";
 import {
   Avatar,
   Drawer,
@@ -36,12 +47,20 @@ import {
 
 export type OrderPatch = {
   status?: OrderStatus;
+  deliveryMethod?: DeliveryMethod;
   trackingNumber?: string;
   labelNote?: string;
 };
 
 type Range = "today" | "7d" | "month" | "all";
-type Filter = "all" | OrderStatus;
+export type OrderFilter = "all" | "decide" | OrderStatus;
+type Filter = OrderFilter;
+
+function inFilter(order: Order, filter: Filter): boolean {
+  if (filter === "all") return true;
+  if (filter === "decide") return needsDeliveryChoice(order);
+  return order.status === filter;
+}
 
 const ranges: { id: Range; label: string }[] = [
   { id: "today", label: "Today" },
@@ -101,6 +120,7 @@ function exportCsv(orders: Order[]) {
     "Delivery",
     "Total",
     "Status",
+    "Sent by",
     "Tracking",
   ];
   const rows = orders.map((order) => [
@@ -118,6 +138,13 @@ function exportCsv(orders: Order[]) {
     order.deliveryFee.toFixed(2),
     order.total.toFixed(2),
     statusMeta[order.status].label,
+    order.fulfillment === "pickup"
+      ? "Pickup"
+      : order.deliveryMethod === "ups"
+        ? "UPS"
+        : order.deliveryMethod === "local"
+          ? "Driver"
+          : "Not chosen",
     order.trackingNumber,
   ]);
   const csv = [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
@@ -133,15 +160,19 @@ export default function OrdersView({
   orders,
   products,
   query,
+  filter,
+  onFilter,
   onUpdate,
 }: {
   orders: Order[];
   products: Product[];
   query: string;
-  onUpdate: (id: string, patch: OrderPatch) => Promise<void>;
+  filter: Filter;
+  onFilter: (filter: Filter) => void;
+  onUpdate: (id: string, patch: OrderPatch) => Promise<boolean>;
 }) {
   const [range, setRange] = useState<Range>("all");
-  const [filter, setFilter] = useState<Filter>("all");
+  const setFilter = onFilter;
   const [page, setPage] = useState(1);
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -162,14 +193,29 @@ export default function OrdersView({
   const counts = useMemo(() => {
     const base: Record<Filter, number> = {
       all: scoped.length,
+      decide: 0,
       to_send: 0,
       sent: 0,
       shipped: 0,
+      delivered: 0,
       picked_up: 0,
     };
-    for (const order of scoped) base[order.status] += 1;
+    for (const order of scoped) {
+      base[order.status] += 1;
+      if (needsDeliveryChoice(order)) base.decide += 1;
+    }
     return base;
   }, [scoped]);
+  const undecided = paid.filter(needsDeliveryChoice).length;
+
+  const updateFromCard = async (id: string, patch: OrderPatch) => {
+    const ok = await onUpdate(id, patch);
+    if (ok && patch.deliveryMethod) {
+      if (patch.deliveryMethod === "ups") setOpenId(id);
+      if (filter === "decide" && undecided <= 1) setFilter("to_send");
+    }
+    return ok;
+  };
 
   const stats = useMemo(() => {
     const inScope = paid.filter((order) => inRange(order, range));
@@ -183,7 +229,7 @@ export default function OrdersView({
     };
   }, [paid, range]);
 
-  const visible = filter === "all" ? scoped : scoped.filter((o) => o.status === filter);
+  const visible = scoped.filter((o) => inFilter(o, filter));
   const pages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
   const current = Math.min(page, pages);
   const pageOrders = visible.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
@@ -240,9 +286,11 @@ export default function OrdersView({
 
   const filters: { id: Filter; label: string; tone: string }[] = [
     { id: "all", label: "All orders", tone: "" },
+    { id: "decide", label: "Choose driver or UPS", tone: "text-[#C2410C]" },
     { id: "to_send", label: statusMeta.to_send.label, tone: "text-[#A16207]" },
     { id: "sent", label: statusMeta.sent.label, tone: "text-[#1D4ED8]" },
     { id: "shipped", label: statusMeta.shipped.label, tone: "text-[#6D28D9]" },
+    { id: "delivered", label: statusMeta.delivered.label, tone: "text-nayo-green-light" },
     { id: "picked_up", label: statusMeta.picked_up.label, tone: "text-nayo-green-light" },
   ];
 
@@ -325,7 +373,35 @@ export default function OrdersView({
         ))}
       </div>
 
-      <section className="space-y-4">
+      {undecided > 0 && filter !== "decide" && (
+        <div className="flex flex-col gap-3 rounded-2xl border border-[#F5C9A8] bg-[#FFF4EA] p-4 sm:flex-row sm:items-center sm:justify-between print:hidden">
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 w-9 h-9 shrink-0 rounded-full bg-[#FDECDD] text-[#C2410C] flex items-center justify-center">
+              <Package size={17} />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-nayo-black">
+                {undecided} delivery order{undecided === 1 ? "" : "s"} need{undecided === 1 ? "s" : ""} a decision
+              </p>
+              <p className="text-xs text-nayo-black/55 mt-0.5">
+                Does it need shipping with UPS, or will your delivery driver take it?
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setFilter("decide");
+              setPage(1);
+            }}
+            className="shrink-0 rounded-xl bg-[#C2410C] px-4 py-2.5 text-xs font-semibold text-white hover:bg-[#9A3412]"
+          >
+            Review now
+          </button>
+        </div>
+      )}
+
+      <section id="order-list" className="space-y-4 scroll-mt-24">
         <div className="flex items-end justify-between gap-4">
           <h2 className="text-display text-2xl font-bold text-nayo-black">
             {query ? `Results for “${query}”` : "Orders"}
@@ -372,7 +448,7 @@ export default function OrdersView({
                   order={order}
                   imageFor={imageFor}
                   onOpen={() => setOpenId(order.id)}
-                  onUpdate={onUpdate}
+                  onUpdate={updateFromCard}
                 />
               ))}
             </div>
@@ -445,23 +521,109 @@ export default function OrdersView({
 
 function FulfillmentBadge({ order }: { order: Order }) {
   const pickup = order.fulfillment === "pickup";
+  const ups = order.deliveryMethod === "ups";
+  const label = pickup
+    ? "Pickup"
+    : ups
+      ? "Ship · UPS"
+      : order.deliveryMethod === "local"
+        ? "Delivery · Driver"
+        : "Delivery";
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-semibold ${
-        pickup ? "bg-[#FDF4DC] text-[#A16207]" : "bg-[#EAF1FE] text-[#1D4ED8]"
+        pickup
+          ? "bg-[#FDF4DC] text-[#A16207]"
+          : ups
+            ? "bg-[#F2ECFE] text-[#6D28D9]"
+            : "bg-[#EAF1FE] text-[#1D4ED8]"
       }`}
     >
-      {pickup ? <Store size={11} /> : <Truck size={11} />}
-      {pickup ? "Pickup" : "Delivery"}
+      {pickup ? <Store size={11} /> : ups ? <Package size={11} /> : <Truck size={11} />}
+      {label}
     </span>
   );
 }
 
-function primaryAction(order: Order): { label: string; next: OrderStatus } | null {
-  if (order.status !== "to_send") return null;
-  return order.fulfillment === "pickup"
-    ? { label: "Mark picked up", next: "picked_up" }
-    : { label: "Mark sent out", next: "sent" };
+type CardAction =
+  | { kind: "status"; label: string; next: OrderStatus }
+  | { kind: "open"; label: string };
+
+function primaryAction(order: Order): CardAction | null {
+  if (order.fulfillment === "pickup") {
+    return order.status === "to_send"
+      ? { kind: "status", label: "Mark picked up", next: "picked_up" }
+      : null;
+  }
+  if (order.deliveryMethod === "ups") {
+    if (order.status === "to_send") return { kind: "open", label: "Add UPS tracking" };
+    if (order.status === "shipped") {
+      return { kind: "status", label: "Mark delivered", next: "delivered" };
+    }
+    return null;
+  }
+  if (order.status === "to_send") {
+    return { kind: "status", label: "Hand to driver", next: "sent" };
+  }
+  if (order.status === "sent") {
+    return { kind: "status", label: "Mark delivered", next: "delivered" };
+  }
+  return null;
+}
+
+function DeliveryChoice({
+  order,
+  onUpdate,
+  compact = false,
+}: {
+  order: Order;
+  onUpdate: (id: string, patch: OrderPatch) => Promise<boolean>;
+  compact?: boolean;
+}) {
+  const [busy, setBusy] = useState<DeliveryMethod | null>(null);
+  const choose = async (method: DeliveryMethod) => {
+    setBusy(method);
+    await onUpdate(order.id, { deliveryMethod: method });
+    setBusy(null);
+  };
+  const button =
+    "flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border text-xs font-semibold transition disabled:opacity-60";
+  return (
+    <div
+      className={
+        compact
+          ? "rounded-xl border border-[#F5C9A8] bg-[#FFF4EA] p-2.5"
+          : "rounded-2xl border border-[#F5C9A8] bg-[#FFF4EA] p-4"
+      }
+    >
+      <p className={`font-semibold text-nayo-black ${compact ? "text-[11px] text-center" : "text-sm"}`}>
+        Does this order need shipping?
+      </p>
+      {!compact && (
+        <p className="mt-1 text-xs text-nayo-black/55">
+          Choose UPS if it is going by courier, or your driver if you are delivering it locally.
+        </p>
+      )}
+      <div className={`flex gap-2 ${compact ? "mt-2" : "mt-3"}`}>
+        <button
+          type="button"
+          disabled={busy !== null}
+          onClick={() => choose("ups")}
+          className={`${button} ${compact ? "py-2" : "py-2.5"} bg-[#6D28D9] border-[#6D28D9] text-white hover:bg-[#5B21B6]`}
+        >
+          <Package size={13} /> {busy === "ups" ? "Saving…" : compact ? "Yes, UPS" : "Yes, ship with UPS"}
+        </button>
+        <button
+          type="button"
+          disabled={busy !== null}
+          onClick={() => choose("local")}
+          className={`${button} ${compact ? "py-2" : "py-2.5"} bg-white border-nayo-black/15 text-nayo-black/75 hover:border-nayo-gold`}
+        >
+          <Truck size={13} /> {busy === "local" ? "Saving…" : compact ? "No, driver" : "No, our driver"}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function OrderCard({
@@ -473,7 +635,7 @@ function OrderCard({
   order: Order;
   imageFor: (name: string, image?: string) => string | undefined;
   onOpen: () => void;
-  onUpdate: (id: string, patch: OrderPatch) => Promise<void>;
+  onUpdate: (id: string, patch: OrderPatch) => Promise<boolean>;
 }) {
   const [slide, setSlide] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -560,12 +722,26 @@ function OrderCard({
         <span className="text-lg font-bold text-nayo-black">{money(order.total)}</span>
       </div>
 
+      {order.trackingNumber && order.deliveryMethod === "ups" && (
+        <a
+          href={upsTrackingUrl(order.trackingNumber)}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-[#6D28D9] hover:underline truncate"
+        >
+          UPS {order.trackingNumber} <ExternalLink size={11} />
+        </a>
+      )}
+
       <div className="mt-3 space-y-2 print:hidden">
-        {action ? (
+        {needsDeliveryChoice(order) ? (
+          <DeliveryChoice order={order} onUpdate={onUpdate} compact />
+        ) : action ? (
           <button
             type="button"
             disabled={busy}
             onClick={async () => {
+              if (action.kind === "open") return onOpen();
               setBusy(true);
               await onUpdate(order.id, { status: action.next });
               setBusy(false);
@@ -600,12 +776,12 @@ function OrderDrawer({
   order: Order | null;
   imageFor: (name: string, image?: string) => string | undefined;
   onClose: () => void;
-  onUpdate: (id: string, patch: OrderPatch) => Promise<void>;
+  onUpdate: (id: string, patch: OrderPatch) => Promise<boolean>;
 }) {
   if (!order) return <Drawer open={false} title="" onClose={onClose}>{null}</Drawer>;
 
-  const steps: OrderStatus[] =
-    order.fulfillment === "pickup" ? ["to_send", "picked_up"] : ["to_send", "sent", "shipped"];
+  const steps = orderSteps(order);
+  const deciding = needsDeliveryChoice(order);
 
   return (
     <Drawer
@@ -620,7 +796,31 @@ function OrderDrawer({
       }
     >
       <div className="space-y-6">
-        <section>
+        {deciding && <DeliveryChoice order={order} onUpdate={onUpdate} />}
+
+        {order.fulfillment === "delivery" && order.deliveryMethod && order.status === "to_send" && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-nayo-black/[0.07] bg-white px-4 py-3 text-xs">
+            <span className="text-nayo-black/65">
+              Going by{" "}
+              <strong className="text-nayo-black">
+                {order.deliveryMethod === "ups" ? "UPS shipping" : "your delivery driver"}
+              </strong>
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                onUpdate(order.id, {
+                  deliveryMethod: order.deliveryMethod === "ups" ? "local" : "ups",
+                })
+              }
+              className="font-semibold text-nayo-green hover:text-nayo-gold"
+            >
+              Switch to {order.deliveryMethod === "ups" ? "driver" : "UPS"}
+            </button>
+          </div>
+        )}
+
+        <section className={deciding ? "opacity-50 pointer-events-none" : ""}>
           <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-nayo-gold mb-2">
             Status
           </p>
@@ -724,24 +924,18 @@ function OrderDrawer({
           </dl>
         </section>
 
-        {order.fulfillment === "delivery" && (
-          <section className="space-y-2" key={order.id}>
+        {order.fulfillment === "delivery" && order.deliveryMethod === "ups" && (
+          <UpsSection key={`${order.id}-ups`} order={order} onUpdate={onUpdate} />
+        )}
+
+        {order.fulfillment === "delivery" && order.deliveryMethod === "local" && (
+          <section className="space-y-2" key={`${order.id}-local`}>
             <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-nayo-gold">
-              Tracking and label
+              Driver notes
             </p>
-            <input
-              defaultValue={order.trackingNumber}
-              placeholder="Tracking number"
-              onBlur={(e) => {
-                if (e.target.value !== (order.trackingNumber ?? "")) {
-                  void onUpdate(order.id, { trackingNumber: e.target.value });
-                }
-              }}
-              className={fieldClass}
-            />
             <textarea
               defaultValue={order.labelNote}
-              placeholder="Label or carrier notes"
+              placeholder="Driver name, delivery window, gate code…"
               rows={3}
               onBlur={(e) => {
                 if (e.target.value !== (order.labelNote ?? "")) {
@@ -755,5 +949,113 @@ function OrderDrawer({
         )}
       </div>
     </Drawer>
+  );
+}
+
+function UpsSection({
+  order,
+  onUpdate,
+}: {
+  order: Order;
+  onUpdate: (id: string, patch: OrderPatch) => Promise<boolean>;
+}) {
+  const [tracking, setTracking] = useState(order.trackingNumber ?? "");
+  const [busy, setBusy] = useState(false);
+  const cleaned = tracking.replace(/\s+/g, "").toUpperCase();
+  const changed = cleaned !== (order.trackingNumber ?? "");
+  const shippedAlready = order.status === "shipped" || order.status === "delivered";
+
+  const save = async (markShipped: boolean) => {
+    setBusy(true);
+    const ok = await onUpdate(order.id, {
+      trackingNumber: cleaned,
+      ...(markShipped ? { status: "shipped" as const } : {}),
+    });
+    if (ok) setTracking(cleaned);
+    setBusy(false);
+  };
+
+  return (
+    <section className="space-y-3">
+      <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-nayo-gold">
+        UPS shipping
+      </p>
+      <ol className="space-y-1.5 text-xs text-nayo-black/60 list-decimal pl-4">
+        <li>
+          Create the label on{" "}
+          <a
+            href="https://www.ups.com/ship"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-[#6D28D9] hover:underline"
+          >
+            ups.com/ship
+          </a>{" "}
+          using the address above.
+        </li>
+        <li>Copy the tracking number from the label (it starts with 1Z).</li>
+        <li>Paste it below and press Save and mark shipped. The customer gets it by email.</li>
+      </ol>
+      <input
+        value={tracking}
+        onChange={(e) => setTracking(e.target.value)}
+        placeholder="1Z999AA10123456784"
+        autoCapitalize="characters"
+        spellCheck={false}
+        className={`${fieldClass} font-mono tracking-wide`}
+      />
+      {cleaned && !looksLikeUpsNumber(cleaned) && (
+        <p className="text-[11px] text-[#C2410C]">
+          UPS numbers usually start with 1Z and are 18 characters. Double check it before saving.
+        </p>
+      )}
+      <div className="flex flex-col gap-2 sm:flex-row">
+        {!shippedAlready ? (
+          <button
+            type="button"
+            disabled={busy || !cleaned}
+            onClick={() => save(true)}
+            className="flex-1 rounded-xl bg-[#6D28D9] py-2.5 text-xs font-semibold text-white hover:bg-[#5B21B6] disabled:opacity-50"
+          >
+            {busy ? "Saving…" : "Save and mark shipped"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            disabled={busy || !changed || !cleaned}
+            onClick={() => save(false)}
+            className="flex-1 rounded-xl bg-nayo-green py-2.5 text-xs font-semibold text-white hover:bg-[#143424] disabled:opacity-50"
+          >
+            {busy ? "Saving…" : "Update tracking number"}
+          </button>
+        )}
+        {order.trackingNumber && (
+          <a
+            href={upsTrackingUrl(order.trackingNumber)}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-nayo-black/15 bg-white py-2.5 text-xs font-semibold text-nayo-black/75 hover:border-nayo-gold"
+          >
+            Track on UPS <ExternalLink size={12} />
+          </a>
+        )}
+      </div>
+      {order.shippingEmailSentAt && (
+        <p className="text-[11px] text-nayo-green-light">
+          Tracking emailed to the customer {formatDateTime(order.shippingEmailSentAt)}.
+        </p>
+      )}
+      <textarea
+        defaultValue={order.labelNote}
+        placeholder="Label notes (box size, weight, service level)"
+        rows={2}
+        onBlur={(e) => {
+          if (e.target.value !== (order.labelNote ?? "")) {
+            void onUpdate(order.id, { labelNote: e.target.value });
+          }
+        }}
+        className={fieldClass}
+      />
+    </section>
   );
 }

@@ -40,6 +40,16 @@ function ShopRow({
   );
 }
 
+export const LANDING_ROW_SIZE = 4;
+
+/** Items the owner marked for the landing page, topped up with the first items in the shop. */
+function landingPicks(products: Product[], category: Product["category"]): Product[] {
+  const inCategory = products.filter((item) => item.category === category);
+  const featured = inCategory.filter((item) => item.featured);
+  const rest = inCategory.filter((item) => !item.featured);
+  return [...featured, ...rest].slice(0, LANDING_ROW_SIZE);
+}
+
 export default function ShopCollections({
   products,
   copy = defaultCopy,
@@ -47,8 +57,8 @@ export default function ShopCollections({
   products: Product[];
   copy?: SiteCopy;
 }) {
-  const food = products.filter((item) => item.category === "food");
-  const health = products.filter((item) => item.category === "health");
+  const food = landingPicks(products, "food");
+  const health = landingPicks(products, "health");
 
   return (
     <div className="bg-nayo-white pt-10 sm:pt-14 lg:pt-16 pb-10 sm:pb-14 lg:pb-16">

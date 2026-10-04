@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
+import { defaultCopy, type SiteCopy } from "@/app/lib/site-data";
 
 const testimonials = [
   {
@@ -97,7 +98,7 @@ function TestimonialCard({
   );
 }
 
-export default function Testimonials() {
+export default function Testimonials({ copy = defaultCopy }: { copy?: SiteCopy }) {
   const loop = [...testimonials, ...testimonials];
 
   return (
@@ -112,7 +113,7 @@ export default function Testimonials() {
             transition={{ duration: 0.5 }}
             className="text-nayo-gold text-xs tracking-[0.3em] uppercase font-semibold"
           >
-            What Our Customers Say
+            {copy.testimonialsEyebrow}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
@@ -121,7 +122,8 @@ export default function Testimonials() {
             transition={{ duration: 0.7, delay: 0.08 }}
             className="text-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mt-3"
           >
-            Loved by Those Who <span className="gold-text">Live It.</span>
+            {copy.testimonialsTitle}{" "}
+            <span className="gold-text">{copy.testimonialsTitleGold}</span>
           </motion.h2>
         </div>
 

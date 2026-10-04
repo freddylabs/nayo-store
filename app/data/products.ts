@@ -24,6 +24,8 @@ export interface Product {
   rating?: number;
   reviews?: number;
   meal?: MealConfig;
+  /** Shown in this category's row on the landing page. */
+  featured?: boolean;
 }
 
 export const fashionProducts: Product[] = [

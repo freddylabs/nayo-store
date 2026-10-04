@@ -31,6 +31,7 @@ const quickLinks = [
   { label: "Health", href: "/health" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "My orders", href: "/account" },
 ];
 
 const socials = [

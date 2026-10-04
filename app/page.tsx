@@ -19,7 +19,7 @@ export default async function Home() {
         <Navbar />
         <Hero copy={copy} />
         <ShopCollections products={products} copy={copy} />
-        <Testimonials />
+        <Testimonials copy={copy} />
         <SectionClose
           eyebrow={copy.landingCloseEyebrow}
           title={copy.landingCloseTitle}

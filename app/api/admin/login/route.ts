@@ -9,16 +9,8 @@ import {
   clientKey,
   lockedMinutes,
   recordFailure,
+  safely,
 } from "@/app/lib/login-limit";
-
-async function safely<T>(task: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await task();
-  } catch (error) {
-    console.error("[admin login] attempt tracking failed", error);
-    return fallback;
-  }
-}
 
 export async function POST(request: Request) {
   let body: { email?: string; password?: string };

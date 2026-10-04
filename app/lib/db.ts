@@ -54,6 +54,13 @@ async function createSchema(sql: Sql) {
       label_note      text
     )
   `;
+  await sql`
+    ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS delivery_method        text,
+      ADD COLUMN IF NOT EXISTS shipped_at             timestamptz,
+      ADD COLUMN IF NOT EXISTS delivered_at           timestamptz,
+      ADD COLUMN IF NOT EXISTS shipping_email_sent_at timestamptz
+  `;
   await sql`CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS orders_email_idx ON orders (lower(email))`;
   await sql`
@@ -63,6 +70,15 @@ async function createSchema(sql: Sql) {
       updated_at timestamptz NOT NULL DEFAULT now()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS customers (
+      id         text PRIMARY KEY,
+      email      text NOT NULL,
+      pin_hash   text,
+      created_at timestamptz NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS customers_email_idx ON customers (lower(email))`;
   await sql`
     CREATE TABLE IF NOT EXISTS login_attempts (
       key          text PRIMARY KEY,

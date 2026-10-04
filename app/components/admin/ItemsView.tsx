@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ImagePlus, PackageOpen, Pencil, Plus, Trash2, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ImagePlus,
+  PackageOpen,
+  Pencil,
+  Plus,
+  Star,
+  Trash2,
+  X,
+} from "lucide-react";
+import { LANDING_ROW_SIZE } from "@/app/components/ShopCollections";
 import {
   complimentarySides,
   type MealExtra,
@@ -11,11 +22,28 @@ import { Drawer, EmptyState, cardClass, fieldClass, money } from "./ui";
 
 type Category = "food" | "fashion" | "health";
 
-const categories: { id: Category; label: string }[] = [
-  { id: "food", label: "Foods" },
-  { id: "fashion", label: "Apparel" },
-  { id: "health", label: "Health" },
+const categories: { id: Category; label: string; page: string }[] = [
+  { id: "food", label: "Foods", page: "/food" },
+  { id: "fashion", label: "Apparel", page: "/fashion" },
+  { id: "health", label: "Health", page: "/health" },
 ];
+
+const onLanding = (category: Category) => category === "food" || category === "health";
+
+/** Moves an item one place up or down among the items in its own category. */
+function moveWithinCategory(products: Product[], id: string, direction: -1 | 1): Product[] {
+  const index = products.findIndex((p) => p.id === id);
+  if (index < 0) return products;
+  const category = products[index].category;
+  let target = index + direction;
+  while (target >= 0 && target < products.length && products[target].category !== category) {
+    target += direction;
+  }
+  if (target < 0 || target >= products.length) return products;
+  const next = [...products];
+  [next[index], next[target]] = [next[target], next[index]];
+  return next;
+}
 
 function emptyProduct(category: Category): Product {
   const base: Product = {
@@ -67,7 +95,7 @@ export default function ItemsView({
             Items and prices
           </h1>
           <p className="mt-1 text-sm text-nayo-black/55">
-            What customers see in the shop. Changes go live as soon as you save.
+            Names, captions, photos and prices on every shop page. Changes go live as soon as you save.
           </p>
         </div>
         <button
@@ -103,9 +131,31 @@ export default function ItemsView({
         </div>
       </div>
 
+      <div className={`${cardClass} p-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-sm`}>
+        <p className="text-nayo-black/65">
+          {onLanding(category) ? (
+            <>
+              <Star size={13} className="inline -mt-0.5 mr-1 fill-nayo-gold text-nayo-gold" />
+              Starred items show first in the landing page row (up to {LANDING_ROW_SIZE}). Use the arrows to set the order on the{" "}
+              {categories.find((c) => c.id === category)!.label} page.
+            </>
+          ) : (
+            <>Use the arrows to set the order items appear on the Apparel page.</>
+          )}
+        </p>
+        <a
+          href={categories.find((c) => c.id === category)!.page}
+          target="_blank"
+          rel="noreferrer"
+          className="shrink-0 font-semibold text-nayo-green hover:text-nayo-gold"
+        >
+          View page ↗
+        </a>
+      </div>
+
       {shown.length ? (
         <div className="grid grid-cols-1 min-[520px]:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-          {shown.map((item) => (
+          {shown.map((item, position) => (
             <article key={item.id} className={`${cardClass} overflow-hidden flex flex-col group`}>
               <div className="relative aspect-[4/3] bg-[#F4F1EA] overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -119,6 +169,28 @@ export default function ItemsView({
                     {item.badge}
                   </span>
                 )}
+                {onLanding(category) && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      void onSave(
+                        products.map((p) =>
+                          p.id === item.id ? { ...p, featured: !p.featured } : p
+                        )
+                      )
+                    }
+                    aria-label={item.featured ? "Remove from landing page" : "Show on landing page"}
+                    title={item.featured ? "On the landing page" : "Show on the landing page"}
+                    className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest shadow transition ${
+                      item.featured
+                        ? "bg-nayo-gold text-nayo-green"
+                        : "bg-white/90 text-nayo-black/55 hover:text-nayo-black"
+                    }`}
+                  >
+                    <Star size={11} className={item.featured ? "fill-nayo-green" : ""} />
+                    {item.featured ? "Landing" : "Add to landing"}
+                  </button>
+                )}
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <p className="font-semibold text-nayo-black leading-snug">{item.name}</p>
@@ -126,6 +198,28 @@ export default function ItemsView({
                 <div className="mt-auto pt-4 flex items-center justify-between gap-2">
                   <p className="text-lg font-bold text-nayo-green">{money(item.price)}</p>
                   <div className="flex gap-1.5">
+                    {!needle && (
+                      <>
+                        <button
+                          type="button"
+                          disabled={position === 0}
+                          onClick={() => void onSave(moveWithinCategory(products, item.id, -1))}
+                          aria-label={`Move ${item.name} earlier`}
+                          className="w-9 h-9 rounded-full border border-nayo-black/10 flex items-center justify-center text-nayo-black/60 hover:border-nayo-gold hover:text-nayo-black disabled:opacity-30"
+                        >
+                          <ArrowUp size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={position === shown.length - 1}
+                          onClick={() => void onSave(moveWithinCategory(products, item.id, 1))}
+                          aria-label={`Move ${item.name} later`}
+                          className="w-9 h-9 rounded-full border border-nayo-black/10 flex items-center justify-center text-nayo-black/60 hover:border-nayo-gold hover:text-nayo-black disabled:opacity-30"
+                        >
+                          <ArrowDown size={14} />
+                        </button>
+                      </>
+                    )}
                     <button
                       type="button"
                       onClick={() => setEditing(item)}
@@ -317,6 +411,23 @@ function ProductEditor({
             />
           </label>
         </div>
+
+        {onLanding(draft.category as Category) && (
+          <label className="flex items-center gap-3 rounded-xl border border-nayo-gold/30 bg-nayo-gold/[0.07] px-4 py-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={Boolean(draft.featured)}
+              onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
+              className="w-4 h-4 accent-[#1A412E]"
+            />
+            <span className="text-sm text-nayo-black/75">
+              <strong className="text-nayo-black">Show on the landing page</strong>
+              <span className="block text-xs text-nayo-black/50">
+                Appears in the {draft.category === "food" ? "Best Sellers" : "Latest collection"} row.
+              </span>
+            </span>
+          </label>
+        )}
 
         <label className="block">
           <Label>Photo path</Label>
