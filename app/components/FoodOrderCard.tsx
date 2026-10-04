@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
 import FoodCustomize, { useMealSelection } from "./FoodCustomize";
 import MealExtrasPrompt from "./MealExtrasPrompt";
+import ProductPhoto from "./ProductPhoto";
 import { mealCartPayload } from "@/app/lib/meal";
 
 export default function FoodOrderCard({
@@ -56,11 +56,8 @@ export default function FoodOrderCard({
             {product.badge}
           </div>
         )}
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          quality={95}
+        <ProductPhoto
+          product={product}
           className="object-cover object-center"
           sizes="(max-width: 768px) 100vw, 50vw"
         />

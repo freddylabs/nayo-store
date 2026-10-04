@@ -19,6 +19,8 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  /** Extra photos the product card rotates through after `image`. */
+  images?: string[];
   category: "fashion" | "food" | "health" | "culture";
   badge?: string;
   rating?: number;
@@ -171,6 +173,7 @@ export const foodProducts: Product[] = [
       "Boiled ripe plantain with garden egg stew, grilled fish, eggs, and avocado.",
     price: 19.99,
     image: "/food-ampesi-plantain.jpg",
+    images: ["/food-abom-fish-eggs.jpg"],
     category: "food",
     badge: "New",
     rating: 4.9,

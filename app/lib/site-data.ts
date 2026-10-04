@@ -159,6 +159,7 @@ export interface SiteCopy {
   heroFoodCaption1: string;
   heroFoodCaption2: string;
   heroFoodCaption3: string;
+  heroFoodCaption4: string;
   heroHealthLabel: string;
   heroHealthBrand: string;
   heroHealthCta: string;
@@ -252,6 +253,7 @@ export const defaultCopy: SiteCopy = {
   heroFoodCaption1: "Jollof and beef",
   heroFoodCaption2: "Plantain Ampesi, grilled fish & eggs",
   heroFoodCaption3: "Yam, plantain & kontomire stew",
+  heroFoodCaption4: "Abom stew with fish & boiled eggs",
   heroHealthLabel: "Health",
   heroHealthBrand: "Nayo Health",
   heroHealthCta: "Shop Health",

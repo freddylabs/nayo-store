@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Heart, Star, ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 import type { Product } from "@/app/data/products";
 import FoodCustomizeModal from "./FoodCustomizeModal";
+import ProductPhoto from "./ProductPhoto";
 
 const categoryHref: Record<Product["category"], string> = {
   food: "/food",
@@ -60,11 +60,8 @@ export default function ShopProductCard({ product }: { product: Product }) {
           aria-label={`View ${product.name}`}
           className="absolute inset-0"
         >
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            quality={95}
+          <ProductPhoto
+            product={product}
             className={
               isHealth
                 ? "object-cover object-top transition-transform duration-500 group-hover:scale-105"

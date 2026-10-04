@@ -89,6 +89,7 @@ export function productImageSize(src: string): { width: number; height: number }
   if (src.includes("food-ampesi-kontomire")) return { width: 1024, height: 731 };
   if (src.includes("food-ampesi-plantain")) return { width: 496, height: 618 };
   if (src.includes("food-kenkey-platter")) return { width: 766, height: 790 };
+  if (src.includes("food-abom-fish-eggs")) return { width: 667, height: 500 };
   if (src.includes("hero-food")) return { width: 511, height: 512 };
   if (
     src.includes("fashion-blazer") ||

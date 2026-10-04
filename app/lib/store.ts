@@ -91,6 +91,15 @@ const catalogMigrations: { id: string; run: (list: Product[]) => Product[] }[] =
         list.filter((item) => item.id !== "f-ghana-home" && item.id !== "f-ghana-away")
       ),
   },
+  {
+    id: "2026-10-ampesi-second-photo",
+    run: (list) =>
+      list.map((item) =>
+        item.id === "fd-006" && !item.images?.length
+          ? { ...item, images: ["/food-abom-fish-eggs.jpg"] }
+          : item
+      ),
+  },
 ];
 
 async function writeCatalog(products: Product[]) {
