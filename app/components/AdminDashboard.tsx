@@ -376,7 +376,7 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="info@nayo.market"
+              placeholder="you@example.com"
               autoComplete="username"
               required
               className={fieldClass}
