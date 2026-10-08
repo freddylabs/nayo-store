@@ -48,6 +48,7 @@ export interface Order {
   paymentStatus?: PaymentStatus;
   paidAt?: string;
   receiptSentAt?: string;
+  adminNotifiedAt?: string;
   deliveryMethod?: DeliveryMethod;
   trackingNumber?: string;
   labelNote?: string;

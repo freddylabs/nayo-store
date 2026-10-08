@@ -59,7 +59,8 @@ async function createSchema(sql: Sql) {
       ADD COLUMN IF NOT EXISTS delivery_method        text,
       ADD COLUMN IF NOT EXISTS shipped_at             timestamptz,
       ADD COLUMN IF NOT EXISTS delivered_at           timestamptz,
-      ADD COLUMN IF NOT EXISTS shipping_email_sent_at timestamptz
+      ADD COLUMN IF NOT EXISTS shipping_email_sent_at timestamptz,
+      ADD COLUMN IF NOT EXISTS admin_notified_at      timestamptz
   `;
   await sql`CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS orders_email_idx ON orders (lower(email))`;

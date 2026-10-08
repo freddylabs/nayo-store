@@ -168,6 +168,7 @@ type OrderRow = {
   payment_status: NonNullable<Order["paymentStatus"]>;
   paid_at: Date | null;
   receipt_sent_at: Date | null;
+  admin_notified_at: Date | null;
   tracking_number: string | null;
   label_note: string | null;
   delivery_method: Order["deliveryMethod"] | null;
@@ -195,6 +196,7 @@ function fromRow(row: OrderRow): Order {
     paymentStatus: row.payment_status,
     paidAt: row.paid_at?.toISOString(),
     receiptSentAt: row.receipt_sent_at?.toISOString(),
+    adminNotifiedAt: row.admin_notified_at?.toISOString(),
     trackingNumber: row.tracking_number ?? undefined,
     labelNote: row.label_note ?? undefined,
     deliveryMethod: row.delivery_method ?? undefined,
@@ -412,6 +414,35 @@ export async function releaseReceipt(id: string) {
   }
   const sql = await db();
   await sql`UPDATE orders SET receipt_sent_at = NULL WHERE id = ${id}`;
+}
+
+/** Marks the admin order email as sent; returns false if it already went out. */
+export async function claimAdminNotice(id: string): Promise<boolean> {
+  if (!hasDatabase()) {
+    let claimed = false;
+    await changeOrderFile(id, (order) => {
+      if (order.adminNotifiedAt) return null;
+      claimed = true;
+      return { ...order, adminNotifiedAt: new Date().toISOString() };
+    });
+    return claimed;
+  }
+  const sql = await db();
+  const rows = await sql`
+    UPDATE orders SET admin_notified_at = now()
+    WHERE id = ${id} AND admin_notified_at IS NULL
+    RETURNING id
+  `;
+  return rows.length > 0;
+}
+
+export async function releaseAdminNotice(id: string) {
+  if (!hasDatabase()) {
+    await changeOrderFile(id, (order) => ({ ...order, adminNotifiedAt: undefined }));
+    return;
+  }
+  const sql = await db();
+  await sql`UPDATE orders SET admin_notified_at = NULL WHERE id = ${id}`;
 }
 
 export function productsByCategory(

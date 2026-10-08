@@ -3,6 +3,7 @@ type EmailMessage = {
   subject: string;
   html: string;
   text: string;
+  replyTo?: string;
   idempotencyKey?: string;
 };
 
@@ -33,7 +34,7 @@ export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
     },
     body: JSON.stringify({
       from: process.env.EMAIL_FROM || "Nayo <orders@nayo.market>",
-      reply_to: process.env.EMAIL_REPLY_TO || "info@nayo.market",
+      reply_to: message.replyTo || process.env.EMAIL_REPLY_TO || "info@nayo.market",
       to: [message.to],
       subject: message.subject,
       html: message.html,

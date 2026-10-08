@@ -2,13 +2,17 @@ import Stripe from "stripe";
 import type { Order, OrderAddress } from "@/app/lib/site-data";
 import {
   addOrder,
+  claimAdminNotice,
   claimReceipt,
   createOrderNumber,
   getOrder,
   markOrderPaid,
+  releaseAdminNotice,
   releaseReceipt,
 } from "@/app/lib/store";
 import { sendEmail } from "@/app/lib/email";
+import { renderAdminOrderEmail } from "@/app/lib/admin-order-email";
+import { getAdminEmail } from "@/app/lib/admin-auth";
 import { emailBaseUrl, renderReceiptEmail } from "@/app/lib/receipt-email";
 import { ensureCustomer, pinLinkUrl, type Customer } from "@/app/lib/customers";
 
@@ -107,9 +111,31 @@ async function sendReceiptOnce(order: Order, customer: Customer | null) {
   }
 }
 
+async function sendAdminNoticeOnce(order: Order) {
+  const claimed =
+    (await attempt("claim admin notice", () => claimAdminNotice(order.id))) ?? true;
+  if (!claimed) return;
+
+  const { subject, html, text } = renderAdminOrderEmail(order);
+  const result = await sendEmail({
+    to: getAdminEmail(),
+    subject,
+    html,
+    text,
+    replyTo: order.email || undefined,
+    idempotencyKey: `nayo-admin-order-${order.id}`,
+  });
+
+  if (!result.sent) {
+    if (!result.skipped) console.error("[checkout] admin order email failed", result.error);
+    await attempt("release admin notice", () => releaseAdminNotice(order.id));
+  }
+}
+
 /**
  * Confirms a Checkout Session with Stripe, marks the order paid, and emails
- * the receipt once. Safe to call repeatedly from the success page and webhook.
+ * the customer receipt and the admin summary once each. Safe to call
+ * repeatedly from the success page and webhook.
  */
 export async function finalizeCheckout(sessionId: string): Promise<CheckoutOutcome> {
   const stripe = stripeClient();
@@ -141,7 +167,7 @@ export async function finalizeCheckout(sessionId: string): Promise<CheckoutOutco
   const customer = paid.email
     ? await attempt("ensure customer", () => ensureCustomer(paid.email))
     : null;
-  await sendReceiptOnce(paid, customer);
+  await Promise.all([sendReceiptOnce(paid, customer), sendAdminNoticeOnce(paid)]);
   return { state: "paid", order: paid, customer: summarize(customer) };
 }
 

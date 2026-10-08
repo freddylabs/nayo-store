@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { renderAdminOrderEmail } from "@/app/lib/admin-order-email";
 import { renderReceiptEmail } from "@/app/lib/receipt-email";
 import type { Order } from "@/app/lib/site-data";
 
@@ -54,6 +55,12 @@ export async function GET(request: Request) {
   const order: Order = pickup
     ? { ...sample, fulfillment: "pickup", address: undefined }
     : sample;
+  if (url.searchParams.get("admin") === "1") {
+    const { html } = renderAdminOrderEmail(order, url.origin);
+    return new NextResponse(html, {
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
   const { html } = renderReceiptEmail(order, {
     baseUrl: url.origin,
     account: {
